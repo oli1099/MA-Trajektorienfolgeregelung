@@ -4,9 +4,9 @@
 
 #include <string.h>
 
-#include "ros_robot_controller_msgs/msg/detail/rgb_states__struct.h"
-#include "rosidl_typesupport_interface/macros.h"
 #include "ros_robot_controller_msgs/msg/detail/rgb_states__functions.h"
+#include "rosidl_typesupport_interface/macros.h"
+#include "ros_robot_controller_msgs/msg/detail/rgb_states__struct.h"
 #include "ros_robot_controller_msgs/msg/detail/rgb_states__type_support.h"
 
 #ifdef __cplusplus

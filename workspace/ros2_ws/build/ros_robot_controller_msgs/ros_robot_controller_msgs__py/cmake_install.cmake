@@ -1,8 +1,8 @@
-# Install script for directory: /home/ro01/workspace/ros2_ws/build/ros_robot_controller_msgs/ros_robot_controller_msgs__py
+# Install script for directory: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller_msgs/ros_robot_controller_msgs__py
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ro01/workspace/ros2_ws/install/ros_robot_controller_msgs")
+  set(CMAKE_INSTALL_PREFIX "/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller_msgs")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

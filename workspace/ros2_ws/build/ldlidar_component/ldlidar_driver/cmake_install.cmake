@@ -1,8 +1,8 @@
-# Install script for directory: /home/ro01/workspace/ros2_ws/src/ldrobot-lidar-ros2/ldlidar_component/ldlidar_driver
+# Install script for directory: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/ldrobot-lidar-ros2/ldlidar_component/ldlidar_driver
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ro01/workspace/ros2_ws/install/ldlidar_component")
+  set(CMAKE_INSTALL_PREFIX "/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ldlidar_component")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

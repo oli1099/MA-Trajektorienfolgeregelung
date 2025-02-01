@@ -1,0 +1,87 @@
+[1.343s] Invoking command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/sdk:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/ros_robot_controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/peripherals:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/mentorpi_description:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/calibration:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/Trajektorienfolgeregelung:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/imu_calib -DCMAKE_INSTALL_PREFIX=/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib
+[1.883s] -- The C compiler identification is GNU 13.3.0
+[1.883s] -- The CXX compiler identification is GNU 13.3.0
+[1.883s] -- Detecting C compiler ABI info
+[1.883s] -- Detecting C compiler ABI info - done
+[1.883s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.883s] -- Detecting C compile features
+[1.883s] -- Detecting C compile features - done
+[1.884s] -- Detecting CXX compiler ABI info
+[1.999s] -- Detecting CXX compiler ABI info - done
+[2.019s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[2.020s] -- Detecting CXX compile features
+[2.021s] -- Detecting CXX compile features - done
+[2.029s] -- Found ament_cmake: 2.5.3 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[2.362s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[2.756s] -- Found rclcpp: 28.1.6 (/opt/ros/jazzy/share/rclcpp/cmake)
+[2.911s] -- Found rosidl_generator_c: 4.6.5 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[2.969s] -- Found rosidl_generator_cpp: 4.6.5 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[3.028s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.100s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.389s] -- Found rmw_implementation_cmake: 7.3.1 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[3.401s] -- Found rmw_fastrtps_cpp: 8.4.1 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[3.650s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[3.717s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[3.787s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[4.050s] -- Found sensor_msgs: 5.3.5 (/opt/ros/jazzy/share/sensor_msgs/cmake)
+[4.256s] -- Found eigen3_cmake_module: 0.3.0 (/opt/ros/jazzy/share/eigen3_cmake_module/cmake)
+[4.280s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[4.294s] -- Found yaml_cpp_vendor: 9.0.1 (/opt/ros/jazzy/share/yaml_cpp_vendor/cmake)
+[4.296s] -- Setting yaml-cpp_DIR to: '/opt/ros/jazzy/share/yaml_cpp_vendor/cmake/../../../opt/yaml_cpp_vendor/share/cmake/yaml-cpp'
+[4.328s] -- Found ament_lint_auto: 0.17.1 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[4.839s] -- Added test 'copyright' to check source files copyright and LICENSE
+[4.845s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[4.847s] -- Configured cppcheck include dirs: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/imu_calib/include;/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/imu_calib/src
+[4.847s] -- Configured cppcheck exclude dirs and/or files: 
+[4.852s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[4.852s] -- Configured cpplint exclude dirs and/or files: 
+[4.856s] -- Added test 'lint_cmake' to check CMake code style
+[4.863s] -- Added test 'uncrustify' to check C / C++ code style
+[4.864s] -- Configured uncrustify additional arguments: 
+[4.871s] -- Added test 'xmllint' to check XML markup files
+[4.883s] -- Configuring done (3.5s)
+[4.971s] -- Generating done (0.0s)
+[5.006s] -- Build files have been written to: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib
+[5.030s] Invoked command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/sdk:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/ros_robot_controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/peripherals:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/mentorpi_description:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/calibration:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/Trajektorienfolgeregelung:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/imu_calib -DCMAKE_INSTALL_PREFIX=/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib
+[5.031s] Invoking command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/sdk:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/ros_robot_controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/peripherals:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/mentorpi_description:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/calibration:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/Trajektorienfolgeregelung:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib -- -j8 -l8
+[8.805s] [ 12%] [32mBuilding CXX object CMakeFiles/accel_calib.dir/src/accel_calib.cpp.o[0m
+[27.450s] [ 25%] [32m[1mLinking CXX static library libaccel_calib.a[0m
+[28.275s] [ 25%] Built target accel_calib
+[28.369s] [ 37%] [32mBuilding CXX object CMakeFiles/do_calib.dir/src/do_calib_node.cpp.o[0m
+[28.376s] [ 50%] [32mBuilding CXX object CMakeFiles/apply_calib.dir/src/apply_calib_node.cpp.o[0m
+[28.388s] [ 62%] [32mBuilding CXX object CMakeFiles/do_calib.dir/src/do_calib.cpp.o[0m
+[28.392s] [ 75%] [32mBuilding CXX object CMakeFiles/apply_calib.dir/src/apply_calib.cpp.o[0m
+[62.343s] [ 87%] [32m[1mLinking CXX executable apply_calib[0m
+[63.338s] [ 87%] Built target apply_calib
+[65.356s] [100%] [32m[1mLinking CXX executable do_calib[0m
+[66.527s] [100%] Built target do_calib
+[66.550s] Invoked command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/sdk:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/ros_robot_controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/peripherals:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/mentorpi_description:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/calibration:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/Trajektorienfolgeregelung:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib -- -j8 -l8
+[66.553s] Invoking command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/sdk:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/ros_robot_controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/peripherals:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/mentorpi_description:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/calibration:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/Trajektorienfolgeregelung:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib
+[66.567s] -- Install configuration: ""
+[66.568s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/lib/imu_calib/do_calib
+[66.579s] -- Set non-toolchain portion of runtime path of "/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/lib/imu_calib/do_calib" to ""
+[66.580s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/lib/imu_calib/apply_calib
+[66.591s] -- Set non-toolchain portion of runtime path of "/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/lib/imu_calib/apply_calib" to ""
+[66.592s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/include/
+[66.592s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/include//imu_calib
+[66.592s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/include//imu_calib/accel_calib.h
+[66.593s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/include//imu_calib/do_calib.h
+[66.593s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/include//imu_calib/apply_calib.h
+[66.593s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/ament_index/resource_index/package_run_dependencies/imu_calib
+[66.594s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/ament_index/resource_index/parent_prefix_path/imu_calib
+[66.594s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/environment/ament_prefix_path.sh
+[66.595s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/environment/ament_prefix_path.dsv
+[66.595s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/environment/path.sh
+[66.596s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/environment/path.dsv
+[66.596s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/local_setup.bash
+[66.596s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/local_setup.sh
+[66.597s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/local_setup.zsh
+[66.597s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/local_setup.dsv
+[66.597s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/package.dsv
+[66.598s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/ament_index/resource_index/packages/imu_calib
+[66.598s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/cmake/ament_cmake_export_dependencies-extras.cmake
+[66.599s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/cmake/ament_cmake_export_include_directories-extras.cmake
+[66.599s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/cmake/imu_calibConfig.cmake
+[66.599s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/cmake/imu_calibConfig-version.cmake
+[66.600s] -- Installing: /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/imu_calib/share/imu_calib/package.xml
+[66.603s] Invoked command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/sdk:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/ros_robot_controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/peripherals:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/mentorpi_description:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/controller:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/calibration:/home/oli/Desktop/Oliver/Uni/MA/GithubRepo/MA-HiWonder-MPC/workspace/ros2_ws/install/Trajektorienfolgeregelung:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib

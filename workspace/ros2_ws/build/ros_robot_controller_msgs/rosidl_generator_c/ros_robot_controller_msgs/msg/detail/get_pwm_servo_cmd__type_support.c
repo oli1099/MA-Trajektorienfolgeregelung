@@ -5,9 +5,9 @@
 #include <string.h>
 
 #include "ros_robot_controller_msgs/msg/detail/get_pwm_servo_cmd__functions.h"
-#include "ros_robot_controller_msgs/msg/detail/get_pwm_servo_cmd__struct.h"
-#include "ros_robot_controller_msgs/msg/detail/get_pwm_servo_cmd__type_support.h"
 #include "rosidl_typesupport_interface/macros.h"
+#include "ros_robot_controller_msgs/msg/detail/get_pwm_servo_cmd__type_support.h"
+#include "ros_robot_controller_msgs/msg/detail/get_pwm_servo_cmd__struct.h"
 
 #ifdef __cplusplus
 extern "C"
