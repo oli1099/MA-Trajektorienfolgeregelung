@@ -1,0 +1,31 @@
+running egg_info
+creating ../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info
+writing ../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/PKG-INFO
+writing dependency_links to ../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/dependency_links.txt
+writing requirements to ../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/requires.txt
+writing top-level names to ../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/top_level.txt
+writing manifest file '../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/SOURCES.txt'
+reading manifest file '../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file '../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/build
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/build/lib
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/build/lib/trajektorienfolgeregelung
+copying trajektorienfolgeregelung/__init__.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/build/lib/trajektorienfolgeregelung
+running install
+running install_lib
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/lib/python3.12/site-packages/trajektorienfolgeregelung
+copying /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/build/lib/trajektorienfolgeregelung/__init__.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/lib/python3.12/site-packages/trajektorienfolgeregelung
+byte-compiling /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/lib/python3.12/site-packages/trajektorienfolgeregelung/__init__.py to __init__.cpython-312.pyc
+running install_data
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index/resource_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index/resource_index/packages
+copying resource/trajektorienfolgeregelung -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index/resource_index/packages
+copying package.xml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/trajektorienfolgeregelung
+running install_egg_info
+Copying ../../build/trajektorienfolgeregelung/trajektorienfolgeregelung.egg-info to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/lib/python3.12/site-packages/trajektorienfolgeregelung-0.0.0-py3.12.egg-info
+running install_scripts
+writing list of installed files to '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/install.log'

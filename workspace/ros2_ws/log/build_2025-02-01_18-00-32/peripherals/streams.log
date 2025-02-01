@@ -1,0 +1,23 @@
+[5.217s] Invoking command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/peripherals': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/peripherals build --build-base /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/build install --record /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/install.log --single-version-externally-managed install_data
+[6.358s] running egg_info
+[6.428s] writing ../../build/peripherals/peripherals.egg-info/PKG-INFO
+[6.429s] writing dependency_links to ../../build/peripherals/peripherals.egg-info/dependency_links.txt
+[6.429s] writing entry points to ../../build/peripherals/peripherals.egg-info/entry_points.txt
+[6.429s] writing requirements to ../../build/peripherals/peripherals.egg-info/requires.txt
+[6.429s] writing top-level names to ../../build/peripherals/peripherals.egg-info/top_level.txt
+[6.571s] reading manifest file '../../build/peripherals/peripherals.egg-info/SOURCES.txt'
+[6.574s] writing manifest file '../../build/peripherals/peripherals.egg-info/SOURCES.txt'
+[6.577s] running build
+[6.578s] running build_py
+[6.578s] running install
+[6.596s] running install_lib
+[6.669s] running install_data
+[6.674s] running install_egg_info
+[6.754s] removing '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/python3.12/site-packages/peripherals-0.0.0-py3.12.egg-info' (and everything under it)
+[6.757s] Copying ../../build/peripherals/peripherals.egg-info to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/python3.12/site-packages/peripherals-0.0.0-py3.12.egg-info
+[6.759s] running install_scripts
+[7.279s] Installing joystick_control script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/peripherals
+[7.280s] Installing teleop_key_control script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/peripherals
+[7.280s] Installing tf_broadcaster_imu script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/peripherals
+[7.281s] writing list of installed files to '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/install.log'
+[7.362s] Invoked command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/peripherals' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/peripherals/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/peripherals build --build-base /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/build install --record /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/peripherals/install.log --single-version-externally-managed install_data

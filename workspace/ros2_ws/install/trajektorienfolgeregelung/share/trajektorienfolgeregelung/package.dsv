@@ -1,0 +1,6 @@
+source;share/trajektorienfolgeregelung/hook/pythonpath.ps1
+source;share/trajektorienfolgeregelung/hook/pythonpath.dsv
+source;share/trajektorienfolgeregelung/hook/pythonpath.sh
+source;share/trajektorienfolgeregelung/hook/ament_prefix_path.ps1
+source;share/trajektorienfolgeregelung/hook/ament_prefix_path.dsv
+source;share/trajektorienfolgeregelung/hook/ament_prefix_path.sh
