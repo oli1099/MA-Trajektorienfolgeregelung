@@ -1,0 +1,2 @@
+[console_scripts]
+trajectory_p_controller = trajektorienfolgeregelung.trajectory_p_controller:main
