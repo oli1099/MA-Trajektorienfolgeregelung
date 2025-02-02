@@ -105,6 +105,20 @@ class CircleTrajectoryController(Node):
         yaw = math.atan2(t3, t4)
 
         return roll, pitch, yaw
+    def stop_robot(self):
+        """Sendet ein Stoppsignal an die Motorsteuerung"""
+        stop_command = MotorsState()
+        stop_command.velocity_x = 0.0
+        stop_command.velocity_y = 0.0
+        stop_command.angular_velocity = 0.0
+        self.motor_pub.publish(stop_command)
+        self.get_logger().info("Roboter gestoppt.")
+    
+    def shutdown(self):
+        """Graceful shutdown procedure to stop motors and clean up."""
+        # Stop the robot by sending a stop command to the motor control publisher
+        self.stop_robot()
+        rclpy.shutdown
 
 
 class MecanumChassis:
@@ -133,20 +147,7 @@ class MecanumChassis:
         msg.data = data
         return msg
     
-    def stop_robot(self):
-        """Sendet ein Stoppsignal an die Motorsteuerung"""
-        stop_command = MotorsState()
-        stop_command.velocity_x = 0.0
-        stop_command.velocity_y = 0.0
-        stop_command.angular_velocity = 0.0
-        self.motor_pub.publish(stop_command)
-        self.get_logger().info("Roboter gestoppt.")
     
-    def shutdown(self):
-        """Graceful shutdown procedure to stop motors and clean up."""
-        # Stop the robot by sending a stop command to the motor control publisher
-        self.stop_robot()
-        rclpy.shutdown
 
 
 def main(args=None):
