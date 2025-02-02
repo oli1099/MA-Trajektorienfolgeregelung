@@ -132,6 +132,15 @@ class MecanumChassis:
         msg = MotorsState()
         msg.data = data
         return msg
+    
+    def shutdown(self):
+        """Graceful shutdown procedure to stop motors and clean up."""
+        # Stop the robot by sending a stop command to the motor control publisher
+        stop_command = self.mecanum_chassis.set_velocity(0.0, 0.0, 0.0)  # Stop the robot
+        self.motor_pub.publish(stop_command)  # Publish the stop command to the motor topic
+        self.get_logger().info("Roboter gestoppt. Node wird jetzt beendet.")
+        super().shutdown()  # Ensure that the base class shutdown happens after stopping the robot
+
 
 
 def main(args=None):
@@ -142,18 +151,13 @@ def main(args=None):
     except KeyboardInterrupt:
         node.get_logger().info("Node wird beendet... Roboter wird gestoppt.")
         # Stop-Botschaft an die Motoren senden
-        if rclpy.ok():
-            stop_command = node.mecanum_chassis.set_velocity(0.0, 0.0, 0.0)
-            node.motor_pub.publish(stop_command)
-
-        time.sleep(0.5)
+        node.shutdown()
 
         #rclpy.spin_once(node,timeout_sec=0.1)
     finally:
-        if rclpy.ok():
-            node.get_logger().info("Roboter gestoppt. Node wird zerstört.")
-            node.destroy_node()
-            rclpy.shutdown()
+        node.get_logger().info("Roboter gestoppt. Node wird zerstört.")
+        #node.destroy_node()
+        rclpy.shutdown()
 
     #rclpy.spin(node)
     #node.destroy_node()
