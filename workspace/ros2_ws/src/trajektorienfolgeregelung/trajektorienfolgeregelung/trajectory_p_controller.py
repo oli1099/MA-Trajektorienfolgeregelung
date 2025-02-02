@@ -108,9 +108,14 @@ class CircleTrajectoryController(Node):
     def stop_robot(self):
         """Sendet ein Stoppsignal an die Motorsteuerung"""
         stop_command = MotorsState()
-        stop_command.velocity_x = 0.0
-        stop_command.velocity_y = 0.0
-        stop_command.angular_velocity = 0.0
+        stop_command.data = []  # Leeres Array initialisieren
+    
+        for i in range(4):  # 4 Motoren
+            msg = MotorState()
+            msg.id = i + 1
+            msg.rps = 0.0  # Geschwindigkeit auf 0 setzen
+            stop_command.data.append(msg)
+
         self.motor_pub.publish(stop_command)
         self.get_logger().info("Roboter gestoppt.")
     
