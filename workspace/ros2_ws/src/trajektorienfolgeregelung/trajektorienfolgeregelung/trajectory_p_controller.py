@@ -163,14 +163,14 @@ def main(args=None):
     except KeyboardInterrupt:
         node.get_logger().info("Node wird beendet... Roboter wird gestoppt.")
         # Stop-Botschaft an die Motoren senden
-        node.shutdown()
+        
 
         #rclpy.spin_once(node,timeout_sec=0.1)
     finally:
-        if rclpy.ok():
-            node.get_logger().info("Roboter gestoppt. Node wird zerstört.")
-            #node.destroy_node()
-            rclpy.shutdown()
+        node.shutdown()
+        node.get_logger().info("Roboter gestoppt. Node wird zerstört.")
+        #node.destroy_node()
+        rclpy.shutdown()
 
     #rclpy.spin(node)
     #node.destroy_node()
