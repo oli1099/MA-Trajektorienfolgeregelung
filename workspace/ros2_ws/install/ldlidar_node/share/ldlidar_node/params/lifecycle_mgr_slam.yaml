@@ -1,11 +1,1 @@
-# config/lifecycle_mgr.yaml
-#
-# Example configuration file to automatically handle the ldlidar lifecycle node
-
-/**:
-  ros__parameters:
-    autostart: True
-    node_names: ['ldlidar_node']
-    bond_timeout: 5.0
-    attempt_respawn_reconnection: true
-    bond_respawn_max_duration: 10.0
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/ldrobot-lidar-ros2/ldlidar_node/params/lifecycle_mgr_slam.yaml

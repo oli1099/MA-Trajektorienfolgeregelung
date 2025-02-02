@@ -1,3 +1,1 @@
-ros_robot_controller_msgs/BusServoState[] state
-
-float64 duration
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/driver/ros_robot_controller_msgs/msg/SetBusServoState.msg

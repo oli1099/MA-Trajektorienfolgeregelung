@@ -1,0 +1,20 @@
+running develop
+running egg_info
+creating sdk.egg-info
+writing sdk.egg-info/PKG-INFO
+writing dependency_links to sdk.egg-info/dependency_links.txt
+writing requirements to sdk.egg-info/requires.txt
+writing top-level names to sdk.egg-info/top_level.txt
+writing manifest file 'sdk.egg-info/SOURCES.txt'
+reading manifest file 'sdk.egg-info/SOURCES.txt'
+writing manifest file 'sdk.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/sdk/lib/python3.12/site-packages/sdk.egg-link (link to .)
+
+Installed /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/sdk
+running symlink_data
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/sdk/share/ament_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/sdk/share/ament_index/resource_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/sdk/share/ament_index/resource_index/packages
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/sdk/resource/sdk -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/sdk/share/ament_index/resource_index/packages
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/sdk/package.xml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/sdk/share/sdk

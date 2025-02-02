@@ -1,0 +1,22 @@
+running develop
+running egg_info
+creating trajektorienfolgeregelung.egg-info
+writing trajektorienfolgeregelung.egg-info/PKG-INFO
+writing dependency_links to trajektorienfolgeregelung.egg-info/dependency_links.txt
+writing entry points to trajektorienfolgeregelung.egg-info/entry_points.txt
+writing requirements to trajektorienfolgeregelung.egg-info/requires.txt
+writing top-level names to trajektorienfolgeregelung.egg-info/top_level.txt
+writing manifest file 'trajektorienfolgeregelung.egg-info/SOURCES.txt'
+reading manifest file 'trajektorienfolgeregelung.egg-info/SOURCES.txt'
+writing manifest file 'trajektorienfolgeregelung.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/lib/python3.12/site-packages/trajektorienfolgeregelung.egg-link (link to .)
+Installing trajectory_p_controller script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/lib/trajektorienfolgeregelung
+
+Installed /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung
+running symlink_data
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index/resource_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index/resource_index/packages
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/resource/trajektorienfolgeregelung -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/ament_index/resource_index/packages
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/trajektorienfolgeregelung/package.xml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/trajektorienfolgeregelung/share/trajektorienfolgeregelung

@@ -4,9 +4,9 @@
 
 #include <string.h>
 
+#include "ros_robot_controller_msgs/msg/detail/sbus__functions.h"
 #include "ros_robot_controller_msgs/msg/detail/sbus__struct.h"
 #include "rosidl_typesupport_interface/macros.h"
-#include "ros_robot_controller_msgs/msg/detail/sbus__functions.h"
 #include "ros_robot_controller_msgs/msg/detail/sbus__type_support.h"
 
 #ifdef __cplusplus

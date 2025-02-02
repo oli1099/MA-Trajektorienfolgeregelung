@@ -1,0 +1,29 @@
+running develop
+running egg_info
+creating calibration.egg-info
+writing calibration.egg-info/PKG-INFO
+writing dependency_links to calibration.egg-info/dependency_links.txt
+writing entry points to calibration.egg-info/entry_points.txt
+writing requirements to calibration.egg-info/requires.txt
+writing top-level names to calibration.egg-info/top_level.txt
+writing manifest file 'calibration.egg-info/SOURCES.txt'
+reading manifest file 'calibration.egg-info/SOURCES.txt'
+writing manifest file 'calibration.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/lib/python3.12/site-packages/calibration.egg-link (link to .)
+Installing calibrate_angular script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/lib/calibration
+Installing calibrate_linear script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/lib/calibration
+
+Installed /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration
+running symlink_data
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/ament_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/ament_index/resource_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/ament_index/resource_index/packages
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration/resource/calibration -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/ament_index/resource_index/packages
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration/package.xml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration/launch
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration/launch/angular_calib.launch.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration/launch
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration/launch/linear_calib.launch.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration/launch
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration/config
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration/config/bk.yaml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration/config
+symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/calibration/config/imu_calib.yaml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/calibration/share/calibration/config

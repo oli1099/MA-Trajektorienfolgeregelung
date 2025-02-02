@@ -69,8 +69,8 @@ ros_robot_controller_msgs__srv__GetBusServoState_Event__get_type_hash(
 
 // Include directives for referenced types
 #include "builtin_interfaces/msg/detail/time__functions.h"
-#include "service_msgs/msg/detail/service_event_info__functions.h"
 #include "ros_robot_controller_msgs/msg/detail/get_bus_servo_cmd__functions.h"
+#include "service_msgs/msg/detail/service_event_info__functions.h"
 #include "ros_robot_controller_msgs/msg/detail/bus_servo_state__functions.h"
 
 // Hashes for external referenced types

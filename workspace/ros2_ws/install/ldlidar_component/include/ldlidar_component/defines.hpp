@@ -1,9 +1,1 @@
-#ifndef DEFINES_HPP
-#define DEFINES_HPP
-
-namespace ldlidar
-{
-
-}
-
-#endif // DEFINES_HPP
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/ldrobot-lidar-ros2/ldlidar_component/component/include/defines.hpp

@@ -35,8 +35,8 @@ def launch_setup(context):
         peripherals_package_path = get_package_share_directory('peripherals')
         controller_package_path = get_package_share_directory('controller')
     else:
-        peripherals_package_path = '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/ros2_ws/src/peripherals'#os.path.join(os.environ['HOME'], 'workspace/ros2_ws/src/peripherals')
-        controller_package_path = '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/ros2_ws/src/driver/controller'#os.path.join(os.environ['HOME'], 'workspace/ros2_ws/src/driver/controller')
+        peripherals_package_path = os.path.join(os.environ['HOME'], 'workspace/ros2_ws/src/peripherals')
+        controller_package_path = os.path.join(os.environ['HOME'], 'workspace/ros2_ws/src/driver/controller')
 
 
     odom_publisher_launch = IncludeLaunchDescription(

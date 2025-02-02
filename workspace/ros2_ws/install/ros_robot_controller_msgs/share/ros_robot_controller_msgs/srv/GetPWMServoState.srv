@@ -1,4 +1,1 @@
-ros_robot_controller_msgs/GetPWMServoCmd[] cmd
----
-bool success
-ros_robot_controller_msgs/PWMServoState[] state
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/driver/ros_robot_controller_msgs/srv/GetPWMServoState.srv

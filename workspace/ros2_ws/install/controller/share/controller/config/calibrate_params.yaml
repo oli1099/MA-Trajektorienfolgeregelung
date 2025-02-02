@@ -1,4 +1,1 @@
-/**:
-  ros__parameters:
-    linear_correction_factor: 0.93
-    angular_correction_factor: 1.01
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/controller/config/calibrate_params.yaml

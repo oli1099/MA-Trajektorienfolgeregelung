@@ -1,0 +1,26 @@
+[4.215s] Invoking command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/build --no-deps symlink_data
+[5.462s] running develop
+[6.461s] running egg_info
+[6.461s] creating ros_robot_controller.egg-info
+[6.539s] writing ros_robot_controller.egg-info/PKG-INFO
+[6.539s] writing dependency_links to ros_robot_controller.egg-info/dependency_links.txt
+[6.540s] writing entry points to ros_robot_controller.egg-info/entry_points.txt
+[6.540s] writing requirements to ros_robot_controller.egg-info/requires.txt
+[6.540s] writing top-level names to ros_robot_controller.egg-info/top_level.txt
+[6.540s] writing manifest file 'ros_robot_controller.egg-info/SOURCES.txt'
+[6.703s] reading manifest file 'ros_robot_controller.egg-info/SOURCES.txt'
+[6.705s] writing manifest file 'ros_robot_controller.egg-info/SOURCES.txt'
+[6.774s] running build_ext
+[6.774s] Creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/lib/python3.12/site-packages/ros-robot-controller.egg-link (link to .)
+[6.775s] Installing ros_robot_controller script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/lib/ros_robot_controller
+[6.777s] 
+[6.777s] Installed /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller
+[6.777s] running symlink_data
+[6.778s] creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ament_index
+[6.778s] creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ament_index/resource_index
+[6.778s] creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ament_index/resource_index/packages
+[6.778s] symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/resource/ros_robot_controller -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ament_index/resource_index/packages
+[6.778s] symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/package.xml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ros_robot_controller
+[6.778s] creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ros_robot_controller/launch
+[6.779s] symbolically linking /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/launch/ros_robot_controller.launch.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/share/ros_robot_controller/launch
+[6.868s] Invoked command in '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/ros_robot_controller/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/ros_robot_controller/build --no-deps symlink_data

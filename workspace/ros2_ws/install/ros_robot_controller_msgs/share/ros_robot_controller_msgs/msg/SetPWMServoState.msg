@@ -1,2 +1,1 @@
-ros_robot_controller_msgs/PWMServoState[] state
-float64 duration
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/driver/ros_robot_controller_msgs/msg/SetPWMServoState.msg

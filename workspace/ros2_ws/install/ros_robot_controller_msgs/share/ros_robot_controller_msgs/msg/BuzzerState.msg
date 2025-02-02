@@ -1,4 +1,1 @@
-uint16 freq
-float32 on_time
-float32 off_time
-uint16 repeat
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/driver/ros_robot_controller_msgs/msg/BuzzerState.msg

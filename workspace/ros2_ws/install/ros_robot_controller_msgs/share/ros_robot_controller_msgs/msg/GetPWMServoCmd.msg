@@ -1,3 +1,1 @@
-uint8 id
-uint8 get_position
-uint8 get_offset
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/driver/ros_robot_controller_msgs/msg/GetPWMServoCmd.msg

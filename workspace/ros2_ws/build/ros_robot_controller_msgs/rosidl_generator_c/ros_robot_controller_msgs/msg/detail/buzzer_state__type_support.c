@@ -5,9 +5,9 @@
 #include <string.h>
 
 #include "ros_robot_controller_msgs/msg/detail/buzzer_state__struct.h"
+#include "ros_robot_controller_msgs/msg/detail/buzzer_state__functions.h"
 #include "rosidl_typesupport_interface/macros.h"
 #include "ros_robot_controller_msgs/msg/detail/buzzer_state__type_support.h"
-#include "ros_robot_controller_msgs/msg/detail/buzzer_state__functions.h"
 
 #ifdef __cplusplus
 extern "C"

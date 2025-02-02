@@ -1,2 +1,1 @@
-source;share/imu_calib/environment/ament_prefix_path.sh
-source;share/imu_calib/environment/path.sh
+/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/imu_calib/ament_cmake_environment_hooks/local_setup.dsv
