@@ -147,7 +147,7 @@ def main(args=None):
 
         time.sleep(0.5)
 
-        rclpy.spin_once(node,timeout_sec=0.1)
+        #rclpy.spin_once(node,timeout_sec=0.1)
     finally:
         
         node.get_logger().info("Roboter gestoppt. Node wird zerstört.")
