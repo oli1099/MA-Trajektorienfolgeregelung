@@ -123,7 +123,7 @@ class CircleTrajectoryController(Node):
         """Graceful shutdown procedure to stop motors and clean up."""
         # Stop the robot by sending a stop command to the motor control publisher
         self.stop_robot()
-        rclpy.shutdown
+        
 
 
 class MecanumChassis:
@@ -163,11 +163,12 @@ def main(args=None):
     except KeyboardInterrupt:
         node.get_logger().info("Node wird beendet... Roboter wird gestoppt.")
         # Stop-Botschaft an die Motoren senden
-        
+        node.shutdown()
+        time.sleep(0.5)
 
         #rclpy.spin_once(node,timeout_sec=0.1)
     finally:
-        node.shutdown()
+        node.destroy_node()
         node.get_logger().info("Roboter gestoppt. Node wird zerstört.")
         #node.destroy_node()
         rclpy.shutdown()
