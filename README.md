@@ -15,7 +15,7 @@ Package Erstellen in ROS2:
 
 Starten des Roboters:
     1. SSH Verbindung zum Roboter : sh prinzessinleia@192.168.1.32 (im Lab)
-    2. Zum folgenden ordner navigieren: cd /..
+    2. Zum folgenden ordner navigieren: cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
     3. Controller Launch vom roboter starten: ros2 launch controller controller.launch.py
 
 
