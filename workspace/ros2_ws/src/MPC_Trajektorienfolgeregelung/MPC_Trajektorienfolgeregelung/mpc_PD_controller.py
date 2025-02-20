@@ -58,7 +58,9 @@ class MPCTrajectoryController(Node):
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
-
+        
+        self.timer = self.create_timer(0.1, self.control_loop)
+        
         self.get_logger().info("Trajektorienfolgeregelung Startet")
 
     def odom_callback(self,msg: Odometry):
