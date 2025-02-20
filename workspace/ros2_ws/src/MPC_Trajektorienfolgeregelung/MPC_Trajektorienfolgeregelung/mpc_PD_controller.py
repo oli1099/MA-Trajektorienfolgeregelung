@@ -70,7 +70,7 @@ class MPCTrajectoryController(Node):
         if self.start_position is None:
             self.start_position = self.current_position
             shift_x = self.start_position[0]-self.trajectory[0][0]
-            shift_y = self.start_position[0]-self.trajectory[0][1]
+            shift_y = self.start_position[1]-self.trajectory[0][1]
             self.trajectory = [(x +shift_x,y +shift_y,theta) for (x,y,theta) in self.trajectory]
             self.get_logger().info(f"Trajectory:{self.trajectory}")
 
@@ -82,8 +82,7 @@ class MPCTrajectoryController(Node):
         return math.atan2(siny_cosp, cosy_cosp)
         
     def control_loop(self):
-        if not self.trajectory:
-            self.stop_robot()
+        if self.current_position is None:
             return
         if self.waypoints_index >= len(self.trajectory):
             self.stop_robot()
