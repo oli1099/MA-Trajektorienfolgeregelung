@@ -72,6 +72,7 @@ class MPCTrajectoryController(Node):
             shift_x = self.start_position[0]-self.trajectory[0][0]
             shift_y = self.start_position[0]-self.trajectory[0][1]
             self.trajectory = [(x +shift_x,y +shift_y,theta) for (x,y,theta) in self.trajectory]
+            self.get_logger().info(f"Trajectory:{self.trajectory}")
 
         self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
@@ -108,6 +109,8 @@ class MPCTrajectoryController(Node):
         v_x = min(v_x,0.25)
         v_y = min(v_y,0.25)
         theta = max(min(theta,1),-1)
+
+        self.get_logger().info(f"V_x={v_x}")
 
         #Geschwindigkeit an Motor übergeben
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
