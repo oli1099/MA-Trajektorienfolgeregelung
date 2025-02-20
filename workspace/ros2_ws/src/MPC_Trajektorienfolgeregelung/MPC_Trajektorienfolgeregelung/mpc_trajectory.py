@@ -7,6 +7,7 @@ from ros_robot_controller_msgs.msg import MotorsState, MotorState
 import numpy as np
 import math
 import time
+import matplotlib.pyplot as plt
 
 class TrajectoryController(Node):
     def __init__(self):
@@ -69,6 +70,8 @@ class TrajectoryController(Node):
                         0.4080, 0.3854, 0.3628, 0.3402, 0.3176, 0.2950, 0.2724, 0.2498, 0.2272, 0.2046,
                         0.1820, 0.1594, 0.1367, 0.1140, 0.0913, 0.0686, 0.0454, 0.0240, 0.0114, 0.0055,
                         0.0027, 0.0013, 0.0006, 0.0003, 0.0002, 0.0001, 0.0000, 0.0000, 0.0000, 0.0000,0]
+        self.simX = []
+        self.simU = []
 
         # Optional: Überprüfe, ob alle Listen die gleiche Länge haben.
         print(len(theta_values))
@@ -81,12 +84,12 @@ class TrajectoryController(Node):
         self.trajectory = self.trajectory.T
 
         # Maximale Zeit in Sekunden
-        self.total_time = 180.0  
+        self.total_time = 100.0  
         self.start_time = None
 
         # P-Regler für x,y,theta
-        self.kp_xy = 2.0
-        self.kp_theta = 2.0
+        self.kp_xy = 0.5
+        self.kp_theta = 0.5
 
         # Subscriber für Odometrie
         self.odom_sub = self.create_subscription(Odometry, 'odom_raw', self.odom_callback, 10)
@@ -161,6 +164,8 @@ class TrajectoryController(Node):
         y_act = self.current_position[1]
         theta_act= self.current_orientation
 
+        
+
         ex = x_des - x_act
         ey = y_des - y_act
         etheta = theta_des - theta_act
@@ -177,6 +182,9 @@ class TrajectoryController(Node):
         u_x_world = self.kp_xy * ex
         u_y_world = self.kp_xy * ey
 
+        self.simX.append((x_act,y_act))
+        
+
         # Transformation nach Roboterkoordinaten:
         cosT = math.cos(theta_act)
         sinT = math.sin(theta_act)
@@ -188,7 +196,7 @@ class TrajectoryController(Node):
         omega_cmd = self.kp_theta * etheta
 
         # 5) Begrenzen (optional)
-        max_lin = 0.5  # [m/s], Beispielwert
+        max_lin = 0.1  # [m/s], Beispielwert
         max_ang = 1.0  # [rad/s]
         # Norm in der Ebene
         lin_norm = math.hypot(v_x, v_y)
@@ -307,6 +315,24 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+    
+    if node.simX:
+                positions = np.array(node.simX)  # Shape: (N, 2)
+                plt.figure(figsize=(8, 6))
+                plt.plot(positions[:, 0], positions[:, 1], 'bo-', label="Roboterpfad")
+                plt.xlabel("x [m]")
+                plt.ylabel("y [m]")
+                plt.title("Zurückgelegter Pfad des Roboters")
+                plt.legend()
+                plt.grid(True)
+                plt.show()
+    else:
+                print("Keine Positionsdaten geloggt.")  
+
+       
 
 if __name__ == '__main__':
     main()
+
+
+    

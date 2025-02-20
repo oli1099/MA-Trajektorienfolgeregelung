@@ -18,4 +18,19 @@ Starten des Roboters:
     2. Zum folgenden ordner navigieren: cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
     3. Controller Launch vom roboter starten: ros2 launch controller controller.launch.py
 
+    ROS2 Befehle:
+
+    ros2 topic list -t will return the same list of topics, this time with the topic type appended in brackets
+
+    ros2 topic echo <topic_name> Data being published
+
+    ros2 topic info <topic_name>
+
+    ros2 interface show <Type> gibt genauere Informationen über den Type des Topic
+
+    Orientation vom ROboter ist positiv gegen den Uhrzeigersinn
+
+    
+
+
 
