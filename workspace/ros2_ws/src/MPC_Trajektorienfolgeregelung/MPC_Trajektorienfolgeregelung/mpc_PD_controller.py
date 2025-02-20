@@ -62,8 +62,9 @@ class MPCTrajectoryController(Node):
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
-        
-        self.timer = self.create_timer(0.1, self.control_loop)
+        self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
+
+        self.timer = self.create_timer(0.2, self.control_loop)
         self.plot_timer = self.create_timer(1.0, self.plot_callback)
         self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
@@ -86,7 +87,7 @@ class MPCTrajectoryController(Node):
             self.trajectory = [(x +shift_x,y +shift_y,theta) for (x,y,theta) in self.trajectory]
             self.get_logger().info(f"Trajectory:{self.trajectory}")
 
-        self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
+        #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
     def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
@@ -138,9 +139,14 @@ class MPCTrajectoryController(Node):
         if distance_error < self.tolerence:
             self.get_logger().info(f"Waypoint {self.waypoints_index} erreicht.")
             self.waypoints_index += 1
-            self.stop_robot()
+            #self.stop_robot()
 
     def stop_robot(self):
+        motor_stopp  = Twist()
+        motor_stopp.linear.x = 0.0 
+        motor_stopp.linear.y = 0.0
+        motor_stopp.angular.z = 0.0
+        self.stop_pub.publish(motor_stopp)
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
         self.fig.savefig("trajectory_plot.png")
