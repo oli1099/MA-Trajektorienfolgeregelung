@@ -32,6 +32,9 @@ Starten des Roboters:
 
     Orientation vom ROboter ist positiv gegen den Uhrzeigersinn
 
+    IP Adresse Zuhause: 
+192.168.2.114 
+
     
 
 

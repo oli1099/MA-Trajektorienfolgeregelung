@@ -15,7 +15,8 @@ class MPCTrajectoryController(Node):
         super().__init__('mpc_trajectory_controller')
 
         # Trajektorie festlegen
-        self.trajectory = [
+        self.trajectory = [(1,0,0),(2,0,0)]
+        """[
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
             (1.6148, 0.6226, 2.9602),
@@ -33,7 +34,7 @@ class MPCTrajectoryController(Node):
             (7.7014, 7.7014, 0.3176),
             (8.1519, 8.1519, 0.1367),
             (8.6587, 8.6587, 0.0013),
-            (9.0000, 8.0000, 0.0000)]
+            (9.0000, 8.0000, 0.0000)]"""
 
 
         #Startposition und aktuelle Position initzialisieren
@@ -64,7 +65,7 @@ class MPCTrajectoryController(Node):
         
         self.timer = self.create_timer(0.1, self.control_loop)
         self.plot_timer = self.create_timer(1.0, self.plot_callback)
-        self.shutdowntimer = self.create_timer(80,self.stop_robot)
+        self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
         plt.ion()
         self.fig ,self.ax = plt.subplots()
@@ -120,7 +121,7 @@ class MPCTrajectoryController(Node):
         v_y = min(v_y,0.1)
         theta = max(min(theta,1),-1)
 
-        self.get_logger().info(f"V_x={v_x}")
+        self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
 
         #Geschwindigkeit an Motor übergeben
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
