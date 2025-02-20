@@ -70,7 +70,7 @@ class MPCTrajectoryController(Node):
 
         self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_position[2]:.4f}")
 
-    def quaternion_to_yaw(q):
+    def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         return math.atan2(siny_cosp, cosy_cosp)
