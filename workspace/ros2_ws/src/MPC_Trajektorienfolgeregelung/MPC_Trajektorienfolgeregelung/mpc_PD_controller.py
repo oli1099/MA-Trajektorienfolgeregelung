@@ -64,6 +64,7 @@ class MPCTrajectoryController(Node):
         
         self.timer = self.create_timer(0.1, self.control_loop)
         self.plot_timer = self.create_timer(1.0, self.plot_callback)
+        self.shutdowntimer = self.create_timer(80,self.stop_robot)
 
         plt.ion()
         self.fig ,self.ax = plt.subplots()
@@ -129,6 +130,7 @@ class MPCTrajectoryController(Node):
                                f"Current: {self.current_position}, "
                                f"Distance Error: {distance_error:.2f}, "
                                f"Angular Error: {error_orientation:.2f}")
+        self.get_logger().info(f"Timer:{self.shutdowntimer}")
         
         #Prüfe ob zielpunkt erreicht?
 
@@ -140,6 +142,8 @@ class MPCTrajectoryController(Node):
     def stop_robot(self):
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
+        self.fig.savefig("trajectory_plot.png")
+        self.shutdowntimer.cancel()
 
     def plot_callback(self):
         if not self.actual_path:
