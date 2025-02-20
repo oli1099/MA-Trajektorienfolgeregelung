@@ -41,6 +41,9 @@ class MPCTrajectoryController(Node):
         self.current_position = None # enthält x,y
         self.current_orientation = 0
 
+        # Liste für aktuelle path
+        self.actual_path = []
+
         #Index für die Stützpunkte
         self.waypoints_index = 0
         
@@ -60,12 +63,19 @@ class MPCTrajectoryController(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         
         self.timer = self.create_timer(0.1, self.control_loop)
+        self.plot_timer = self.create_timer(1.0, self.plot_callback)
+
+        plt.ion()
+        self.fig ,self.ax = plt.subplots()
 
         self.get_logger().info("Trajektorienfolgeregelung Startet")
 
     def odom_callback(self,msg: Odometry):
         self.current_position = (msg.pose.pose.position.x,msg.pose.pose.position.y)
         self.current_orientation = self.quaternion_to_yaw(msg.pose.pose.orientation)
+
+        if self.current_position is not None:
+            self.actual_path.append(self.current_position)
 
         if self.start_position is None:
             self.start_position = self.current_position
@@ -130,6 +140,31 @@ class MPCTrajectoryController(Node):
     def stop_robot(self):
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
+
+    def plot_callback(self):
+        if not self.actual_path:
+            return
+        
+        self.ax.cla()
+
+        # Solltrajektorie extrahieren
+        traj_x = [pt[0] for pt in self.trajectory]
+        traj_y = [pt[1] for pt in self.trajectory]
+        self.ax.plot(traj_x, traj_y, 'r--', label='Solltrajektorie')
+
+        # Tatsächlichen Pfad extrahieren
+        path_x = [pt[0] for pt in self.actual_path]
+        path_y = [pt[1] for pt in self.actual_path]
+        self.ax.plot(path_x, path_y, 'b-', label='Tatsächlicher Weg')
+
+        self.ax.set_xlabel("x")
+        self.ax.set_ylabel("y")
+        self.ax.legend()
+        self.ax.set_title("Trajektorie vs. tatsächlicher Weg")
+
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
+
 
 def main(args=None):
     rclpy.init(args=args)
