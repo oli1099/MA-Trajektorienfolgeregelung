@@ -60,7 +60,7 @@ class MPCTrajectoryController(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         
         self.timer = self.create_timer(0.1, self.control_loop)
-        
+
         self.get_logger().info("Trajektorienfolgeregelung Startet")
 
     def odom_callback(self,msg: Odometry):
@@ -69,6 +69,9 @@ class MPCTrajectoryController(Node):
 
         if self.start_position is None:
             self.start_position = self.current_position
+            shift_x = self.start_position[0]-self.trajectory[0][0]
+            shift_y = self.start_position[0]-self.trajectory[0][1]
+            self.trajectory = [(x +shift_x,y +shift_y,theta) for (x,y,theta) in self.trajectory]
 
         self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
@@ -129,9 +132,13 @@ class MPCTrajectoryController(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = MPCTrajectoryController()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    try: 
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.stop_robot()
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
