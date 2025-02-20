@@ -49,8 +49,8 @@ class MPCTrajectoryController(Node):
 
         #Regelparameter
 
-        self.k = 1
-        self.k_ang = 1
+        self.k = 0.5
+        self.k_ang = 0.5
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -105,8 +105,8 @@ class MPCTrajectoryController(Node):
         theta = self.k_ang*error_orientation
 
         #Geschwindigkeit Begrenzung
-        v_x = min(v_x,0.25)
-        v_y = min(v_y,0.25)
+        v_x = min(v_x,0.1)
+        v_y = min(v_y,0.1)
         theta = max(min(theta,1),-1)
 
         self.get_logger().info(f"V_x={v_x}")
