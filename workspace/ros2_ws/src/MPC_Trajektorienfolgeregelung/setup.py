@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'mpc_trajectory = MPC_Trajektorienfolgeregelung.mpc_trajectory:main'
+            'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main'
         ],
     },
 )
