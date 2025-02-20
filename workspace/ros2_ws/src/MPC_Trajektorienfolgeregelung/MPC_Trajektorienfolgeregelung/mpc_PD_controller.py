@@ -63,17 +63,17 @@ class MPCTrajectoryController(Node):
 
     def odom_callback(self,msg: Odometry):
         self.current_position = (msg.pose.pose.position.x,msg.pose.pose.position.y)
-        self.current_orientation = quaternion_to_yaw(msg.pose.pose.orientation)
+        self.current_orientation = self.quaternion_to_yaw(msg.pose.pose.orientation)
 
         if self.start_position is None:
             self.start_position = self.current_position
 
         self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_position[2]:.4f}")
 
-        def quaternion_to_yaw(q):
-            siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
-            cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
-            return math.atan2(siny_cosp, cosy_cosp)
+    def quaternion_to_yaw(q):
+        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        return math.atan2(siny_cosp, cosy_cosp)
         
     def control_loop(self):
         if not self.trajectory:
