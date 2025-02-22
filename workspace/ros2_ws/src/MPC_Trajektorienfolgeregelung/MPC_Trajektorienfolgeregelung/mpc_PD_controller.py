@@ -138,7 +138,7 @@ class MPCTrajectoryController(Node):
                               f"Current: {self.current_position}, "
                            f"Distance Error: {distance_error:.2f}, "
                             f"Angular Error: {error_orientation:.2f}")
-        self.get_logger().info(f"Timer:{self.shutdowntimer}")
+        #self.get_logger().info(f"Timer:{self.shutdowntimer}")
         
         #Prüfe ob zielpunkt erreicht?
 
