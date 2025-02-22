@@ -87,7 +87,7 @@ class MPCTrajectoryController(Node):
             self.trajectory = [(x +shift_x,y +shift_y,theta) for (x,y,theta) in self.trajectory]
             self.get_logger().info(f"Trajectory:{self.trajectory}")
 
-        #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
+        self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
     def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
@@ -128,10 +128,10 @@ class MPCTrajectoryController(Node):
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
 
-        self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
-                              f"Current: {self.current_position}, "
-                             f"Distance Error: {distance_error:.2f}, "
-                            f"Angular Error: {error_orientation:.2f}")
+        #self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
+         #                     f"Current: {self.current_position}, "
+          #                   f"Distance Error: {distance_error:.2f}, "
+           #                 f"Angular Error: {error_orientation:.2f}")
         #self.get_logger().info(f"Timer:{self.shutdowntimer}")
         
         #Prüfe ob zielpunkt erreicht?
@@ -150,7 +150,7 @@ class MPCTrajectoryController(Node):
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
         self.fig.savefig("trajectory_plot.png")
-        self.shutdowntimer.cancel()
+        #self.shutdowntimer.cancel()
 
     def plot_callback(self):
         if not self.actual_path:
