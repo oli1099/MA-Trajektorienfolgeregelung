@@ -120,8 +120,8 @@ class MPCTrajectoryController(Node):
         theta = self.k_ang*error_orientation
 
         #Geschwindigkeit Begrenzung
-        v_x = min(v_x,0.1)
-        v_y = min(v_y,0.1)
+        v_x = min(v_x,0.5)
+        v_y = min(v_y,0.5)
         theta = max(min(theta,1),-1)
 
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
