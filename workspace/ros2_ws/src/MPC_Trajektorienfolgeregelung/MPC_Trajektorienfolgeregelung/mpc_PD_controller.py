@@ -65,7 +65,7 @@ class MPCTrajectoryController(Node):
         self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.control_loop)
-        self.plot_timer = self.create_timer(1.0, self.plot_callback)
+        self.plot_timer = self.create_timer(0.5, self.plot_callback)
         #self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
         plt.ion()
@@ -107,14 +107,16 @@ class MPCTrajectoryController(Node):
         error_y = self.trajectory[self.waypoints_index][1]-self.current_position[1]
         distance_error = np.sqrt(np.square(error_x) + np.square(error_y))
 
+        desired_angle = math.atan2(error_y, error_x)
+
         error_orientation = self.trajectory[self.waypoints_index][2]-self.current_orientation
         #Normalisieren auf [-pi,pi]
         error_orientation = np.arctan2(np.sin(error_orientation),np.cos(error_orientation))
 
         #P-Regler
         v = self.k*distance_error
-        v_x = v*np.cos(error_orientation)
-        v_y = v*np.sin(error_orientation)
+        v_x = v*np.cos(desired_angle)
+        v_y = v*np.sin(desired_angle)
         theta = self.k_ang*error_orientation
 
         #Geschwindigkeit Begrenzung
@@ -193,6 +195,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+        
 
 if __name__ == '__main__':
     main()
