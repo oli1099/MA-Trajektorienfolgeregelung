@@ -61,19 +61,19 @@ class MPCTrajectoryController(Node):
 
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
-        self.get_position = self.create_subscription(Odometry,'odom_raw',self.odom_callback,10)
+        self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.control_loop)
         self.plot_timer = self.create_timer(1.0, self.plot_callback)
-        self.shutdowntimer = self.create_timer(2,self.stop_robot)
+        #self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
         plt.ion()
         self.fig ,self.ax = plt.subplots()
 
         self.get_logger().info("Trajektorienfolgeregelung Startet")
 
-    def odom_callback(self,msg: Odometry):
+    def odom_callback(self,msg):
         self.current_position = (msg.pose.pose.position.x,msg.pose.pose.position.y)
         self.current_orientation = self.quaternion_to_yaw(msg.pose.pose.orientation)
 
@@ -132,7 +132,7 @@ class MPCTrajectoryController(Node):
                               f"Current: {self.current_position}, "
                              f"Distance Error: {distance_error:.2f}, "
                             f"Angular Error: {error_orientation:.2f}")
-        self.get_logger().info(f"Timer:{self.shutdowntimer}")
+        #self.get_logger().info(f"Timer:{self.shutdowntimer}")
         
         #Prüfe ob zielpunkt erreicht?
 
