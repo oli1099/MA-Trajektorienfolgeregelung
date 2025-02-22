@@ -15,7 +15,7 @@ class MPCTrajectoryController(Node):
         super().__init__('mpc_trajectory_controller')
 
         # Trajektorie festlegen
-        self.trajectory = [(0.5,0,0),(1,0,0)]
+        self.trajectory = [(0.0,0.0),(0.5,0,0),(1,0,0)]
         """[
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
@@ -61,10 +61,10 @@ class MPCTrajectoryController(Node):
 
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
-        self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
+        self.get_position = self.create_subscription(Odometry,'odom_raw',self.odom_callback,10)
         self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
 
-        self.timer = self.create_timer(0.2, self.control_loop)
+        self.timer = self.create_timer(0.1, self.control_loop)
         self.plot_timer = self.create_timer(1.0, self.plot_callback)
         self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
@@ -128,11 +128,11 @@ class MPCTrajectoryController(Node):
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
 
-        #self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
-         #                      f"Current: {self.current_position}, "
-          #                     f"Distance Error: {distance_error:.2f}, "
-           #                    f"Angular Error: {error_orientation:.2f}")
-        #self.get_logger().info(f"Timer:{self.shutdowntimer}")
+        self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
+                              f"Current: {self.current_position}, "
+                             f"Distance Error: {distance_error:.2f}, "
+                            f"Angular Error: {error_orientation:.2f}")
+        self.get_logger().info(f"Timer:{self.shutdowntimer}")
         
         #Prüfe ob zielpunkt erreicht?
 
