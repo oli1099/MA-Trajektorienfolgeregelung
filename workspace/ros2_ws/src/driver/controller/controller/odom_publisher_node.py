@@ -130,6 +130,7 @@ class Controller(Node):
         self.pose_pub = self.create_publisher(PoseWithCovarianceStamped, 'set_pose', 1)
         self.create_subscription(Pose2D, 'set_odom', self.set_odom, 1)
         self.create_subscription(Twist, 'controller/cmd_vel', self.cmd_vel_callback, 1)
+        #self.create_subscription(MotorsState,'ros_robot_controller/set_motor', self.motors_state_callback, 10)
         #self.create_subscription(Twist, '/app/cmd_vel', self.acker_cmd_vel_callback, 1)
         self.create_subscription(Twist, 'cmd_vel', self.app_cmd_vel_callback, 1)
         self.create_service(Trigger, 'controller/load_calibrate_param', self.load_calibrate_param)
@@ -248,6 +249,44 @@ class Controller(Node):
                 speeds = self.ackermann.set_velocity(self.linear_x, self.angular_z)
                 self.motor_pub.publish(speeds[1])
 
+    #def motors_state_callback(self,msg: MotorsState):
+        wheel_radius = self.mecanum.wheel_diameter/2
+        lx = self.mecanum.wheelbase
+        ly = self.mecanum.track_width
+
+        omega1 = msg.data[0].rps
+        omega2 = msg.data[1].rps
+        omega3 = msg.data[2].rps
+        omega4 = msg.data[3].rps
+
+        vx = (4 / (wheel_radius**2)) * (omega1 + omega2 + omega3 + omega4)
+        vy = (4 / (wheel_radius**2)) * (omega1 - omega2 + omega3 - omega4)
+        angular_z = (4 * wheel_radius / ((lx + ly)**2)) * ((omega4 - omega3) - (omega2 - omega1))
+        
+        now = time.time()
+        if self.last_time is None:
+            dt = 0.0
+        else:
+            dt = now - self.last_time
+        self.last_time = now
+
+        # Integriere die neuen Werte, um die Pose zu aktualisieren:
+        self.x += vx * dt * math.cos(self.pose_yaw) - vy * dt * math.sin(self.pose_yaw)
+        self.y += vx * dt * math.sin(self.pose_yaw) + vy * dt * math.cos(self.pose_yaw)
+        self.pose_yaw += angular_z * dt
+
+        # Aktualisiere und publiziere die Odometry-Nachricht:
+        self.odom.header.stamp = self.get_clock().now().to_msg()
+        self.odom.pose.pose.position.x = self.x
+        self.odom.pose.pose.position.y = self.y
+        self.odom.pose.pose.orientation = rpy2qua(0, 0, self.pose_yaw)
+        self.odom.twist.twist.linear.x = vx
+        self.odom.twist.twist.linear.y = vy
+        self.odom.twist.twist.angular.z = angular_z
+
+        self.odom_pub.publish(self.odom)
+        
+    
     def cal_odom_fun(self):
         while True:
             self.current_time = time.time()

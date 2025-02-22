@@ -4,7 +4,12 @@ Dieses Rep dient zur Entwicklung auf dem HiWonder Mentor PI der mit einem rasber
 
 Der HiWonder Pi wurde mit folgender Anleitung aufgesetzt: https://github.com/Matzefritz/HiWonder_MentorPi
 
-Stopp the Roboter: ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
+Stopp th
+
+Radumdrehungen an den Roboter geben:
+
+ros2 topic pub -1 /ros_robot_controller/set_motor ros_robot_controller_msgs/MotorsState "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.10}, {id: 4, rps: 0.10}]}" (Vorwärts)
+
 
 ros2 launch controller controller.launch.py
 
