@@ -60,7 +60,7 @@ class MPCTrajectoryController(Node):
         self.mecanum_chassis = MecanumChassis()
 
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
-        self.motor_pub = self.create_publisher(MotorState,'ros_robot_controller/set_motor',10)
+        self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
 
