@@ -15,7 +15,7 @@ class MPCTrajectoryController(Node):
         super().__init__('mpc_trajectory_controller')
 
         # Trajektorie festlegen
-        self.trajectory = [(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.75),(1,1,1.5)]
+        self.trajectory = [(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]
         """[
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
