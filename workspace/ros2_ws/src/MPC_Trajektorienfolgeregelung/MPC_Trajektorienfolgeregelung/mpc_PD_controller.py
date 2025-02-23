@@ -197,6 +197,9 @@ class MPCTrajectoryController(Node):
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
+        self.fig.savefig("trajectory_plot.png")
+        plt.pause(0.001)
+
 
 def main(args=None):
     rclpy.init(args=args)
