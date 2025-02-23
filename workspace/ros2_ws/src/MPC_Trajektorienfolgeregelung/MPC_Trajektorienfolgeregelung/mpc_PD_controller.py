@@ -131,7 +131,6 @@ class MPCTrajectoryController(Node):
 
         v_x = v_ff_x +v_fb_x
         v_y = v_ff_y +v_fb_y
-        
 
         #Geschwindigkeit Begrenzung
         v_x = min(v_x,0.5)
