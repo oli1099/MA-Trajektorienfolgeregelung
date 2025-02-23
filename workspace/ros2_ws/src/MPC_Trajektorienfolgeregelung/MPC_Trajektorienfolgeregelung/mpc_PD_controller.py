@@ -15,7 +15,7 @@ class MPCTrajectoryController(Node):
         super().__init__('mpc_trajectory_controller')
         """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
         # Trajektorie festlegen
-        self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0.0),(2,1,0)]
+        self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0.0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         """[
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
@@ -171,7 +171,7 @@ class MPCTrajectoryController(Node):
         self.stop_pub.publish(motor_stopp)
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
-        self.fig.savefig("trajectory_plot.png")
+        self.fig.savefig("trajectory_plot1.png")
         #self.shutdowntimer.cancel()
 
     def plot_callback(self):
@@ -197,9 +197,6 @@ class MPCTrajectoryController(Node):
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
-
-        self.fig.savefig("trajectory_plot.png")
-        plt.pause(0.001)
 
 
 def main(args=None):
