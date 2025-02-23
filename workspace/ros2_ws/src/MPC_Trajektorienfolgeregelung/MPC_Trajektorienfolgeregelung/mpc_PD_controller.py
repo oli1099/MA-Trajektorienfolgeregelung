@@ -144,9 +144,9 @@ class MPCTrajectoryController(Node):
         self.motor_pub.publish(motor_v)
 
         twist = Twist()
-        twist.linear.x = v_x
-        twist.linear.y = v_y
-        twist.angular.z = theta
+        twist.linear.x = float(v_x)
+        twist.linear.y = float(v_y)
+        twist.angular.z = float(theta)
         self.stop_pub.publish(twist)
 
         self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
