@@ -130,7 +130,7 @@ class MPCTrajectoryController(Node):
         theta = self.k_ang*error_orientation
 
         v_x = v_ff_x +v_fb_x
-        v_x = v_ff_y +v_fb_y
+        v_y = v_ff_y +v_fb_y
         
 
         #Geschwindigkeit Begrenzung
