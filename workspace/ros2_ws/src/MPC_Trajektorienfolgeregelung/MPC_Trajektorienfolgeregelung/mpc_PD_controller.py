@@ -69,7 +69,7 @@ class MPCTrajectoryController(Node):
         self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.control_loop)
-        self.plot_timer = self.create_timer(0.5, self.plot_callback)
+        self.plot_timer = self.create_timer(1, self.plot_callback)
         #self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
         plt.ion()
