@@ -13,10 +13,9 @@ from controller.mecanum import MecanumChassis
 class MPCTrajectoryController(Node):
     def __init__(self):
         super().__init__('mpc_trajectory_controller')
-
+        """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
         # Trajektorie festlegen
-        self.trajectory = """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
-        [
+        self.trajectory = [
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
             (1.6148, 0.6226, 2.9602),
