@@ -42,6 +42,10 @@ class MPCTrajectoryController(Node):
         self.current_position = None # enthält x,y
         self.current_orientation = 0
 
+        #Feedforward konstante geschwindigkeit
+
+        self.v_ff= 0.25
+
         # Liste für aktuelle path
         self.actual_path = []
 
@@ -113,11 +117,21 @@ class MPCTrajectoryController(Node):
         #Normalisieren auf [-pi,pi]
         error_orientation = np.arctan2(np.sin(error_orientation),np.cos(error_orientation))
 
-        #P-Regler
+        #FF-Komponente
+        v_ff_x = self.v_ff*np.cos(desired_angle)
+        v_ff_y = self.v_ff*np.sin(desired_angle)
+
+        
+        
+        #P-Regler      
         v = self.k*distance_error
-        v_x = v*np.cos(desired_angle)
-        v_y = v*np.sin(desired_angle)
+        v_fb_x = v*np.cos(desired_angle)
+        v_fb_y = v*np.sin(desired_angle)
         theta = self.k_ang*error_orientation
+
+        v_x = v_ff_x +v_fb_x
+        v_x = v_ff_y +v_fb_y
+        
 
         #Geschwindigkeit Begrenzung
         v_x = min(v_x,0.5)
