@@ -73,6 +73,7 @@ class MPCTrajectoryController(Node):
         #self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
         plt.ion()
+        plt.show()
         self.fig ,self.ax = plt.subplots()
 
         self.get_logger().info("Trajektorienfolgeregelung Startet")
