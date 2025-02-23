@@ -54,7 +54,7 @@ class MPCTrajectoryController(Node):
         #Regelparameter
 
         self.k = 0.5
-        self.k_ang = 2
+        self.k_ang = 1
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
