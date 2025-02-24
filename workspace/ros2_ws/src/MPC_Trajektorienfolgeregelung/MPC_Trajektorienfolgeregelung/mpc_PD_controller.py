@@ -53,11 +53,11 @@ class MPCTrajectoryController(Node):
         self.waypoints_index = 0
         
         #Toleranz für Wegpunkt erreicht
-        self.tolerence = 0.05
+        self.tolerence = 0.1
 
         #Regelparameter
 
-        self.k = 0.5
+        self.k = 1
         self.k_ang = 1
 
         #Mecanum-Chassis Objekt erstellen
