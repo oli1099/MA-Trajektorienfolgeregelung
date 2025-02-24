@@ -15,7 +15,7 @@ class MPCTrajectoryController(Node):
         super().__init__('mpc_trajectory_controller')
         """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
         # Trajektorie festlegen
-        self.trajectory = [(0.0,0,0.25),(0.5,0.5,0.5),(1,1,0.75),(1.5,1,1.0),(2,1,1.25),(2,0.5,1.5),(1,0.5,1.5),(0,0,1.5)]
+        self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         """[
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
@@ -58,7 +58,7 @@ class MPCTrajectoryController(Node):
         #Regelparameter
 
         self.k = 1
-        self.k_ang = 2
+        self.k_ang = 1
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
