@@ -130,6 +130,7 @@ class Controller(Node):
         self.pose_pub = self.create_publisher(PoseWithCovarianceStamped, 'set_pose', 1)
         self.create_subscription(Pose2D, 'set_odom', self.set_odom, 1)
         self.create_subscription(Twist, 'controller/cmd_vel', self.cmd_vel_callback, 1)
+        #self.create_subscription(MotorsState,'ros_robot_controller/set_motor', self.motors_state_callback, 10)
         #self.create_subscription(Twist, '/app/cmd_vel', self.acker_cmd_vel_callback, 1)
         self.create_subscription(Twist, 'cmd_vel', self.app_cmd_vel_callback, 1)
         self.create_service(Trigger, 'controller/load_calibrate_param', self.load_calibrate_param)
@@ -247,7 +248,8 @@ class Controller(Node):
                 self.angular_z = 0.0
                 speeds = self.ackermann.set_velocity(self.linear_x, self.angular_z)
                 self.motor_pub.publish(speeds[1])
-
+        
+    
     def cal_odom_fun(self):
         while True:
             self.current_time = time.time()

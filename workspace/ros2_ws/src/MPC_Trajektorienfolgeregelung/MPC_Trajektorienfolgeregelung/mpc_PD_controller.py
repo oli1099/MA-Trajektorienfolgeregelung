@@ -13,9 +13,9 @@ from controller.mecanum import MecanumChassis
 class MPCTrajectoryController(Node):
     def __init__(self):
         super().__init__('mpc_trajectory_controller')
-
+        """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
         # Trajektorie festlegen
-        self.trajectory = [(0.0,0,0),(0.5,0,0),(1,0,0)]
+        self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         """[
             (0.0000, 0.0000, 0.0000),
             (0.7384, 0.4495, 2.8184),
@@ -42,6 +42,10 @@ class MPCTrajectoryController(Node):
         self.current_position = None # enthält x,y
         self.current_orientation = 0
 
+        #Feedforward konstante geschwindigkeit
+
+        self.v_ff= 0.25
+
         # Liste für aktuelle path
         self.actual_path = []
 
@@ -49,12 +53,12 @@ class MPCTrajectoryController(Node):
         self.waypoints_index = 0
         
         #Toleranz für Wegpunkt erreicht
-        self.tolerence = 0.05
+        self.tolerence = 0.1
 
         #Regelparameter
 
-        self.k = 0.5
-        self.k_ang = 0.5
+        self.k = 1
+        self.k_ang = 1
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -65,10 +69,11 @@ class MPCTrajectoryController(Node):
         self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.control_loop)
-        self.plot_timer = self.create_timer(1.0, self.plot_callback)
+        self.plot_timer = self.create_timer(1, self.plot_callback)
         #self.shutdowntimer = self.create_timer(2,self.stop_robot)
 
         plt.ion()
+        plt.show()
         self.fig ,self.ax = plt.subplots()
 
         self.get_logger().info("Trajektorienfolgeregelung Startet")
@@ -87,7 +92,7 @@ class MPCTrajectoryController(Node):
             self.trajectory = [(x +shift_x,y +shift_y,theta) for (x,y,theta) in self.trajectory]
             self.get_logger().info(f"Trajectory:{self.trajectory}")
 
-        self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
+        #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
     def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
@@ -107,19 +112,30 @@ class MPCTrajectoryController(Node):
         error_y = self.trajectory[self.waypoints_index][1]-self.current_position[1]
         distance_error = np.sqrt(np.square(error_x) + np.square(error_y))
 
+        desired_angle = math.atan2(error_y, error_x)
+
         error_orientation = self.trajectory[self.waypoints_index][2]-self.current_orientation
         #Normalisieren auf [-pi,pi]
         error_orientation = np.arctan2(np.sin(error_orientation),np.cos(error_orientation))
 
-        #P-Regler
+        #FF-Komponente
+        v_ff_x = self.v_ff*np.cos(desired_angle)
+        v_ff_y = self.v_ff*np.sin(desired_angle)
+
+        
+        
+        #P-Regler      
         v = self.k*distance_error
-        v_x = v*np.cos(error_orientation)
-        v_y = v*np.sin(error_orientation)
+        v_fb_x = v*np.cos(desired_angle)
+        v_fb_y = v*np.sin(desired_angle)
         theta = self.k_ang*error_orientation
 
+        v_x = v_ff_x +v_fb_x
+        v_y = v_ff_y +v_fb_y
+
         #Geschwindigkeit Begrenzung
-        v_x = min(v_x,0.1)
-        v_y = min(v_y,0.1)
+        v_x = min(v_x,0.5)
+        v_y = min(v_y,0.5)
         theta = max(min(theta,1),-1)
 
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
@@ -128,10 +144,16 @@ class MPCTrajectoryController(Node):
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
 
-        #self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
-         #                     f"Current: {self.current_position}, "
-          #                   f"Distance Error: {distance_error:.2f}, "
-           #                 f"Angular Error: {error_orientation:.2f}")
+        twist = Twist()
+        twist.linear.x = float(v_x)
+        twist.linear.y = float(v_y)
+        twist.angular.z = float(theta)
+        self.stop_pub.publish(twist)
+
+        self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
+                              f"Current: {self.current_position}, "
+                           f"Distance Error: {distance_error:.2f}, "
+                            f"Angular Error: {error_orientation:.2f}")
         #self.get_logger().info(f"Timer:{self.shutdowntimer}")
         
         #Prüfe ob zielpunkt erreicht?
@@ -149,7 +171,7 @@ class MPCTrajectoryController(Node):
         self.stop_pub.publish(motor_stopp)
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
-        self.fig.savefig("trajectory_plot.png")
+        self.fig.savefig("trajectory_plot1.png")
         #self.shutdowntimer.cancel()
 
     def plot_callback(self):
@@ -187,6 +209,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+        
 
 if __name__ == '__main__':
     main()

@@ -4,7 +4,14 @@ Dieses Rep dient zur Entwicklung auf dem HiWonder Mentor PI der mit einem rasber
 
 Der HiWonder Pi wurde mit folgender Anleitung aufgesetzt: https://github.com/Matzefritz/HiWonder_MentorPi
 
-Stopp the Roboter: ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
+Stopp den roboter: ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
+
+
+
+Radumdrehungen an den Roboter geben:
+
+ros2 topic pub -1 /ros_robot_controller/set_motor ros_robot_controller_msgs/MotorsState "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.10}, {id: 4, rps: 0.10}]}" (Vorwärts)
+
 
 ros2 launch controller controller.launch.py
 
@@ -34,6 +41,45 @@ Starten des Roboters:
 
     IP Adresse Zuhause: 
 192.168.2.215
+
+Funktion für MotorsState aktualisiert die Odometry
+
+def motors_state_callback(self,msg: MotorsState):
+        wheel_radius = self.mecanum.wheel_diameter/2
+        lx = self.mecanum.wheelbase
+        ly = self.mecanum.track_width
+
+        omega1 = msg.data[0].rps
+        omega2 = msg.data[1].rps
+        omega3 = msg.data[2].rps
+        omega4 = msg.data[3].rps
+
+        vx = (4 / (wheel_radius**2)) * (omega1 + omega2 + omega3 + omega4)
+        vy = (4 / (wheel_radius**2)) * (omega1 - omega2 + omega3 - omega4)
+        angular_z = (4 * wheel_radius / ((lx + ly)**2)) * ((omega4 - omega3) - (omega2 - omega1))
+        
+        now = time.time()
+        if self.last_time is None:
+            dt = 0.0
+        else:
+            dt = now - self.last_time
+        self.last_time = now
+
+        # Integriere die neuen Werte, um die Pose zu aktualisieren:
+        self.x += vx * dt * math.cos(self.pose_yaw) - vy * dt * math.sin(self.pose_yaw)
+        self.y += vx * dt * math.sin(self.pose_yaw) + vy * dt * math.cos(self.pose_yaw)
+        self.pose_yaw += angular_z * dt
+
+        # Aktualisiere und publiziere die Odometry-Nachricht:
+        self.odom.header.stamp = self.get_clock().now().to_msg()
+        self.odom.pose.pose.position.x = self.x
+        self.odom.pose.pose.position.y = self.y
+        self.odom.pose.pose.orientation = rpy2qua(0, 0, self.pose_yaw)
+        self.odom.twist.twist.linear.x = vx
+        self.odom.twist.twist.linear.y = vy
+        self.odom.twist.twist.angular.z = angular_z
+
+        self.odom_pub.publish(self.odom)
 
     
 
