@@ -51,6 +51,20 @@ SSH Verbidung herstellen:
 Plots vom Roboter speichern
      scp prinzessinleia@192.168.1.32:~/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/trajectory_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
 
+     ---Virtual Environment---
+Create venv with:
+    python3-m venv <Namevenv>
+Activate venv with:
+    source <Namevenv>/bin/activate
+Deactivate venv with:
+    deactivate
+
+---Requirements.txt---\
+Requirements.txt erstellen laseen:\
+    pip freeze > requirements.txt
+Installieren lassen mit:\
+    pip install -r requirements.txt
+
 
 Funktion für MotorsState aktualisiert die Odometry
 
