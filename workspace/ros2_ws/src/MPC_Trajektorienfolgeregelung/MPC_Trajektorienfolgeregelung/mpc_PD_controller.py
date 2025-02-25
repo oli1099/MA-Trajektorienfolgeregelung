@@ -44,7 +44,7 @@ class MPCTrajectoryController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0.25
+        self.v_ff= 0.35
 
         # Liste für aktuelle path
         self.actual_path = []
@@ -53,7 +53,7 @@ class MPCTrajectoryController(Node):
         self.waypoints_index = 0
         
         #Toleranz für Wegpunkt erreicht
-        self.tolerence = 0.1
+        self.tolerence = 0.05
 
         #Regelparameter
 
