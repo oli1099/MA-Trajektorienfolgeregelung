@@ -76,7 +76,7 @@ class MPCController:
         self.lbz = np.array(lbz).flatten()
         self.ubz = ubz
 
-        #Definition des quadratischen Problems
+        #Definition des quadratischen Problems 
 
         qp = {'f': cost, 'x':Z,'g': g, 'p':P} 
         self.solver = ca.qpsol('solver','qpoases',qp,solver_opts)
