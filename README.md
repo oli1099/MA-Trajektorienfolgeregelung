@@ -4,20 +4,20 @@ Dieses Rep dient zur Entwicklung auf dem HiWonder Mentor PI der mit einem rasber
 
 Der HiWonder Pi wurde mit folgender Anleitung aufgesetzt: https://github.com/Matzefritz/HiWonder_MentorPi
 
-Stopp den roboter: ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
+Stopp den roboter: 
+    ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
 
 
 
 Radumdrehungen an den Roboter geben:
+    ros2 topic pub -1 /ros_robot_controller/set_motor ros_robot_controller_msgs/MotorsState "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.10}, {id: 4, rps: 0.10}]}" (Vorwärts)
 
-ros2 topic pub -1 /ros_robot_controller/set_motor ros_robot_controller_msgs/MotorsState "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.10}, {id: 4, rps: 0.10}]}" (Vorwärts)
+Nodes starten
+    ros2 launch controller controller.launch.py
 
+    ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler
 
-ros2 launch controller controller.launch.py
-
-ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler
-
-ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller
+    ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller
 
 Package Erstellen in ROS2:
     ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
@@ -27,7 +27,7 @@ Starten des Roboters:
     2. Zum folgenden ordner navigieren: cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
     3. Controller Launch vom roboter starten: ros2 launch controller controller.launch.py
 
-    ROS2 Befehle:
+ROS2 Befehle:
 
     ros2 topic list -t will return the same list of topics, this time with the topic type appended in brackets
 
@@ -39,8 +39,18 @@ Starten des Roboters:
 
     Orientation vom ROboter ist positiv gegen den Uhrzeigersinn
 
-    IP Adresse Zuhause: 
-192.168.2.215
+SSH Verbidung herstellen:
+
+    IP Adresse vom ROboter herausfinden: nmap -sn 192.168.1.0/24
+
+    Verbinden: ssh prinzessinleia@<IP-Adresse>
+    Verbinden mit gui: ssh prinzessinleia@<IP-Adresse> -X
+
+    IP Adresse Zuhause: 192.168.2.215
+    IP Adresse LAB: 192.168.1.32
+Plots vom Roboter speichern
+     scp prinzessinleia@192.168.1.32:~/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/trajectory_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+
 
 Funktion für MotorsState aktualisiert die Odometry
 
