@@ -7,7 +7,7 @@ from ros_robot_controller_msgs.msg import MotorsState, MotorState
 import numpy as np
 import math
 import time
-import matplotlib.pyplot as pltS
+import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
 
 class MPCTrajectoryController(Node):
