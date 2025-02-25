@@ -44,7 +44,7 @@ class MPCTrajectoryController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0.35
+        self.v_ff= 0.25
 
         # Liste für aktuelle path
         self.actual_path = []
