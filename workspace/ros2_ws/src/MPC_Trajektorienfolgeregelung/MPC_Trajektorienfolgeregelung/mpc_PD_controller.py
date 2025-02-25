@@ -171,7 +171,7 @@ class MPCTrajectoryController(Node):
         self.stop_pub.publish(motor_stopp)
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
-        self.fig.savefig("trajectory_plot1.png")
+        self.fig.savefig("trajectory_plot2.png")
         #self.shutdowntimer.cancel()
 
     def plot_callback(self):
