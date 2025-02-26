@@ -40,8 +40,8 @@ class MPCController:
                         [0, 0, 0, 0,        1,      0],
                         [0, 0, 0, 0,        0,      1],
                         [0, 0, 0, -2*self.k/self.m,   0,      0],
-                        [0, 0, 0, 0,        -2*self.k/self.m, 2*self.k*self.ly/self.m],
-                        [0, 0, 0, 2*self.k*self.ly/self.m, 0,       - 2*self.k*(np.square(self.lx)+np.square(self.ly))/self.I]])
+                        [0, 0, 0, 0,   -2*self.k/self.m, 2*self.k*self.ly/self.m],
+                        [0, 0, 0, 0,   2*self.k*self.ly/self.I,        - 2*self.k*(np.square(self.lx)+np.square(self.ly))/self.I]])
                 
                 Bc = np.array([
                         [0, 0, 0, 0],
