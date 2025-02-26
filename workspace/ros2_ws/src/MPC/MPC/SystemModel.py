@@ -26,7 +26,7 @@ class MPCController:
             self.Ac, self.Bc , self.Cc, self.Dc = self.continuous_model()
             
             # Diskretisierung
-            self.A_d, self.B_d = self.c2d(self.Ac, self.Bc, Ts)
+            self.A_d, self.B_d = self.c2d(self.Ac, self.Bc,self.Cc, self.Dc, Ts)
             
             # Dimensions
             self.nx = self.Ac.shape[0]
@@ -64,8 +64,8 @@ class MPCController:
                 return Ac, Bc, Cc, Dc
             
         def c2d(self,Ac,Bc,Cc,Dc,Ts):
-                 sys_d = cont2discrete(Ac,Bc,Cc,Dc,Ts,method='zoh')
-                 Ad, Bd = sys_d
+                 sys_d = cont2discrete((Ac,Bc,Cc,Dc),Ts,method='zoh')
+                 Ad, Bd, Cd, Dd, dt = sys_d
 
                  return Ad, Bd
 
