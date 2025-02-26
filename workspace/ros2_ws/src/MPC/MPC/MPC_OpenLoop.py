@@ -4,8 +4,8 @@ import casadi as ca
 from scipy.linalg import expm, block_diag
 import matplotlib.pyplot as plt
 
-class MPCController:
-    def __init__(self, A_d, B_d, Q, R, QN, N, nx, nu, Ts, solver_opts=None):
+class QP:
+    def __init__(self, A_d, B_d, Q, R, QN, N, nx, nu, Ts,solver_opts=None):
         self.A_d = A_d
         self.B_d = B_d
         self.Q = Q
@@ -15,6 +15,7 @@ class MPCController:
         self.nx = nx
         self.nu = nu
         self.Ts = Ts
+        self.z0 =z0
 
         #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
     
@@ -83,12 +84,12 @@ class MPCController:
 
         #Warmstart immer der vorherige Zustand
 
-        self.z0 = np.zeros(self.zdim)
+        #self.z0 = np.zeros(self.zdim)
 
-    def solveMPC(self,x_current, x_ref):
+    def solveMPC(self,x_current, x_ref,z0):
         P_val = np.concatenate([x_current,x_ref])
         
-        sol = self.solver(x0 = self.z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
+        sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
         #Extrahiere X und U
@@ -119,7 +120,7 @@ if __name__ == "__main__":
     QN = np.eye(nx)*2.0
     
     for i in N:
-        mpc = MPCController(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
+        mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
     
         x0 = np.array([0.0, 0.0, 0.0])
         x_ref = np.array([2.0, 3.0, 0.0])

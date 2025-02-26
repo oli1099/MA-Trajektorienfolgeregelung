@@ -4,7 +4,7 @@ from scipy.linalg import expm
 from scipy.signal import cont2discrete
 
 
-class MPCController:
+class DynamicModel:
         def __init__(self,  m=1.2, #Masse des Roboters
                  I=0.0074385,      # Trägheitsmoment (um z Achse) in kgm²
                  lx=0.0735,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
@@ -69,14 +69,5 @@ class MPCController:
 
                  return Ad, Bd
 
-if __name__ == "__main__":
-    # Erzeuge ein Objekt mit Standardparametern
-    mpc = MPCController()
-
-    # Prüfe die diskreten Matrizen
-    print("A_d =\n", mpc.A_d)
-    print("B_d =\n", mpc.B_d)
-
-    # Optional: Dimensionen checken
-    print("A_d.shape =", mpc.A_d.shape)
-    print("B_d.shape =", mpc.B_d.shape)
+        def get_dimensions(self):
+               return self.nx, self.nu
