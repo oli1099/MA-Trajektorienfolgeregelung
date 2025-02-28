@@ -15,9 +15,11 @@ Radumdrehungen an den Roboter geben:
 Nodes starten
     ros2 launch controller controller.launch.py
 
-    ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler
+    ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler  #Kreis Trajektorie
 
-    ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller
+    ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller  #Trajektorienfolgereglung
+
+    ros2 run MPC MPC_ClosedLoop   #MPC Algorithmus starten
 
 Package Erstellen in ROS2:
     ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
