@@ -71,3 +71,22 @@ class DynamicModel:
 
         def get_dimensions(self):
                return self.nx, self.nu
+        
+        def get_velocity(self,omega_vec):
+               J = np.array([
+                        [ 1,  1,  (self.lx - self.ly)],
+                        [ 1, -1,  (self.ly - self.lx)],
+                        [ 1,  1, -(self.lx + self.ly)],
+                        [ 1, -1,  (self.lx + self.ly)]
+                        ])
+               J_pseudo = np.linalg.inv(J.T @ J) @ J.T
+               
+
+               v = (np.sqrt(2)*self.r)*J_pseudo @ omega_vec
+               return v
+
+if __name__ == "__main__":
+       omega_vec = np.array([1,1,1,1])
+       mpc_model = DynamicModel()
+       v = mpc_model.get_velocity(omega_vec)
+       print("V:\n", v)

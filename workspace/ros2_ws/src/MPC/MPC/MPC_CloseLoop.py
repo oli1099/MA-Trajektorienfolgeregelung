@@ -38,7 +38,7 @@ class MPCClosedLoop(Node):
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
-        self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
+        self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
         self.plot_timer = self.create_timer(1, self.plot_callback)
@@ -55,17 +55,17 @@ class MPCClosedLoop(Node):
         self.u_cl = []
 
         #Wir legen einen guess Wert für die 1. Iteration fest#
-        self.x_guess =[np.zeros(self.nx,self.N+1)]
+        self.x_guess =np.zeros((self.nx,self.N+1))
         self.x_guess[:,0]=self.x0
-        self.u_guess = [np.zeros(self.nu,self.N)]
+        self.u_guess = np.zeros((self.nu,self.N))
 
         for i in range(self.N):
-             self.x_guess[:,i+1]= self.Ad*self.x_guess[:,i].self.Bd*self.u_guess[i]
+             self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
              
         for i in range (self.N-1):
-             self.u_guess[:,i+1] = self.u_guess[i]
+             self.u_guess[:,i+1] = self.u_guess[:,i]
         
-        self.z0 = self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten()))
+        self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten()))
         
 
         #QP initzialisieren
@@ -74,11 +74,20 @@ class MPCClosedLoop(Node):
         
         
     def odom_callback(self,msg):
-        self.xmeasure = (msg.pose.pose.position.x,msg.pose.pose.position.y,self.quaternion_to_yaw(msg.pose.pose.orientation))
+        self.xmeasure = np.array([msg.pose.pose.position.x, #x
+                                  msg.pose.pose.position.y, #y
+                                  self.quaternion_to_yaw(msg.pose.pose.orientation), #theta
+                                  msg.twist.twist.linear.x, #vx
+                                  msg.twist.twist.linear.y, #vy
+                                  msg.twist.twist.angular.z]) #omega
           
     def mpc_closedloop(self):
-        #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen)
-        x_opt, u_opt = self.QP.solveMPC(x_current, self.x_ref,self.z0)
+        if self.xmeasure is None:
+            self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
+
+
+        #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
+        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
 
@@ -101,6 +110,17 @@ class MPCClosedLoop(Node):
         self.z0 = z0_new
 
         # uopt auf den Roboter publishen
+        # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
+        v_robot = self.mpc_model.get_velocity(u_cl)
+
+        #Geschwindigkeit des Roboters wird gepublisht
+        twist = Twist()
+        twist.linear.x = float(v_robot[0])
+        twist.linear.y = float(v_robot[1])
+        twist.angular.z = float(v_robot[2])
+        self.control_pub.publish(twist)
+
+        
 
 
     def quaternion_to_yaw(self,q):

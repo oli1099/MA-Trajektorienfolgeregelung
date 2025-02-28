@@ -15,7 +15,6 @@ class QP:
         self.nx = nx
         self.nu = nu
         self.Ts = Ts
-        self.z0 =z0
 
         #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
     
@@ -103,7 +102,7 @@ class QP:
 
         return x_opt, u_opt
         
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     # KLEINER TEST
 
     # Beispielsystem
@@ -119,15 +118,15 @@ if __name__ == "__main__":
     R  = np.eye(nu)*0.1
     QN = np.eye(nx)*2.0
     
-    for i in N:
+    for i in range(N):
         mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
     
         x0 = np.array([0.0, 0.0, 0.0])
         x_ref = np.array([2.0, 3.0, 0.0])
     
-        U_opt, X_opt = mpc.solveMPC(x0,x_ref)
+        U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
         print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)
+        print("X_opt:\n", X_opt)'''
 
 
 
