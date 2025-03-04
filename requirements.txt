@@ -127,7 +127,7 @@ rosidl-typesupport-fastrtps-cpp==3.6.1
 rosidl-typesupport-introspection-c==4.6.5
 rosidl-typesupport-introspection-cpp==4.6.5
 rpyutils==0.4.1
-rqt==1.6.0
+#rqt==1.6.0
 rqt-action==2.2.0
 rqt-bag==1.5.4
 rqt-bag-plugins==1.5.4
