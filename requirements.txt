@@ -132,7 +132,7 @@ rqt-action==2.2.0
 rqt-bag==1.5.4
 rqt-bag-plugins==1.5.4
 rqt-console==2.2.1
-rqt-controller-manager==4.21.0
+#rqt-controller-manager==4.21.0
 rqt-dotgraph==0.0.4
 rqt-gauges==0.0.3
 rqt-graph==1.5.4
