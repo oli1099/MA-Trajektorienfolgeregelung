@@ -67,6 +67,7 @@ Requirements.txt erstellen laseen:\
 Installieren lassen mit:\
     pip install -r requirements.txt
 
+#!/home/prinzessinleia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/venv/bin/python3
 
 Funktion für MotorsState aktualisiert die Odometry
 

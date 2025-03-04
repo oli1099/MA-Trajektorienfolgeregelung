@@ -1,4 +1,4 @@
-#!/home/prinzessinleia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/venv/bin/python3
+#!/usr/bin/env python3
 
 import numpy as np
 import casadi as ca
