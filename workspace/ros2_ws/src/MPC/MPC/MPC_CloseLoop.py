@@ -35,6 +35,14 @@ class MPCClosedLoop(Node):
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
 
+        #Liste für aktuellen Pfad
+        self.actual_path = []
+        plt.ion()
+        plt.show()
+        self.fig ,self.ax = plt.subplots()
+        self.x_pred = None
+
+
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
@@ -89,11 +97,23 @@ class MPCClosedLoop(Node):
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
 
+        error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
+        if error < 0.1 :
+            motor_stopp  = Twist()
+            motor_stopp.linear.x = 0.0 
+            motor_stopp.linear.y = 0.0
+            motor_stopp.angular.z = 0.0
+            self.stop_pub.publish(motor_stopp)
+            self.fig.savefig("MPC_CL_plot")
+
+
 
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
+
+        self.x_pred =x_opt
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
 
@@ -131,6 +151,29 @@ class MPCClosedLoop(Node):
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         return math.atan2(siny_cosp, cosy_cosp)
     
+    def plot_callback(self):
+        self.ax.clear()
+
+        # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
+        if self.x_pred is not None:
+            # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
+            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')
+
+        # Plot des tatsächlichen Pfads, falls vorhanden
+        if self.actual_path:
+            actual_path_arr = np.array(self.actual_path)
+            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
+
+        self.ax.legend()
+        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
+        self.ax.set_xlabel("x [m]")
+        self.ax.set_ylabel("y [m]")
+        self.ax.grid(True)
+
+        # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
+
+
+
 def main(args=None):
     rclpy.init(args=args)
     node = MPCClosedLoop()
