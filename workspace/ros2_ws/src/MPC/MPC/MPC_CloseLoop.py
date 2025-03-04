@@ -46,6 +46,7 @@ class MPCClosedLoop(Node):
         #Anfangszustand festlegen
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
+        self.xmeasure_received = None 
         self.x_ref = [4,3,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
@@ -54,7 +55,7 @@ class MPCClosedLoop(Node):
         self.x_cl = []
         self.u_cl = []
 
-        #Wir legen einen guess Wert für die 1. Iteration fest#
+        #Wir legen einen guess Wert für die 1. Iteration fest
         self.x_guess =np.zeros((self.nx,self.N+1))
         self.x_guess[:,0]=self.x0
         self.u_guess = np.zeros((self.nu,self.N))
@@ -80,10 +81,13 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.x, #vx
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
+        self.xmeasure_recieved = True
+        self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
-        if self.xmeasure is None:
+        if self.xmeasure_received is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
+            return
 
 
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
@@ -93,8 +97,7 @@ class MPCClosedLoop(Node):
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
 
-        #Neuen Warmstart initialisieren Dabei wird die Lösung in i+1 geshiftet und am ende der gleiche Zustand nochmal drangehängt
-        # Schiebe x(1..N) -> x(0..N-1)
+        #Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
         for k in range(self.N):
             z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
         #Letzter Zustand wird nochmal drangehängt 
@@ -127,7 +130,17 @@ class MPCClosedLoop(Node):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         return math.atan2(siny_cosp, cosy_cosp)
-        
+    
+def main(args=None):
+    rclpy.init(args=args)
+    node = MPCClosedLoop()
+    rclpy.spin(node)
+
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()      
         
 
 
