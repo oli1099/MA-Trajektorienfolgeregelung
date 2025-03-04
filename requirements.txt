@@ -86,7 +86,7 @@ rclpy==7.1.3
 rcutils==6.7.2
 resource-retriever==3.4.3
 rmw-dds-common==3.1.0
-robot-localization==3.8.1
+#robot-localization==3.8.1
 ros-image-to-qimage==0.4.1
 ros-robot-controller==0.0.0
 ros-robot-controller-msgs==0.0.0
