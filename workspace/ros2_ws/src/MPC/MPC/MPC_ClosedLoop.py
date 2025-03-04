@@ -9,8 +9,8 @@ import math
 import time
 import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
-from MPC_OpenLoop import QP
-from SystemModel import DynamicModel
+from .MPC_OpenLoop import QP
+from .SystemModel import DynamicModel
 
 class MPCClosedLoop(Node):
     def __init__(self):
