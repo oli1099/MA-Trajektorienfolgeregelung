@@ -40,7 +40,7 @@ examples-rclpy-minimal-client==0.19.4
 examples-rclpy-minimal-publisher==0.19.4
 examples-rclpy-minimal-service==0.19.4
 examples-rclpy-minimal-subscriber==0.19.4
-fonttools==4.56.0
+#fonttools==4.56.0
 generate-parameter-library-py==0.3.8
 geographic-msgs==1.0.6
 geometry-msgs==5.3.5
