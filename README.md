@@ -69,6 +69,8 @@ Installieren lassen mit:\
 
 #!/home/prinzessinleia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/venv/bin/python3
 
+#!/usr/bin/env python3
+
 Funktion für MotorsState aktualisiert die Odometry
 
 def motors_state_callback(self,msg: MotorsState):
