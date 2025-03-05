@@ -13,6 +13,11 @@ from controller.mecanum import MecanumChassis
 from .MPC_OpenLoop import QP
 from .SystemModel import DynamicModel
 
+import sys
+print("DEBUG: sys.executable =", sys.executable)
+print("DEBUG: sys.path =", sys.path)
+
+
 class MPCClosedLoop(Node):
     def __init__(self):
         super().__init__('mpc_closed_loop')
