@@ -88,8 +88,8 @@ resource-retriever==3.4.3
 rmw-dds-common==3.1.0
 #robot-localization==3.8.1
 #ros-image-to-qimage==0.4.1
-ros-robot-controller==0.0.0
-ros-robot-controller-msgs==0.0.0
+#ros-robot-controller==0.0.0
+#ros-robot-controller-msgs==0.0.0
 ros2action==0.32.2
 ros2bag==0.26.6
 ros2bag-mcap-cli==0.26.6
@@ -155,7 +155,7 @@ rqt-console==2.2.1
 #rqt-srv==1.2.2
 #rqt-tf-tree==1.0.5
 #rqt-topic==1.7.3
-sdk==0.0.0
+#sdk==0.0.0
 sensor-msgs==5.3.5
 sensor-msgs-py==5.3.5
 service-msgs==2.0.2
