@@ -40,6 +40,7 @@ class MPCClosedLoop(Node):
 
         #Liste für aktuellen Pfad
         self.actual_path = []
+        self.predictions_list = []
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
@@ -58,7 +59,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [1,1,0,0,0,0]
+        self.x_ref = [3,1,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [1,1,1,1]
 
@@ -93,6 +94,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
+        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
@@ -117,6 +119,8 @@ class MPCClosedLoop(Node):
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
+        self.predictions_list.append(x_opt.copy())
+        
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
 
@@ -166,12 +170,15 @@ class MPCClosedLoop(Node):
         return math.atan2(siny_cosp, cosy_cosp)
     
     def plot_callback(self):
-        self.ax.clear()
+        #self.ax.clear()
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
-        if self.x_pred is not None:
+        for i, pred in enumerate(self.predictions_list):
+            self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5,label='Vorhersage (N Schritte)')
+
+        '''if self.x_pred is not None:
             # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')
+            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
 
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
