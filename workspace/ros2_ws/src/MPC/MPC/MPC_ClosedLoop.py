@@ -36,7 +36,7 @@ class MPCClosedLoop(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 20   #Prediktionshorizont
+        self.N = 15   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -61,7 +61,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [2,1,0,0,0,0]
+        self.x_ref = [0,1,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
