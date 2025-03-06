@@ -109,7 +109,7 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.x = 0.0 
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
-            self.stop_pub.publish(motor_stopp)
+            self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_CL_plot")
 
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
