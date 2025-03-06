@@ -14,9 +14,6 @@ from .MPC_OpenLoop import QP
 from .SystemModel import DynamicModel
 
 import sys
-print("DEBUG: sys.executable =", sys.executable)
-print("DEBUG: sys.path =", sys.path)
-
 
 class MPCClosedLoop(Node):
     def __init__(self):
@@ -32,7 +29,7 @@ class MPCClosedLoop(Node):
 
         # Gewichtsmatrizen festlegen
         self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = np.eye(self.nu)
+        self.R = 0.1*np.eye(self.nu)
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
@@ -63,7 +60,7 @@ class MPCClosedLoop(Node):
         self.xmeasure_received = None 
         self.x_ref = [1,1,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
-        self.u0 = [2,2,2,2]
+        self.u0 = [1,1,1,1]
 
         #Speicher für geschlossenen Trajektorie
         self.x_cl = []
