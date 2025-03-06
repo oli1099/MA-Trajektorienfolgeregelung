@@ -36,7 +36,7 @@ class MPCClosedLoop(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 15   #Prediktionshorizont
+        self.N = 10   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -61,7 +61,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [0,1,0,0,0,0]
+        self.x_ref = [1,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -121,7 +121,18 @@ class MPCClosedLoop(Node):
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
 
-        #Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
+        # x_opt hat die Form (nx, N+1) und u_opt die Form (nu, N)
+        # Verschieben der Zustände: Entferne das erste Element und hänge den letzten Zustand an
+        x_warm = np.hstack((x_opt[:, 1:], x_opt[:, -1:]))
+        # Verschieben der Eingänge: Entferne das erste Eingangselement und hänge den letzten Eingang an
+        u_warm = np.hstack((u_opt[:, 1:], u_opt[:, -1:]))
+
+        # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
+        z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
+        self.z0 = z0_new
+
+
+        '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
         for k in range(self.N):
             z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
         #Letzter Zustand wird nochmal drangehängt 
@@ -134,7 +145,7 @@ class MPCClosedLoop(Node):
         # U nochmal dranhängen
         z0_new[(self.N+1)*self.nx + (self.N-1)*self.nu:(self.N+1)*self.nx + self.N*self.nu]= u_opt[:,self.N-1]
 
-        self.z0 = z0_new
+        self.z0 = z0_new'''
 
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
