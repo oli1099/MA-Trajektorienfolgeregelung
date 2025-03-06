@@ -149,7 +149,7 @@ class MPCClosedLoop(Node):
 
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
-        v_robot = self.mpc_model.get_velocity(u_cl)
+        v_robot = self.mpc_model.get_velocity(u_cl)  
 
         #Geschwindigkeit des Roboters wird gepublisht
         twist = Twist()
