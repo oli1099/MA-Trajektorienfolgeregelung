@@ -183,7 +183,7 @@ class MPCClosedLoop(Node):
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
-            self.ax.plot(actual_path_arr[:, 1], actual_path_arr[:, 0], 'b-', linewidth=2)
+            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
         self.ax.legend()
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
