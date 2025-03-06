@@ -174,7 +174,7 @@ class MPCClosedLoop(Node):
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
         for i, pred in enumerate(self.predictions_list):
-                self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5)
+                self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
             
         '''if self.x_pred is not None:
             # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
