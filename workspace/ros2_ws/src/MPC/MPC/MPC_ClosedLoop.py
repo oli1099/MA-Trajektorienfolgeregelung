@@ -119,7 +119,7 @@ class MPCClosedLoop(Node):
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
-        self.predictions_list.append(x_opt.copy())
+        self.predictions_list.append(x_opt.copy().T)
         
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
@@ -183,10 +183,11 @@ class MPCClosedLoop(Node):
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
-            self.ax.plot(actual_path_arr[:, 1], actual_path_arr[:, 0], 'b-', linewidth=2, label='Tatsächlicher Pfad')
+            self.ax.plot(actual_path_arr[:, 1], actual_path_arr[:, 0], 'b-', linewidth=2)
 
         self.ax.legend()
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
+        self.ax.set_label('Vorhersage zum  Zeitpunk t (N Schritte)','Tatsächlicher Pfad')
         self.ax.set_xlabel("y [m]")
         self.ax.set_ylabel("x [m]")
         self.ax.grid(True)
