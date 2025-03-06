@@ -109,7 +109,6 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
-            #self.plot_callback()
             self.fig.savefig("MPC_CL_plot")
             self.timer.cancel()
             return
@@ -175,11 +174,8 @@ class MPCClosedLoop(Node):
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
         for i, pred in enumerate(self.predictions_list):
-            if i == 0:
-                self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5, label='Vorhersage (N Schritte)')
-            else:
-                self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5, label= '_nolegend_')
-
+                self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5)
+            
         '''if self.x_pred is not None:
             # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
             self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
