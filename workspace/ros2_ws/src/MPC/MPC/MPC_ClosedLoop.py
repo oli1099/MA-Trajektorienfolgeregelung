@@ -94,7 +94,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.actual_path.append((self.xmeasure[1], self.xmeasure[0]))
+        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
@@ -119,7 +119,7 @@ class MPCClosedLoop(Node):
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
-        self.predictions_list.append(x_opt.copy().T)
+        self.predictions_list.append(x_opt.copy())
         
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
