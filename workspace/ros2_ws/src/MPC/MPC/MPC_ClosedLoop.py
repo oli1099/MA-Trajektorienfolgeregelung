@@ -53,13 +53,13 @@ class MPCClosedLoop(Node):
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
-        #self.plot_timer = self.create_timer(1, self.plot_callback)
+        self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3,1,0,0,0,0]
+        self.x_ref = [3,1,np.pi/2,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [1,1,1,1]
 
@@ -109,7 +109,7 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
-            self.plot_callback()
+            #self.plot_callback()
             self.fig.savefig("MPC_CL_plot")
             self.timer.cancel()
             return
