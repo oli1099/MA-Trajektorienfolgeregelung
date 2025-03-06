@@ -101,13 +101,15 @@ class MPCClosedLoop(Node):
             return
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if error < 0.3:
+        if error < 0.1:
             motor_stopp  = Twist()
             motor_stopp.linear.x = 0.0 
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_CL_plot")
+            self.timer.cancel()
+            return
 
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
