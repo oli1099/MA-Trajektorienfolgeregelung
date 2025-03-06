@@ -101,7 +101,7 @@ class MPCClosedLoop(Node):
             return
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if error < 0.2 :
+        if error < 0.3:
             motor_stopp  = Twist()
             motor_stopp.linear.x = 0.0 
             motor_stopp.linear.y = 0.0
