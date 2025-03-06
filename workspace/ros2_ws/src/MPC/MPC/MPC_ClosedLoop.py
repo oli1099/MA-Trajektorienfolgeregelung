@@ -94,7 +94,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        self.actual_path.append((self.xmeasure[1], self.xmeasure[0]))
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
@@ -174,7 +174,7 @@ class MPCClosedLoop(Node):
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
         for i, pred in enumerate(self.predictions_list):
-            self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5,label='Vorhersage (N Schritte)')
+            self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5)
 
         '''if self.x_pred is not None:
             # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
@@ -183,12 +183,12 @@ class MPCClosedLoop(Node):
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
-            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
+            self.ax.plot(actual_path_arr[:, 1], actual_path_arr[:, 0], 'b-', linewidth=2, label='Tatsächlicher Pfad')
 
         self.ax.legend()
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
-        self.ax.set_xlabel("x [m]")
-        self.ax.set_ylabel("y [m]")
+        self.ax.set_xlabel("y [m]")
+        self.ax.set_ylabel("x [m]")
         self.ax.grid(True)
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
