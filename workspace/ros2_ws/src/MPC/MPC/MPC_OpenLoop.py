@@ -68,7 +68,14 @@ class QP:
         ubz = np.inf*np.ones(self.zdim)
 
         #Zustandsbegrenzung
+        for k in range(N):
+            #x wird beschränkt
+            lbz[k*nx + 0] = 0
+            ubz[k*nx + 0] = 5
 
+            #y wird beschränkt
+            lbz[k*nx +1] = 0
+            lbz[k*nx +1] = 2
         #Eingangsbegrenzung
         for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
