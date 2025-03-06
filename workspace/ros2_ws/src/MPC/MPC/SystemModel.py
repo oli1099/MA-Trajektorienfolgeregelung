@@ -8,10 +8,10 @@ from scipy.signal import cont2discrete
 class DynamicModel:
         def __init__(self,  m=1.2, #Masse des Roboters
                  I=0.0074385,      # Trägheitsmoment (um z Achse) in kgm²
-                 lx=0.0735,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
-                 ly=0.1005,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
+                 lx=0.106,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
+                 ly=0.0855,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  r=0.0325,         # Radius der Räder
-                 k=10.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
+                 k=100.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
                  Ts=0.1):          # Abtastzeit
                 
             
