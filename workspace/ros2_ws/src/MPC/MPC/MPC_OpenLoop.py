@@ -68,14 +68,8 @@ class QP:
         ubz = np.inf*np.ones(self.zdim)
 
         #Zustandsbegrenzung
-        for k in range(N):
-            #x wird beschränkt
-            lbz[k*nx + 0] = 0
-            ubz[k*nx + 0] = 5
-
-            #y wird beschränkt
-            lbz[k*nx +1] = 0
-            lbz[k*nx +1] = 2
+        # evetl funktion sich xmin etc ziehen
+       
         #Eingangsbegrenzung
         for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
@@ -96,7 +90,41 @@ class QP:
     def solveMPC(self,x_current, x_ref,z0):
         P_val = np.concatenate([x_current,x_ref])
         
-        sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
+        # 1) Kopien der globalen Bounds anlegen
+        lbz_mod = self.lbz.copy()
+        ubz_mod = self.ubz.copy() 
+        # 2) Region per if-Abfrage bestimmen
+        # Beispiel: Zwei Teilbereiche
+        if x_current[0] <= 2.0:
+            x_min, x_max = 0.0, 2.0
+            y_min, y_max = 0.0, 5.0
+        elif  x_current[0] >2 and x_current[0]  <= 3: 
+            x_min, x_max = 2.0, 3.0
+            y_min, y_max = 1.0, 2.0
+        else:
+            x_min, x_max = 3.0, 5.0
+            y_min, y_max = 0.0, 2.0
+
+        # 3) Für alle Zeitschritte k=0..N diese Bounds anwenden
+        #    Annahme: x = Z[k*nx+0], y = Z[k*nx+1]
+        for k in range(self.N+1):
+            lbz_mod[k*self.nx + 0] = x_min
+            ubz_mod[k*self.nx + 0] = x_max
+
+            lbz_mod[k*self.nx + 1] = y_min
+            ubz_mod[k*self.nx + 1] = y_max
+
+        # 4) MPC mit den aktualisierten Bounds lösen
+        P_val = np.concatenate([x_current, x_ref])
+        sol = self.solver(
+            x0 = z0,
+            p = P_val,
+            lbx = lbz_mod,
+            ubx = ubz_mod,
+            lbg = self.lbg,
+            ubg = self.ubg
+        )
+        #sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
         #Extrahiere X und U
@@ -109,6 +137,15 @@ class QP:
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
         return x_opt, u_opt
+    def getRegionBounds(x_current):
+        # x_current[0] = x-Position
+        if x_current[0] < 2:
+            return (0,2, 0,5)
+        elif x_current[0] < 3:
+            return (0,3, 1,2)  # Beispiel: Schmaler Korridor
+        else:
+            return (0,5, 0,2)
+
         
 '''if __name__ == "__main__":
     # KLEINER TEST
