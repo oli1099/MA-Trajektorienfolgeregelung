@@ -53,7 +53,7 @@ class MPCTrajectoryController(Node):
         self.waypoints_index = 0
         
         #Toleranz für Wegpunkt erreicht
-        self.tolerence = 0.1
+        self.tolerence = 0.05
 
         #Regelparameter
 
