@@ -61,7 +61,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [4,3,0,0,0,0]
+        self.x_ref = [1,0.5,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -96,7 +96,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
+        #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
         if self.xmeasure_received is None:
@@ -116,7 +116,7 @@ class MPCClosedLoop(Node):
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
-
+        self.get_logger().info(f'Received state update: x={x_cl:.2f}, y={u_cl:.2f}')
         self.x_pred =x_opt
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
