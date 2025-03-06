@@ -61,7 +61,7 @@ class MPCClosedLoop(Node):
         self.xmeasure_received = None 
         self.x_ref = [3,3,0.5,0,0,0]
         self.x0 = [0,0,0,0,0,0]
-        self.u0 = [1,1,1,1]
+        self.u0 = [0.2,0.2,0.2,0.2]
 
         #Speicher für geschlossenen Trajektorie
         self.x_cl = []
