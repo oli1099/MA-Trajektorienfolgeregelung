@@ -53,7 +53,7 @@ class MPCClosedLoop(Node):
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
-        self.plot_timer = self.create_timer(1, self.plot_callback)
+        #self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
 
@@ -109,6 +109,7 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
+            self.plot_callback()
             self.fig.savefig("MPC_CL_plot")
             self.timer.cancel()
             return
@@ -174,7 +175,10 @@ class MPCClosedLoop(Node):
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
         for i, pred in enumerate(self.predictions_list):
-            self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5)
+            if i == 0:
+                self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5, label='Vorhersage (N Schritte)')
+            else:
+                self.ax.plot(pred[1, :], pred[0, :], 'r--', alpha=0.5, label= '_nolegend_')
 
         '''if self.x_pred is not None:
             # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
@@ -187,7 +191,6 @@ class MPCClosedLoop(Node):
 
         self.ax.legend()
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
-        self.ax.set_label('Vorhersage zum  Zeitpunk t (N Schritte)','Tatsächlicher Pfad')
         self.ax.set_xlabel("y [m]")
         self.ax.set_ylabel("x [m]")
         self.ax.grid(True)
