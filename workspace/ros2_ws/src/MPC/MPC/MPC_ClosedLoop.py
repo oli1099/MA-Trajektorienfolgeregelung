@@ -116,7 +116,7 @@ class MPCClosedLoop(Node):
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
-        self.get_logger().info(f'Received state update: x={x_cl:.2f}, y={u_cl:.2f}')
+        self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
