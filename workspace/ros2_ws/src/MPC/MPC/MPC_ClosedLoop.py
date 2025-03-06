@@ -85,7 +85,7 @@ class MPCClosedLoop(Node):
 
         #QP initzialisieren
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
-                                              self.N, self.nx, self.nu, self.Ts,self.z0)
+                                              self.N, self.nx, self.nu, self.Ts)
         
         
     def odom_callback(self,msg):
