@@ -95,15 +95,13 @@ class QP:
         ubz_mod = self.ubz.copy() 
         # 2) Region per if-Abfrage bestimmen
         # Beispiel: Zwei Teilbereiche
-        if x_current[0] < 1.5:
+        if x_current[0] <=2:
+            x_min, x_max = 0.0, 2.0
+            y_min, y_max = 0.0, 5.0
+        elif x_current[0]  > 2: 
             x_min, x_max = 0.0, 5.0
-            y_min, y_max = 0.0, 3.0
-        elif x_current[0]  < 2.5: 
-            x_min, x_max = 0.0, 5.0
-            y_min, y_max = 0.5, 3.0
-        else:
-            x_min, x_max =  0, 5.0
-            y_min, y_max = 0.0, 3.0
+            y_min, y_max = 2, 5.0
+        
 
         # 3) Für alle Zeitschritte k=0..N diese Bounds anwenden
         #    Annahme: x = Z[k*nx+0], y = Z[k*nx+1]
