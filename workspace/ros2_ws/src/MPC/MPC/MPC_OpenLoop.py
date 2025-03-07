@@ -95,11 +95,11 @@ class QP:
         ubz_mod = self.ubz.copy() 
         # 2) Region per if-Abfrage bestimmen
         # Beispiel: Zwei Teilbereiche
-        if x_current[0] < 1.9:
+        if x_current[0] < 1.5:
             x_min, x_max = 0.0, 5.0
             y_min, y_max = 0.0, 3.0
-        elif x_current[0]  < 3.1: 
-            x_min, x_max = 0, 5
+        elif x_current[0]  < 2.5: 
+            x_min, x_max = 0.0, 5.0
             y_min, y_max = 0.5, 3.0
         else:
             x_min, x_max =  0, 5.0
