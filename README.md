@@ -26,6 +26,7 @@ Trajektorienfolgereglung
 MPC Algorithmus starten
 
     ros2 run MPC MPC_ClosedLoop   
+    mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
 
 Zeitbasierte Trajektorienfolgereglung
 
