@@ -29,7 +29,7 @@ class MPCClosedLoopTrajectory(Node):
 
         # Gewichtsmatrizen festlegen
         self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.1*np.eye(self.nu)
+        self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
@@ -209,6 +209,16 @@ class MPCClosedLoopTrajectory(Node):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         return math.atan2(siny_cosp, cosy_cosp)
+    
+    def stop_robot(self):
+        motor_stopp  = Twist()
+        motor_stopp.linear.x = 0.0 
+        motor_stopp.linear.y = 0.0
+        motor_stopp.angular.z = 0.0
+        self.stop_pub.publish(motor_stopp)
+        motor_v=self.mecanum_chassis.set_velocity(0,0,0)
+        self.motor_pub.publish(motor_v)
+        self.fig.savefig("MPCtrajectorytime_plot1.png")
     
     def plot_callback(self):
         #self.ax.clear()
