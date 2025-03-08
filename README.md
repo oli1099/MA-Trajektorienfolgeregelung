@@ -32,6 +32,10 @@ Zeitbasierte Trajektorienfolgereglung
 
     ros2 run MPC_Trajektorienfolgeregelung trajectoryPControllerTime  
 
+MPC Trajectory starten
+
+    ros2 run MPC MPC_ClosedLoopTrajectory
+
 Package Erstellen in ROS2:
     ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
 

@@ -57,7 +57,7 @@ class MPCClosedLoopTrajectory(Node):
         
         #Anfangszustand festlegen
 
-        self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
+        self.trajectory = [(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         self.num_waypoints = len(self.trajectory)
         
         self.total_time = 25
@@ -177,7 +177,7 @@ class MPCClosedLoopTrajectory(Node):
             t_k = current_time + k*self.Ts
             # Finde Segment, in dem t_k liegt, linear interpolieren
             if t_k >= self.times[-1]:
-                x_des, y_des, theta_des = self.trajectory[self.trajectory[-1]]
+                x_des, y_des, theta_des = self.trajectory[-1]
             else:
             # 1) Finde Segment [t_i, t_{i+1}] mit t_i <= t_k < t_{i+1}
                 i = 0
