@@ -199,7 +199,7 @@ class MPCClosedLoopTrajectory(Node):
             
         # vx, vy, w = 0.0 gesetzt (vereinfachtes Beispiel)
         Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
-    
+        self.get_logger().info(f"Xref = {Xref}")
         return Xref
             
          
@@ -215,9 +215,7 @@ class MPCClosedLoopTrajectory(Node):
         motor_stopp.linear.x = 0.0 
         motor_stopp.linear.y = 0.0
         motor_stopp.angular.z = 0.0
-        self.stop_pub.publish(motor_stopp)
-        motor_v=self.mecanum_chassis.set_velocity(0,0,0)
-        self.motor_pub.publish(motor_v)
+        self.control_pub.publish(motor_stopp)
         self.fig.savefig("MPCtrajectorytime_plot1.png")
     
     def plot_callback(self):
