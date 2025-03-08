@@ -1,0 +1,5 @@
+[console_scripts]
+PurePursuit = Trajektorienfolgeregelung.PurePursuit:main
+Trajectorytracking = Trajektorienfolgeregelung.Trajectorytracking:main
+mpc_PD_controller = Trajektorienfolgeregelung.mpc_PD_controller:main
+trajectoryPControllerTime = Trajektorienfolgeregelung.trajectoryPControllerTime:main

@@ -1,0 +1,43 @@
+running egg_info
+creating ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info
+writing ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/PKG-INFO
+writing dependency_links to ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/dependency_links.txt
+writing entry points to ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/entry_points.txt
+writing requirements to ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/requires.txt
+writing top-level names to ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/top_level.txt
+writing manifest file '../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/SOURCES.txt'
+reading manifest file '../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/SOURCES.txt'
+writing manifest file '../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection
+copying lidar_obstacle_detection/obstacle_clustering.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection
+copying lidar_obstacle_detection/__init__.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection
+copying lidar_obstacle_detection/obstacle_map.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection
+copying lidar_obstacle_detection/obstacle_detection_map.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection
+running install
+running install_lib
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection
+copying /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection/obstacle_clustering.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection
+copying /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection/__init__.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection
+copying /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection/obstacle_map.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection
+copying /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/build/lib/lidar_obstacle_detection/obstacle_detection_map.py -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection
+byte-compiling /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection/obstacle_clustering.py to obstacle_clustering.cpython-312.pyc
+byte-compiling /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection/obstacle_map.py to obstacle_map.cpython-312.pyc
+byte-compiling /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection/obstacle_detection_map.py to obstacle_detection_map.cpython-312.pyc
+running install_data
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/share/ament_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/share/ament_index/resource_index
+creating /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/share/ament_index/resource_index/packages
+copying resource/lidar_obstacle_detection -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/share/ament_index/resource_index/packages
+copying package.xml -> /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/share/lidar_obstacle_detection
+running install_egg_info
+Copying ../../build/lidar_obstacle_detection/lidar_obstacle_detection.egg-info to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/python3.12/site-packages/lidar_obstacle_detection-0.0.0-py3.12.egg-info
+running install_scripts
+Installing obstacle_clustering script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/lidar_obstacle_detection
+Installing obstacle_detection_map script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/lidar_obstacle_detection
+Installing obstacle_map script to /home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/install/lidar_obstacle_detection/lib/lidar_obstacle_detection
+writing list of installed files to '/home/oli/Desktop/Oliver/Uni/MA/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/build/lidar_obstacle_detection/install.log'
