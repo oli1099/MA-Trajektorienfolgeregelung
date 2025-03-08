@@ -111,7 +111,8 @@ class MPCClosedLoopTrajectory(Node):
         if self.xmeasure_received is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
-
+        if self.start_timer is None:
+            return
         current_time = (self.get_clock().now() - self.start_timer).nanoseconds*1e-9
         Xref = self.get_reference_trajectory(current_time)
 
