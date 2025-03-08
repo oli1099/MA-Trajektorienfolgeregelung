@@ -119,12 +119,12 @@ class TrajectoryPController(Node):
         # Fehlerberechnung
 
         error_x = desired_state[0] - self.current_position[0]
-        error_y = desired_state[0] - self.current_position[1]
+        error_y = desired_state[1] - self.current_position[1]
         distance_error = np.sqrt(np.square(error_x) + np.square(error_y))
 
         desired_angle = math.atan2(error_y, error_x)
 
-        error_orientation = desired_state[0]-self.current_orientation
+        error_orientation = desired_state[2]-self.current_orientation
         #Normalisieren auf [-pi,pi]
         error_orientation = np.arctan2(np.sin(error_orientation),np.cos(error_orientation))
 
