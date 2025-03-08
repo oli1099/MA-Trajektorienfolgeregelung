@@ -18,7 +18,7 @@ class TrajectoryPController(Node):
         self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 5
+        self.total_time = 10
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -182,7 +182,7 @@ class TrajectoryPController(Node):
         self.stop_pub.publish(motor_stopp)
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
-        self.fig.savefig("trajectory_plot1.png")
+        self.fig.savefig("trajectorytime_plot1.png")
         #self.shutdowntimer.cancel()
 
     def plot_callback(self):
