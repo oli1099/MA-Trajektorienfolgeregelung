@@ -200,7 +200,7 @@ class MPCClosedLoopTrajectory(Node):
             
             # vx, vy, w = 0.0 gesetzt (vereinfachtes Beispiel)
             Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
-        self.get_logger().info(f"Xref = {Xref}")
+        
         
         return Xref
 
@@ -220,6 +220,12 @@ class MPCClosedLoopTrajectory(Node):
     
     def plot_callback(self):
         #self.ax.clear()
+
+        # Solltrajektorie extrahieren
+        traj_x = [pt[0] for pt in self.trajectory]
+        traj_y = [pt[1] for pt in self.trajectory]
+        self.ax.plot(traj_x, traj_y, 'r--', label='Solltrajektorie')
+
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
         for i, pred in enumerate(self.predictions_list):
