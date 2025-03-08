@@ -18,7 +18,7 @@ class TrajectoryPController(Node):
         self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 20
+        self.total_time = 25
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -97,8 +97,8 @@ class TrajectoryPController(Node):
             self.waypoints_index += 1
 
         # Falls am Ende letzte Punkt als Sollpunkt
-        if self.waypoints_index >= len(self.trajectory) -1:
-            desired_state = self.trajectory[-1]
+        if self.waypoints_index >= len(self.trajectory):
+            desired_state = self.trajectory[len(self.trajectory)]
         else:
             #Interpolation zwischen den wegpunkten
             t_i = self.times[self.waypoints_index]
