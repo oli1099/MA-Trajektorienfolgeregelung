@@ -109,7 +109,7 @@ class TrajectoryPController(Node):
             x_i1, y_i1, theta_i1 = self.trajectory[self.waypoints_index + 1]
             
             #Lineare Interpolation
-            x_des = x_i + ratio(x_i1 - x_i)
+            x_des = x_i + ratio*(x_i1 - x_i)
             y_des = y_i + ratio * (y_i1 - y_i)
             theta_des = theta_i + ratio * (theta_i1 - theta_i)
             desired_state = (x_des, y_des, theta_des)
