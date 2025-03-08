@@ -29,7 +29,7 @@ class MPCClosedLoopTrajectory(Node):
 
         # Gewichtsmatrizen festlegen
         self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.01*np.eye(self.nu)
+        self.R = 0.1*np.eye(self.nu)
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
@@ -60,7 +60,7 @@ class MPCClosedLoopTrajectory(Node):
         self.trajectory = [(0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         self.num_waypoints = len(self.trajectory)
         
-        self.total_time = 35
+        self.total_time = 25
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
@@ -224,7 +224,7 @@ class MPCClosedLoopTrajectory(Node):
         # Solltrajektorie extrahieren
         traj_x = [pt[0] for pt in self.trajectory]
         traj_y = [pt[1] for pt in self.trajectory]
-        self.ax.plot(traj_x, traj_y, 'r--', label='Solltrajektorie')
+        self.ax.plot(traj_x, traj_y, 'g--')
 
 
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
@@ -233,7 +233,7 @@ class MPCClosedLoopTrajectory(Node):
             
         '''if self.x_pred is not None:
             # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
+            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=1, label='Vorhersage (N Schritte)')'''
 
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
