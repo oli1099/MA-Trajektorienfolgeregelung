@@ -88,7 +88,7 @@ class TrajectoryPController(Node):
         #Aktuelle Zeit bekommen
         current_time = (self.get_clock().now() - self.start_timer).nanoseconds * 1e-9
 
-        if self.waypoints_index >= len(self.trajectory) - 1:
+        if self.waypoints_index >= len(self.trajectory) or current_time >= self.total_time:
             self.stop_robot()
             return
         # Zeitsegment bestimmen
