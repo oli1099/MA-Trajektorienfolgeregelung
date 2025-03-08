@@ -45,8 +45,8 @@ class TrajectoryPController(Node):
 
         #Regelparameter
 
-        self.k = 1.5
-        self.k_ang = 1.5
+        self.k = 1
+        self.k_ang = 1
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
