@@ -57,7 +57,7 @@ class MPCClosedLoopTrajectory(Node):
         
         #Anfangszustand festlegen
 
-        self.trajectory = [(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
+        self.trajectory = [(0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         self.num_waypoints = len(self.trajectory)
         
         self.total_time = 25
