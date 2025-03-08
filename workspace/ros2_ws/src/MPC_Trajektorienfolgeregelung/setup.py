@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
-            'trajectoryPControllerTime = MPC.Trajektorienfolgereglung.trajectoryPControllerTime:main'
+            'trajectoryPControllerTime = MPC_Trajektorienfolgereglung.trajectoryPControllerTime:main'
         ],
     },
 )
