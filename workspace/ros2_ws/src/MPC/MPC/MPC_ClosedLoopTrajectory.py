@@ -60,7 +60,7 @@ class MPCClosedLoopTrajectory(Node):
         self.trajectory = [(0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         self.num_waypoints = len(self.trajectory)
         
-        self.total_time = 25
+        self.total_time = 35
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
