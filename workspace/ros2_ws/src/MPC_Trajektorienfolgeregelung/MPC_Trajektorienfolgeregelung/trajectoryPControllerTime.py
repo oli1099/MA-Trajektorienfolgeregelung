@@ -18,7 +18,7 @@ class TrajectoryPController(Node):
         self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 10
+        self.total_time = 20
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -45,8 +45,8 @@ class TrajectoryPController(Node):
 
         #Regelparameter
 
-        self.k = 1
-        self.k_ang = 1
+        self.k = 1.5
+        self.k_ang = 1.5
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -145,8 +145,8 @@ class TrajectoryPController(Node):
 
 
         #Geschwindigkeit Begrenzung
-        v_x = min(v_x,0.5)
-        v_y = min(v_y,0.5)
+        v_x = min(v_x,0.75)
+        v_y = min(v_y,0.75)
         theta = max(min(theta,1),-1)
 
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
