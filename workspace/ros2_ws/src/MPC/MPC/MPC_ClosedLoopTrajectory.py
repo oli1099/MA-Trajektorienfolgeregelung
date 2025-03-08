@@ -184,21 +184,21 @@ class MPCClosedLoopTrajectory(Node):
                 while i < len(self.times)-1 and t_k > self.times[i+1]:
                     i += 1
                 
-                # 2) lineare Interpolation
-                t_i   = self.times[i]
-                t_ip1 = self.times[i+1]
+                    # 2) lineare Interpolation
+                    t_i   = self.times[i]
+                    t_ip1 = self.times[i+1]
+                    
+                    ratio = (t_k - t_i) / (t_ip1 - t_i) if (t_ip1 > t_i) else 0.0
+                    
+                    x_i, y_i, theta_i  = self.trajectory[i]
+                    x_i1, y_i1, theta_i1 = self.trajectory[i+1]
+                    
+                    x_des     = x_i     + ratio*(x_i1     - x_i)
+                    y_des     = y_i     + ratio*(y_i1     - y_i)
+                    theta_des = theta_i + ratio*(theta_i1 - theta_i)
                 
-                ratio = (t_k - t_i) / (t_ip1 - t_i) if (t_ip1 > t_i) else 0.0
-                
-                x_i, y_i, theta_i  = self.trajectory[i]
-                x_i1, y_i1, theta_i1 = self.trajectory[i+1]
-                
-                x_des     = x_i     + ratio*(x_i1     - x_i)
-                y_des     = y_i     + ratio*(y_i1     - y_i)
-                theta_des = theta_i + ratio*(theta_i1 - theta_i)
-            
-        # vx, vy, w = 0.0 gesetzt (vereinfachtes Beispiel)
-        Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
+            # vx, vy, w = 0.0 gesetzt (vereinfachtes Beispiel)
+            Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
         self.get_logger().info(f"Xref = {Xref}")
         return Xref
             
