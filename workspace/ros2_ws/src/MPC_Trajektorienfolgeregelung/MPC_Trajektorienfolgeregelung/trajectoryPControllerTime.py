@@ -18,7 +18,7 @@ class TrajectoryPController(Node):
         self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 20
+        self.total_time = 10
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -145,8 +145,9 @@ class TrajectoryPController(Node):
 
 
         #Geschwindigkeit Begrenzung
-        v_x = min(v_x,0.75)
-        v_y = min(v_y,0.75)
+        v_x = max(min(v_x, 0.5), -0.5)
+        v_y = max(min(v_y, 0.5), -0.5)
+
         theta = max(min(theta,1),-1)
 
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
@@ -169,9 +170,9 @@ class TrajectoryPController(Node):
         
         #Prüfe ob zielpunkt erreicht?
 
-        if distance_error < self.tolerence:
-            self.get_logger().info(f"Waypoint {self.waypoints_index} erreicht.")
-            self.waypoints_index += 1
+        #if distance_error < self.tolerence:
+         #   self.get_logger().info(f"Waypoint {self.waypoints_index} erreicht.")
+          #  self.waypoints_index += 1
             #self.stop_robot()
 
     def stop_robot(self):
@@ -201,6 +202,7 @@ class TrajectoryPController(Node):
         path_y = [pt[1] for pt in self.actual_path]
         self.ax.plot(path_x, path_y, 'b-', label='Tatsächlicher Weg')
 
+        self.ax.set_aspect('equal', adjustable='datalim')
         self.ax.set_xlabel("x")
         self.ax.set_ylabel("y")
         self.ax.legend()
