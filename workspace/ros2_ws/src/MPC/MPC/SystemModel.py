@@ -87,7 +87,7 @@ class DynamicModel:
                return v
 
 if __name__ == "__main__":
-       omega_vec = np.array([0.7,0.2,0.7,0.2])
+       omega_vec = np.array([5,5,5,5])
        mpc_model = DynamicModel()
        v = mpc_model.get_velocity(omega_vec)
        print("V:\n", v)
