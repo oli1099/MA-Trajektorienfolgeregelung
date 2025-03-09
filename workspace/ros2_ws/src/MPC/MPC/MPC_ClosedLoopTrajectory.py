@@ -28,12 +28,12 @@ class MPCClosedLoopTrajectory(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.1*np.eye(self.nu)
+        self.Q = np.diag([100,100,5,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 80   #Prediktionshorizont
+        self.N = 50   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -60,7 +60,7 @@ class MPCClosedLoopTrajectory(Node):
         self.trajectory = [(0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
         self.num_waypoints = len(self.trajectory)
         
-        self.total_time = 40
+        self.total_time = 45
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
