@@ -65,8 +65,15 @@ SSH Verbidung herstellen:
 
     IP Adresse Zuhause: 192.168.2.215
     IP Adresse LAB: 192.168.1.32
+
 Plots vom Roboter speichern
-     scp prinzessinleia@192.168.1.32:~/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/trajectory_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+    
+    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/MPCtrajectorytime_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+
+    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/trajectorytime_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+
+
+
 
      ---Virtual Environment---
 Create venv with:
