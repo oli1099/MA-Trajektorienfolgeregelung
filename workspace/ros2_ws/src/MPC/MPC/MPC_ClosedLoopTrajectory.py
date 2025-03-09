@@ -29,11 +29,11 @@ class MPCClosedLoopTrajectory(Node):
 
         # Gewichtsmatrizen festlegen
         self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.1*np.eye(self.nu)
+        self.R = 0.05*np.eye(self.nu)
         self.QN = self.Q
 
-        self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 50   #Prediktionshorizont
+        self.Ts = 0.2 #Diskretisierungszeit
+        self.N = 70   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -52,7 +52,7 @@ class MPCClosedLoopTrajectory(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
-        self.timer = self.create_timer(0.1, self.mpc_closedloop)
+        self.timer = self.create_timer(0.2, self.mpc_closedloop)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
