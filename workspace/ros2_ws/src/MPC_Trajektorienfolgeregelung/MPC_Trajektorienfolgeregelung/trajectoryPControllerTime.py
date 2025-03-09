@@ -32,7 +32,7 @@ class TrajectoryPController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0.25
+        self.v_ff= 0
 
         # Liste für aktuelle path
         self.actual_path = []
