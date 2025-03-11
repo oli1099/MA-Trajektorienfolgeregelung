@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'MPC'
+package_name = 'mpc_obstacle'
 
 setup(
     name=package_name,
@@ -20,8 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'MPC_ClosedLoop = MPC.MPC_ClosedLoop:main'
-            #'MPC_ClosedLoopTrajectory = MPC.MPC_ClosedLoopTrajectory:main'
         ],
     },
 )
