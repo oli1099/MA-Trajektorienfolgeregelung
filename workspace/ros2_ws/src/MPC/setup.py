@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'MPC_ClosedLoop = MPC.MPC_ClosedLoop:main'
+            'MPC_ClosedLoop = MPC.MPC_ClosedLoop:main',
             'MPC_ClosedLoopTrajectory = MPC.MPC_ClosedLoopTrajectory:main'
         ],
     },
