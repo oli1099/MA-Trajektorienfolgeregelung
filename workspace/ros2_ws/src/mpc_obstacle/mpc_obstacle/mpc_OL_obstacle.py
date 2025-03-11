@@ -88,9 +88,9 @@ class QP:
         #self.z0 = np.zeros(self.zdim)
 
     def solveMPC(self,x_current, x_ref,z0):
-        #P_val = np.concatenate([x_current,x_ref])
+        P_val = np.concatenate([x_current,x_ref])
         
-        # 1) Kopien der globalen Bounds anlegen
+        '''# 1) Kopien der globalen Bounds anlegen
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy() 
         # 2) Region per if-Abfrage bestimmen
@@ -123,8 +123,8 @@ class QP:
             ubx = ubz_mod,
             lbg = self.lbg,
             ubg = self.ubg
-        )
-        #sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
+        )'''
+        sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
         #Extrahiere X und U
