@@ -59,7 +59,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3,2,1.6,0,0,0]
+        self.x_ref = [3,2,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 

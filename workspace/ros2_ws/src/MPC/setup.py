@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'MPC_ClosedLoop = MPC.MPC_ClosedLoop:main'
-            #'MPC_ClosedLoopTrajectory = MPC.MPC_ClosedLoopTrajectory:main'
+            'MPC_ClosedLoopTrajectory = MPC.MPC_ClosedLoopTrajectory:main'
         ],
     },
 )
