@@ -59,7 +59,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3,2,0,0,0,0]
+        self.x_ref = [4.5,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
@@ -133,22 +133,6 @@ class MPCClosedLoop(Node):
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
         self.z0 = z0_new
-
-
-        '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
-        for k in range(self.N):
-            z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
-        #Letzter Zustand wird nochmal drangehängt 
-        z0_new[self.N*self.nx : (self.N+1)*self.nx] = x_opt[:, self.N]
-        
-        #Analog für U
-        for k in range(self.N-1):
-            z0_new[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]=u_opt[:,k+1]
-        
-        # U nochmal dranhängen
-        z0_new[(self.N+1)*self.nx + (self.N-1)*self.nu:(self.N+1)*self.nx + self.N*self.nu]= u_opt[:,self.N-1]
-
-        self.z0 = z0_new'''
 
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung

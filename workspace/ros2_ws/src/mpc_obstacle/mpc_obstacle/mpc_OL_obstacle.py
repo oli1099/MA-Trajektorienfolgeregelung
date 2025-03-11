@@ -72,11 +72,11 @@ class QP:
        
         #Eingangsbegrenzung
         for k in range(N):
-            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
-            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
+            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
+            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
         
         self.lbz = np.array(lbz).flatten()
-        self.ubz = ubz
+        self.ubz = np.array(ubz).flatten()
 
         #Definition des quadratischen Problems 
 
@@ -88,20 +88,22 @@ class QP:
         #self.z0 = np.zeros(self.zdim)
 
     def solveMPC(self,x_current, x_ref,z0):
-        P_val = np.concatenate([x_current,x_ref])
+        #P_val = np.concatenate([x_current,x_ref])
         
-        '''# 1) Kopien der globalen Bounds anlegen
+        # 1) Kopien der globalen Bounds anlegen
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy() 
         # 2) Region per if-Abfrage bestimmen
         # Beispiel: Zwei Teilbereiche
-        if x_current[0] <=2:
+        if x_current[0] < 2:
             x_min, x_max = 0.0, 2.0
-            y_min, y_max = 0.0, 5.0
-        elif x_current[0]  > 2: 
+            y_min, y_max = 0.0, 2.0
+        elif x_current[0]  >= 2 and x_current[0] <3: 
+            x_min, x_max = 0.0, 3.0
+            y_min, y_max = 1, 3.0
+        else:
             x_min, x_max = 0.0, 5.0
-            y_min, y_max = 2, 5.0
-        
+            y_min, y_max = 0, 2.0
 
         # 3) Für alle Zeitschritte k=0..N diese Bounds anwenden
         #    Annahme: x = Z[k*nx+0], y = Z[k*nx+1]
@@ -121,7 +123,7 @@ class QP:
             ubx = ubz_mod,
             lbg = self.lbg,
             ubg = self.ubg
-        )'''
+        )
         sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
