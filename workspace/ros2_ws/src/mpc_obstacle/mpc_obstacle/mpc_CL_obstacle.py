@@ -11,7 +11,7 @@ import time
 import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
 from .mpc_OL_obstacle import QP
-from .SystemModel import DynamicModel
+from MPC.SystemModel import DynamicModel
 
 import sys
 
