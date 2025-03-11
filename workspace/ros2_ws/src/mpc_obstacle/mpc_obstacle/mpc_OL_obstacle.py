@@ -140,11 +140,11 @@ class QP:
     def getRegionBounds(x_current):
         # x_current[0] = x-Position
         if x_current[0] < 2:
-            return (0,2, 0,5)
-        elif x_current[0] < 3:
-            return (0,3, 1,2)  # Beispiel: Schmaler Korridor
+            return (0,2, 0,2)
+        elif x_current[0]  >= 2 and x_current[0] <3:
+            return (2,3, 1,2)  # Beispiel: Schmaler Korridor
         else:
-            return (0,5, 0,2)
+            return (3,5, 0,2)
 
         
 '''if __name__ == "__main__":

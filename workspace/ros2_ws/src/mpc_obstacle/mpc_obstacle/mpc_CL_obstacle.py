@@ -15,7 +15,7 @@ from MPC.SystemModel import DynamicModel
 
 import sys
 
-class MPCClosedLoop(Node):
+class MPC_CL_obstacle(Node):
     def __init__(self):
         super().__init__('mpc_closed_loop')
 
@@ -130,6 +130,20 @@ class MPCClosedLoop(Node):
         # Verschieben der Eingänge: Entferne das erste Eingangselement und hänge den letzten Eingang an
         u_warm = np.hstack((u_opt[:, 1:], u_opt[:, -1:]))
 
+        # Überprüfen, ob Warmstart in der Umgebung liegt
+        if self.xmeasure[0] < 2:
+            x_min, x_max = 0.0, 2.0
+            y_min, y_max = 0.0, 2.0
+        elif self.xmeasure[0] >= 1.5 and self.xmeasure[0] < 3.5:
+            x_min, x_max = 2.0, 3.0
+            y_min, y_max = 1.0, 2.0
+        else:
+            x_min, x_max = 3, 5.0
+            y_min, y_max = 0.0, 2.0
+
+        x_warm[0, :] = np.clip(x_warm[0, :], x_min, x_max)
+        x_warm[1, :] = np.clip(x_warm[1, :], y_min, y_max)
+
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
         self.z0 = z0_new
@@ -181,7 +195,7 @@ class MPCClosedLoop(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = MPCClosedLoop()
+    node = MPC_CL_obstacle()
     rclpy.spin(node)
 
     node.destroy_node()
