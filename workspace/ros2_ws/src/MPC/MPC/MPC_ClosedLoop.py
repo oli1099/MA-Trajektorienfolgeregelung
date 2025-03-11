@@ -28,12 +28,12 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.1*np.eye(self.nu)
+        self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 50   #Prediktionshorizont
+        self.N = 25   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -59,7 +59,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3,2,0,0,0,0]
+        self.x_ref = [3,2,0.5,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
