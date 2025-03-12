@@ -33,7 +33,7 @@ class MPC_CL_obstacle(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 150   #Prediktionshorizont
+        self.N = 250   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
