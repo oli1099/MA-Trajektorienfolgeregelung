@@ -33,7 +33,7 @@ class MPC_CL_obstacle(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 120   #Prediktionshorizont
+        self.N = 150   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -44,7 +44,7 @@ class MPC_CL_obstacle(Node):
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
-        self.x_pred = None
+        self.x_pred = None 
 
 
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)

@@ -17,7 +17,7 @@ class QP:
         self.nu = nu
         self.Ts = Ts
 
-
+ 
         #Hindernisse definieren (kreisförmig)
 
         self.x_obs = 2
