@@ -17,7 +17,14 @@ class QP:
         self.nu = nu
         self.Ts = Ts
 
-        #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
+
+        #Hindernisse definieren (kreisförmig)
+
+        self.x_obs = 2
+        self.y_obs = 1
+        self.r_obs = 0.5
+
+        
     
         if solver_opts  is None:
             solver_opts = {"print_time":0}
@@ -53,13 +60,33 @@ class QP:
         xN = Z[N*nx : (N+1)*nx]
         cost += (xN - x_ref).T @ self.QN @ (xN - x_ref)
 
+        #Hindernis constraints hinzufügen (x-x_obs)² + (y-y_obs)² >= r²
+
+        for k in range(N+1):
+            xk = Z[k*nx:(k+1)*nx]
+            obs = np.power(xk[0]-self.x_obs,2) + np.power(xk[1]-self.y_obs,2) - np.power(self.r_obs,2)
+            g.append(obs)
+        
         #Nebenbedingungen
 
         g = ca.vertcat(*g) #Aufsplitten der Liste und als spaltenvektor deklarieren
 
-        #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
-        self.lbg = np.zeros(g.size1())
-        self.ubg = np.zeros(g.size1())
+        #Dimension der Equality constraints festlegen
+        n_dynamics = (N+1)*self.nx
+        n_obs = (N+1)
+
+        lbg_dyn = np.zeros(n_dynamics)
+        ubg_dyn = np.zeros(n_dynamics)
+
+        lbg_obs = np.zeros(n_obs)
+        ubg_obs = np.inf*np.ones(n_obs)
+
+        self.lbg = np.concatenate((lbg_dyn, lbg_obs))
+        self.ubg = np.concatenate((ubg_dyn, ubg_obs))
+
+        #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0 und (x-x_obs)² + (y-y_obs)² - r² >= 0
+        #self.lbg = np.zeros(g.size1())
+        #self.ubg = np.zeros(g.size1())
         
         #Inequality Constraints bestimmen für u < |1| und x muss die map dann sein
 
@@ -80,8 +107,8 @@ class QP:
 
         #Definition des quadratischen Problems 
 
-        qp = {'f': cost, 'x':Z,'g': g, 'p':P} 
-        self.solver = ca.qpsol('solver','qpoases',qp,solver_opts)
+        nlp = {'f': cost, 'x':Z,'g': g, 'p':P} 
+        self.solver = ca.nlpsol('solver','ipopt',nlp,solver_opts)
 
         #Warmstart immer der vorherige Zustand
 
@@ -90,7 +117,7 @@ class QP:
     def solveMPC(self,x_current, x_ref,z0):
         P_val = np.concatenate([x_current,x_ref])
         
-        # 1) Kopien der globalen Bounds anlegen
+        '''# 1) Kopien der globalen Bounds anlegen
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy() 
         # 2) Region per if-Abfrage bestimmen
@@ -123,8 +150,8 @@ class QP:
             ubx = ubz_mod,
             lbg = self.lbg,
             ubg = self.ubg
-        )
-        #sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
+        )'''
+        sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
         #Extrahiere X und U
@@ -137,42 +164,46 @@ class QP:
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
         return x_opt, u_opt
-    def getRegionBounds(x_current):
+    '''def getRegionBounds(x_current):
         # x_current[0] = x-Position
         if x_current[0] < 2:
             return (0,2, 0,2)
         elif x_current[0]  >= 2 and x_current[0] <3:
             return (2,3, 1,2)  # Beispiel: Schmaler Korridor
         else:
-            return (3,5, 0,2)
+            return (3,5, 0,2)'''
 
         
 '''if __name__ == "__main__":
-    # KLEINER TEST
-
-    # Beispielsystem
-    nx = 3
-    nu = 2
-    N  = 5
-    Ts = 0.1
-    
-    A_d = np.eye(nx)
-    B_d = np.ones((nx, nu))*0.1
-    
-    Q  = np.eye(nx)*1.0
-    R  = np.eye(nu)*0.1
-    QN = np.eye(nx)*2.0
-    
-    for i in range(N):
+    if __name__ == "__main__":
+        nx = 3
+        nu = 2
+        N = 5
+        Ts = 0.1
+        A_d = np.eye(nx)
+        B_d = 0.1 * np.ones((nx, nu))
+        Q = np.eye(nx)
+        R = 0.1 * np.eye(nu)
+        QN = 2 * np.eye(nx)
+        
         mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
-    
         x0 = np.array([0.0, 0.0, 0.0])
-        x_ref = np.array([2.0, 3.0, 0.0])
-    
-        U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
-        print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)'''
-
+        x_ref = np.array([4.5,0, 0.0])  # Referenz, die hinter dem Hindernis liegt
+        # Initialer Warmstart: Einfach Nullvektor (oder Propagation via A_d/B_d)
+        z0 = np.zeros(mpc.zdim)
+        
+        x_opt, u_opt = mpc.solveMPC(x0, x_ref, z0)
+        print("Optimale Zustände:\n", x_opt)
+        print("Optimale Eingänge:\n", u_opt)
+        # Plotten der Trajektorie:
+        plt.plot(x_opt[0, :], x_opt[1, :], 'bo-')
+        circle = plt.Circle((mpc.x_obs, mpc.y_obs), mpc.r_obs, color='r', fill=False, linestyle='--', label="Hindernis")
+        plt.gca().add_artist(circle)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title("MPC-Trajektorie mit kreisförmigem Hindernis")
+        plt.legend()
+        plt.show()'''
 
 
 
