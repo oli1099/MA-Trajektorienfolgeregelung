@@ -20,9 +20,9 @@ class QP:
 
         #Hindernisse definieren (kreisförmig)
 
-        self.x_obs = 2
-        self.y_obs = 1
-        self.r_obs = 0.3
+        self.x_obs = 1
+        self.y_obs = 0.5
+        self.r_obs = 0.5
 
         
     
