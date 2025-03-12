@@ -59,7 +59,7 @@ class MPC_CL_obstacle(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [2,1,0,0,0,0]
+        self.x_ref = [4,1,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 

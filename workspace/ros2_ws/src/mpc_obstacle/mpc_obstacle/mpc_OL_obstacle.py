@@ -20,9 +20,9 @@ class QP:
 
         #Hindernisse definieren (kreisförmig)
 
-        self.x_obs = 3
+        self.x_obs = 2
         self.y_obs = 1
-        self.r_obs = 0.5
+        self.r_obs = 0.3
 
         
     
@@ -64,7 +64,7 @@ class QP:
 
         for k in range(N+1):
             xk = Z[k*nx:(k+1)*nx]
-            obs = np.power(xk[0]-self.x_obs,2) + np.power(xk[1]-self.y_obs,2) - np.power(self.r_obs,2)
+            obs = (xk[0]-self.x_obs)**2 + (xk[1]-self.y_obs)**2 - (self.r_obs)**2
             g.append(obs)
         
         #Nebenbedingungen
