@@ -20,9 +20,10 @@ class QP:
 
         #Hindernisse definieren (kreisförmig)
 
-        self.x_obs = 1
+        self.x_obs = 2
         self.y_obs = 0.5
         self.r_obs = 0.5
+        self.delta = 0.3
 
         
     
@@ -64,7 +65,7 @@ class QP:
 
         for k in range(N+1):
             xk = Z[k*nx:(k+1)*nx]
-            obs = (xk[0]-self.x_obs)**2 + (xk[1]-self.y_obs)**2 - (self.r_obs)**2
+            obs = (xk[0]-self.x_obs)**2 + (xk[1]-self.y_obs)**2 - (self.r_obs + self.delta)**2
             g.append(obs)
         
         #Nebenbedingungen
@@ -95,12 +96,18 @@ class QP:
         ubz = np.inf*np.ones(self.zdim)
 
         #Zustandsbegrenzung
-        # evetl funktion sich xmin etc ziehen
+        for k in range (N+1):
+            lbz[k*self.nx + 0] = 0
+            ubz[k*self.nx + 1] = 6
+
+            lbz[k*self.nx + 0] = 0
+            ubz[k*self.nx + 1] = 3
+
        
         #Eingangsbegrenzung
         for k in range(N):
-            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
-            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
+            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
+            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
         
         self.lbz = np.array(lbz).flatten()
         self.ubz = np.array(ubz).flatten()
