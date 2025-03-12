@@ -131,7 +131,7 @@ class MPC_CL_obstacle(Node):
         u_warm = np.hstack((u_opt[:, 1:], u_opt[:, -1:]))
 
         # Überprüfen, ob Warmstart in der Umgebung liegt
-        if self.xmeasure[0] < 2:
+        '''if self.xmeasure[0] < 2:
             x_min, x_max = 0.0, 2.0
             y_min, y_max = 0.0, 2.0
         elif self.xmeasure[0] >= 1.5 and self.xmeasure[0] < 3.5:
@@ -142,7 +142,7 @@ class MPC_CL_obstacle(Node):
             y_min, y_max = 0.0, 2.0
 
         x_warm[0, :] = np.clip(x_warm[0, :], x_min, x_max)
-        x_warm[1, :] = np.clip(x_warm[1, :], y_min, y_max)
+        x_warm[1, :] = np.clip(x_warm[1, :], y_min, y_max)'''
 
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
