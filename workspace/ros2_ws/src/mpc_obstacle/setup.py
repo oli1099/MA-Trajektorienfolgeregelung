@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'mpc_CL_obstacle = mpc_obstacle.mpc_CL_obstacle:main'        ],
+            'mpc_CL_obstacle = mpc_obstacle.mpc_CL_obstacle:main',
+            'adaptiveMPC_CL = mpc_obstacle.adaptiveMPC_CL'        ],
     },
 )
