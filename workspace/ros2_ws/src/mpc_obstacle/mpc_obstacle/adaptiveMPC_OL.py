@@ -102,8 +102,8 @@ class QP:
        
         #Eingangsbegrenzung
         for k in range(N):
-            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
-            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
+            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
+            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
         #Slack Variable Begrenzung ( darf nicht negativ werden)
         #for k in range(N+1):
             #lbz[(N+1)*nx + N*nu + k] = 0
