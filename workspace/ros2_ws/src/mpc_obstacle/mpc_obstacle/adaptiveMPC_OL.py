@@ -119,7 +119,7 @@ class QP:
             ubz_mod[k*self.nx + 1] = self.y_max
 
         sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
-        
+        self.get_logger().info(f'Received state update: lbz_mod={lbz_mod}, ubz_mod={ubz_mod}')
         
         #sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
