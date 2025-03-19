@@ -105,7 +105,7 @@ class QP:
         ubz_mod = self.ubz.copy()
 
         for k in range(self.N+1):
-            x_pred = z0[0,k]
+            x_pred = z0[k*self.nx +0]
 
             if x_pred > 1 and x_pred <= 2:
                 self.y_min = 1
