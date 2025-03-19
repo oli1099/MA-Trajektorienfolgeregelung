@@ -15,6 +15,10 @@ Radumdrehungen an den Roboter geben:
 Nodes starten
     ros2 launch controller controller.launch.py
 
+    ros2 launch ldlidar_node ldlidar.launch.py
+
+    ros2 launch orchestrator_launch slam_toolbox.launch.py
+
 Kreis Trajektorie
 
     ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler  
