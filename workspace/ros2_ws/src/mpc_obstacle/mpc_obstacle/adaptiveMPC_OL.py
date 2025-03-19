@@ -6,12 +6,13 @@ from scipy.linalg import expm, block_diag
 import matplotlib.pyplot as plt
 
 class QP:
-    def __init__(self, A_d, B_d, Q, R, QN, N, nx, nu, Ts,solver_opts=None):
+    def __init__(self, A_d, B_d, Q, R, QN,Penalty, N, nx, nu, Ts,solver_opts=None):
         self.A_d = A_d
         self.B_d = B_d
         self.Q = Q
         self.R = R
         self.QN = QN
+        self.Penalty = Penalty
         self.N = N
         self.nx = nx
         self.nu = nu
@@ -22,8 +23,8 @@ class QP:
         if solver_opts  is None:
             solver_opts = {"print_time":0}
         
-        #Erstellen der Optimierungsvariablen
-        self.zdim = (N+1)*nx +N*nu
+        #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN und slack)
+        self.zdim = (N+1)*nx +N*nu + self.N+1
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
@@ -44,22 +45,44 @@ class QP:
             xk = Z[k*nx:(k+1)*nx]
             x_next = Z[(k+1)*nx:(k+2)*nx]
             uk = Z[(N+1)*nx +k*nu:(N+1)*nx + (k+1)*nu]
-            
-            cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk
+            slack = Z[(N+1)*nx + N*nu + k]
+                  
+            cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk + slack.T @ self.Penalty @ slack
             g.append(x_next - (self.A_d @ xk + self.B_d @ uk))
-        
-        
+            
+            
         #Terminalkosten
         xN = Z[N*nx : (N+1)*nx]
         cost += (xN - x_ref).T @ self.QN @ (xN - x_ref)
 
+        default_ymin =0
+        #Soft Constraints (ymin -s-y<=0)
+        for k in range(N+1):
+            xk = Z[k*nx:(k+1)*nx]
+            slack = Z[(N+1)*nx + N*nu + k] #Slack Variable
+            g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0
+
+    
         #Nebenbedingungen
 
         g = ca.vertcat(*g) #Aufsplitten der Liste und als spaltenvektor deklarieren
 
+        #Für die Equality Constrains g == 0 und für die Inequality Constraints g <= 0
+        n_dynamics = (N+1)*self.nx
+        n_slack = N+1
+
+        lbg_dyn = np.zeros(n_dynamics)
+        ubg_dyn = np.zeros(n_dynamics)
+
+        lbg_slack = -np.inf*np.ones(n_slack)
+        ubg_slack = np.zeros(n_slack)
+
+        self.lbg = np.concatenate((lbg_dyn, lbg_slack))
+        self.ubg = np.concatenate((ubg_dyn, ubg_slack))
+
         #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
-        self.lbg = np.zeros(g.size1())
-        self.ubg = np.zeros(g.size1())
+        #self.lbg = np.zeros(g.size1())
+        #self.ubg = np.zeros(g.size1())
         
         #Inequality Constraints bestimmen für u < |1| und x muss die map dann sein
 
@@ -79,9 +102,14 @@ class QP:
         for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
             ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
+        #Slack Variable Begrenzung ( darf nicht negativ werden)
+        for k in range(N+1):
+            lbz[(N+1)*nx + N*nu + k] = 0
+            # Obere schranke bleibt unendlich
+        
         
         self.lbz = np.array(lbz).flatten()
-        self.ubz = ubz
+        self.ubz = np.array(lbz).flatten()
 
         #Definition des quadratischen Problems 
 
@@ -124,13 +152,15 @@ class QP:
         #Extrahiere X und U
         x_opt = np.zeros((self.nx,self.N+1))
         u_opt = np.zeros((self.nu,self.N))
+        slack_opt = np.zeros(self.N+1)
 
         for k in range(self.N+1):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
+            slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
         for k in range (self.N):
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
-        return x_opt, u_opt
+        return x_opt, u_opt, slack_opt
     def getRegionBounds(x_current):
         # x_current[0] = x-Position
         if x_current[0] < 2:

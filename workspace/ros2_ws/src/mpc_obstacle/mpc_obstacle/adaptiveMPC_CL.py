@@ -31,6 +31,7 @@ class MPCClosedLoop(Node):
         self.Q = np.diag([1,1,0.5,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
+        self.Penalty = 1e6
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 25   #Prediktionshorizont
@@ -82,7 +83,7 @@ class MPCClosedLoop(Node):
         
 
         #QP initzialisieren
-        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
+        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Penalty, 
                                               self.N, self.nx, self.nu, self.Ts)
         
         
@@ -114,7 +115,7 @@ class MPCClosedLoop(Node):
             return
 
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
-        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
+        x_opt, u_opt, slack_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
@@ -122,7 +123,7 @@ class MPCClosedLoop(Node):
         self.predictions_list.append(x_opt.copy())
         
 
-        z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
+        z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten(),slack_opt.flatten()))
 
         # x_opt hat die Form (nx, N+1) und u_opt die Form (nu, N)
         # Verschieben der Zustände: Entferne das erste Element und hänge den letzten Zustand an
@@ -130,8 +131,10 @@ class MPCClosedLoop(Node):
         # Verschieben der Eingänge: Entferne das erste Eingangselement und hänge den letzten Eingang an
         u_warm = np.hstack((u_opt[:, 1:], u_opt[:, -1:]))
 
+        slacks_warm = np.hstack((slack_opt[1:], slack_opt[-1:]))
+
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
-        z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
+        z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten(), slacks_warm.flatten()))
         self.z0 = z0_new
         self.get_logger().info(f'z0: {self.z0}')
 
