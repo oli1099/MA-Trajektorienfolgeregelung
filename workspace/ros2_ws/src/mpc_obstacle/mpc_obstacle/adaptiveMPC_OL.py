@@ -73,13 +73,7 @@ class QP:
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
-            ubz[k*self.nx + 0] = 6
-
-        #Standardbreite der Straße
-        self.y_min = 0
-        self.y_max = 4
-
-            
+            ubz[k*self.nx + 0] = 6            
        
         #Eingangsbegrenzung
         for k in range(N):
@@ -105,18 +99,20 @@ class QP:
         ubz_mod = self.ubz.copy()
 
         for k in range(self.N+1):
-            x_pred = z0[k*self.nx +0]
-
-            if x_pred > 1 and x_pred <= 2:
-                self.y_min = 1
-                self.y_max = 3
-            else: 
-                self.y_min = 0
-                self.y_max = 3
-
+        # Der x-Wert des Warmstarts  für Zeitschritt k
+            x_pred = z0[k*self.nx + 0]
             
-            lbz_mod[k*self.nx + 1] = self.y_min
-            ubz_mod[k*self.nx + 1] = self.y_max
+            # Standard: Straßenbegrenzung 
+            y_min = 0.0
+            y_max = 4.0
+            
+            # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
+            if 1.0 <= x_pred <= 2.0:
+                y_min = 1.0  # Der Roboter fährt oberhalb des Hindernisses
+            
+            lbz_mod[k*self.nx + 1] = y_min
+            ubz_mod[k*self.nx + 1] = y_max
+
             print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
 
