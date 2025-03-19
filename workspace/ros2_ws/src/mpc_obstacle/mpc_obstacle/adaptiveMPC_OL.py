@@ -95,7 +95,7 @@ class QP:
 
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
-            lbz[k*self.nx + 0] = 0
+            lbz[k*self.nx + 0] = -0.5
             ubz[k*self.nx + 0] = 6            
        
         #Eingangsbegrenzung
@@ -135,8 +135,8 @@ class QP:
             y_max = 4.0
             
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
-            if 1.0 <= x_pred <= 2.0:
-                y_min = 1.0  # Der Roboter fährt oberhalb des Hindernisses
+            if  x_pred >= 1 and x_pred <= 2.0:
+                y_min = 1.1  # Der Roboter fährt oberhalb des Hindernisses
             
             lbz_mod[k*self.nx + 1] = y_min
             ubz_mod[k*self.nx + 1] = y_max
