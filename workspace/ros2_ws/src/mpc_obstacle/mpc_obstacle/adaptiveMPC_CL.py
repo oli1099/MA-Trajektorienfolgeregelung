@@ -133,6 +133,7 @@ class MPCClosedLoop(Node):
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
         self.z0 = z0_new
+        self.get_logger().info(f'z0: {self.z0}')
 
 
         '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
