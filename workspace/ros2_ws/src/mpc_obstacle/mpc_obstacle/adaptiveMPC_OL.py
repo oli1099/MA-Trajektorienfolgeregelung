@@ -128,6 +128,8 @@ class QP:
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy()
 
+        obstacle_zone = False
+
         for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
             x_pred = z0[k*self.nx + 0]
@@ -138,7 +140,15 @@ class QP:
             
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
             if  x_pred >= 1 and x_pred <= 2.0:
+                obstacle_zone = True
+                
+            elif x_pred > 2:
+                obstacle_zone = False
+            
+            if obstacle_zone:
                 y_min = 1.1  # Der Roboter fährt oberhalb des Hindernisses
+            else:
+                y_min = 0.0
             
             lbz_mod[k*self.nx + 1] = y_min
             ubz_mod[k*self.nx + 1] = y_max
