@@ -107,7 +107,7 @@ class QP:
         x_pred = z0[0,k]
 
         if x_pred > 1 and x_pred <= 2:
-            self.y_min = 0
+            self.y_min = 1
             self.y_max = 3
         else: 
             self.y_min = 0
