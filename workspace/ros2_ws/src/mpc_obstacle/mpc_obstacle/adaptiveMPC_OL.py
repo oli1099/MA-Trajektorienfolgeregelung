@@ -109,7 +109,7 @@ class QP:
         
         
         self.lbz = np.array(lbz).flatten()
-        self.ubz = np.array(lbz).flatten()
+        self.ubz = np.array(ubz).flatten()
 
         #Definition des quadratischen Problems 
 
