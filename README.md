@@ -44,6 +44,8 @@ MPC Obstacel avoidence starten
 
     ros2 run mpc_obstacle mpc_CL_obstacle
 
+    ros2 run mpc_obstacle adaptiveMPC_CL
+
     
 Package Erstellen in ROS2:
     ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
