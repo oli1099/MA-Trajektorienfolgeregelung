@@ -104,16 +104,17 @@ class QP:
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy()
 
-        x_pred = z0[0,k]
-
-        if x_pred > 1 and x_pred <= 2:
-            self.y_min = 1
-            self.y_max = 3
-        else: 
-            self.y_min = 0
-            self.y_max = 3
-
         for k in range(self.N+1):
+            x_pred = z0[0,k]
+
+            if x_pred > 1 and x_pred <= 2:
+                self.y_min = 1
+                self.y_max = 3
+            else: 
+                self.y_min = 0
+                self.y_max = 3
+
+            
             lbz_mod[k*self.nx + 1] = self.y_min
             ubz_mod[k*self.nx + 1] = self.y_max
 
