@@ -34,7 +34,7 @@ class MPCClosedLoop(Node):
         self.Penalty = 1e2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 30  #Prediktionshorizont
+        self.N = 6  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
