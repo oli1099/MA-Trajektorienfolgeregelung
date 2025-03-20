@@ -73,13 +73,13 @@ class MPCClosedLoop(Node):
         self.x_guess[:,0]=self.x0
         self.u_guess = np.zeros((self.nu,self.N))
 
-        #self.slack_guess = np.zeros(self.N+1)
+        self.slack_guess = np.zeros(self.N+1)
         for i in range(self.N):
             self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
         for i in range (self.N-1):
              self.u_guess[:,i+1] = self.u_guess[:,i]
 
-        self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten())) #,self.slack_guess.flatten()))
+        self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten(), self.slack_guess.flatten()))
         
 
         #QP initzialisieren
