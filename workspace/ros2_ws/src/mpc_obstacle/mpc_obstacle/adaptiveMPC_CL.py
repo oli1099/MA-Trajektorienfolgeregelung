@@ -34,7 +34,7 @@ class MPCClosedLoop(Node):
         self.Penalty = 1e6
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 80  #Prediktionshorizont
+        self.N = 15  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -74,9 +74,12 @@ class MPCClosedLoop(Node):
         self.u_guess = np.zeros((self.nu,self.N))
 
         #self.slack_guess = np.zeros(self.N+1)
-
+        k_obstacle = 8
         for i in range(self.N):
-             self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
+            if i >= k_obstacle:
+                self.x_guess[1,i+1] = 1.1
+            else:
+                self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
              
         for i in range (self.N-1):
              self.u_guess[:,i+1] = self.u_guess[:,i]
