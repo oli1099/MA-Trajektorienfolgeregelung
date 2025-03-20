@@ -148,10 +148,12 @@ class QP:
             lbz_mod[k*self.nx + 1] = y_min
             ubz_mod[k*self.nx + 1] = y_max
 
-            print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
-            f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
-            print(f"Prädizierter x-Wert: {x_pred}")
-            print(f"Prädizierter y-Wert: {y_pred}")
+            #print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
+            #f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
+        print(f"Prädizierter x-Wert: {x_pred}")
+        print(f"Prädizierter y-Wert: {y_pred}")
+
+        print(f"Neue Bounds: {lbz_mod}, {ubz_mod}")
 
         sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
         
