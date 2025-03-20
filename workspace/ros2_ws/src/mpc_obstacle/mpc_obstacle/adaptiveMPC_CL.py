@@ -76,14 +76,14 @@ class MPCClosedLoop(Node):
         #self.slack_guess = np.zeros(self.N+1)
         k_obstacle = 8
         for i in range(self.N):
-            if i >= k_obstacle:
-                self.x_guess[1,i+1] = 1.1
-            else:
-                self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
-             
+            self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
+
+            if k_obstacle <=5:
+                self.x_guess[1, i+1] = 1.1
+
         for i in range (self.N-1):
              self.u_guess[:,i+1] = self.u_guess[:,i]
-        
+        self.get_logger().info(f'x_guess: {self.x_guess}')
         self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten())) #,self.slack_guess.flatten()))
         
 
