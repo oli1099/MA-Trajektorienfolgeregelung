@@ -75,9 +75,9 @@ class MPCClosedLoop(Node):
 
         self.slack_guess = np.zeros(self.N)
         for i in range(self.N+1):
-            self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
+            self.x_guess[:,i]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
         for i in range (self.N):
-             self.u_guess[:,i+1] = self.u_guess[:,i]
+             self.u_guess[:,i] = self.u_guess[:,i]
 
         self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten(), self.slack_guess.flatten()))
         
