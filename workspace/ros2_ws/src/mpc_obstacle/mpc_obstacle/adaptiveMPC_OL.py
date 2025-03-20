@@ -133,7 +133,7 @@ class QP:
 
         
 
-        for k in range(self.N):
+        for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
             x_pred = z0[k*self.nx + 0]
             y_pred = z0[k*self.nx + 1]
@@ -176,7 +176,7 @@ class QP:
         return x_opt, u_opt , slack_opt
    
         
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     # KLEINER TEST
 
     # Beispielsystem
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     
         U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
         print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)
+        print("X_opt:\n", X_opt)'''
 
 
 
