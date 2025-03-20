@@ -97,7 +97,7 @@ class QP:
 
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
-            lbz[k*self.nx + 0] = -0.5
+            lbz[k*self.nx + 0] = 0
             ubz[k*self.nx + 0] = 6            
        
         #Eingangsbegrenzung
