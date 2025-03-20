@@ -57,7 +57,7 @@ class QP:
 
         default_ymin =0
         #Soft Constraints (ymin -s-y<=0)
-        for k in range(N+1):
+        for k in range(N):
             xk = Z[k*nx:(k+1)*nx]
             slack = Z[(N+1)*nx + N*nu + k] #Slack Variable
             g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0
@@ -95,17 +95,17 @@ class QP:
         #Zustandsbegrenzung
         # evetl funktion sich xmin etc ziehen
 
-        for k in range(N +1):
+        for k in range(N ):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
             ubz[k*self.nx + 0] = 6            
        
         #Eingangsbegrenzung
-        for k in range(N):
+        for k in range(N-1):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
             ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
         #Slack Variable Begrenzung ( darf nicht negativ werden)
-        for k in range(N+1):
+        for k in range(N):
             lbz[(N+1)*nx + N*nu + k] = 0
             ubz[(N+1)*nx + N*nu + k] = 1e20
             # Obere schranke bleibt unendlich
@@ -131,7 +131,7 @@ class QP:
 
         
 
-        for k in range(self.N+1):
+        for k in range(self.N):
         # Der x-Wert des Warmstarts  für Zeitschritt k
             x_pred = z0[k*self.nx + 0]
             y_pred = z0[k*self.nx + 1]
@@ -165,10 +165,10 @@ class QP:
         u_opt = np.zeros((self.nu,self.N))
         slack_opt = np.zeros(self.N+1)
 
-        for k in range(self.N+1):
+        for k in range(self.N):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
             slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
-        for k in range (self.N):
+        for k in range (self.N-1):
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
         return x_opt, u_opt , slack_opt
