@@ -131,15 +131,14 @@ class QP:
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy()
 
-        x_pred = z0[k*self.nx + 0]
-        y_pred = z0[k*self.nx + 1]
+   
 
-        '''for k in range(self.N+1):
+        for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
             x_pred = z0[k*self.nx + 0]
             y_pred = z0[k*self.nx + 1]
             
-            # Standard: Straßenbegrenzung 
+            '''# Standard: Straßenbegrenzung 
             y_min = 0.0
             y_max = 4.0
             
