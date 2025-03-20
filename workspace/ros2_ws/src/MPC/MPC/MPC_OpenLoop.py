@@ -93,10 +93,10 @@ class QP:
         for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
             x_pred = z0[k]
-            y_pred = z0[k*(self.N+1)]
+            #y_pred = z0[k*(self.N+1)]
 
             print(f"Prädizierter x-Wert: {x_pred}")
-            print(f"Prädizierter y-Wert: {y_pred}")
+            #print(f"Prädizierter y-Wert: {y_pred}")
 
         '''# 1) Kopien der globalen Bounds anlegen
         lbz_mod = self.lbz.copy()
