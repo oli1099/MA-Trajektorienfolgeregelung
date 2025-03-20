@@ -78,7 +78,7 @@ class MPCClosedLoop(Node):
         for i in range(self.N):
             self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
 
-            if k_obstacle <=5:
+            if k_obstacle >=5:
                 self.x_guess[1, i+1] = 1.1
 
         for i in range (self.N-1):
