@@ -140,8 +140,8 @@ class QP:
             y_max = 4.0
             
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
-            '''if  x_pred >= 1 and x_pred <= 2.0:
-                y_min = 1.1 
+            if  x_pred >= 1 and x_pred <= 2.0:
+                y_min = 0.5
 
             else:
                 y_min = 0.0
@@ -151,7 +151,7 @@ class QP:
 
             print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
-            print(f"Prädizierter x-Wert: {x_pred}")'''
+            print(f"Prädizierter x-Wert: {x_pred}")
 
         sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
         

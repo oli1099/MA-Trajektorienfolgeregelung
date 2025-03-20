@@ -81,7 +81,7 @@ Plots vom Roboter speichern
     
     scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/MPCtrajectorytime_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
 
-    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/trajectorytime_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/MPC_Adaptive_CL_plot.png /home/oli/Desktop/Oliver/Uni/MA/Plots
 
 
 

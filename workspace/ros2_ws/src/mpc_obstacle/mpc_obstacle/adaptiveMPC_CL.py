@@ -110,7 +110,7 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
-            self.fig.savefig("MPC_CL_plot")
+            self.fig.savefig("MPC_Adaptive_CL_plot")
             self.timer.cancel()
             return
 
