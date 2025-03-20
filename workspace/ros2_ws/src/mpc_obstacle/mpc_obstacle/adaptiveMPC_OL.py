@@ -57,7 +57,7 @@ class QP:
 
         default_ymin =0
         #Soft Constraints (ymin -s-y<=0)
-        for k in range(N):
+        for k in range(N+1):
             xk = Z[k*nx:(k+1)*nx]
             slack = Z[(N+1)*nx + N*nu + k] #Slack Variable
             g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0
