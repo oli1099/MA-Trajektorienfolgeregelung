@@ -161,15 +161,15 @@ class QP:
         #Extrahiere X und U
         x_opt = np.zeros((self.nx,self.N+1))
         u_opt = np.zeros((self.nu,self.N))
-        #slack_opt = np.zeros(self.N+1)
+        slack_opt = np.zeros(self.N+1)
 
         for k in range(self.N+1):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
-            #slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
+            slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
         for k in range (self.N):
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
-        return x_opt, u_opt #, slack_opt
+        return x_opt, u_opt , slack_opt
    
         
 '''if __name__ == "__main__":
