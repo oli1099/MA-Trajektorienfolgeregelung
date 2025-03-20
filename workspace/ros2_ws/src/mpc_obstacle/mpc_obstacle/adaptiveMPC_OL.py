@@ -138,15 +138,15 @@ class QP:
         y_min = 0.0
         y_max = 4.0
 
-        for k, value in enumerate(x_pred):
+        '''for k, value in enumerate(x_pred):
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
             if value >= 1.0 and value <= 2.0:
                 y_min = 0.5
             else:
-                y_min = 0.0
+                y_min = 0.0'''
             
-            lbz_mod[k*self.nx + 1] = y_min
-            ubz_mod[k*self.nx + 1] = y_max
+        lbz_mod[k*self.nx + 1] = y_min
+        ubz_mod[k*self.nx + 1] = y_max
 
             #print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             #f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
