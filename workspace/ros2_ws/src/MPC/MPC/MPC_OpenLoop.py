@@ -90,13 +90,13 @@ class QP:
     def solveMPC(self,x_current, x_ref,z0):
         P_val = np.concatenate([x_current,x_ref])
         
-        for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
-            x_pred = z0[k]
-            #y_pred = z0[k*(self.N+1)]
+        x_values = z0[:(self.N+1)*self.nx].reshape((self.nx, self.N+1))
+        x_pred = x_values[0,:]
+        y_pred = x_values[1,:]
 
-            print(f"Prädizierter x-Wert: {x_pred}")
-            #print(f"Prädizierter y-Wert: {y_pred}")
+        print(f"Prädizierter x-Wert: {x_pred}")
+        print(f"Prädizierter y-Wert: {y_pred}")
 
         '''# 1) Kopien der globalen Bounds anlegen
         lbz_mod = self.lbz.copy()
