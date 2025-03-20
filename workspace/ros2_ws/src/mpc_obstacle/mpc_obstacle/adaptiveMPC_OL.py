@@ -24,7 +24,7 @@ class QP:
             solver_opts = {"print_time":0}
         
         #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN und slack)
-        self.zdim = (N+1)*nx +N*nu + self.N+1
+        self.zdim = (N+1)*nx +N*nu + self.N
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
@@ -53,11 +53,11 @@ class QP:
             
         #Terminalkosten
         xN = Z[N*nx : (N+1)*nx]
-        cost += (xN - x_ref).T @ self.QN @ (xN - x_ref)
+        cost += (xN - x_ref).T @ self.QN @ (xN - x_ref) 
 
         default_ymin =0
         #Soft Constraints (ymin -s-y<=0)
-        for k in range(N+1):
+        for k in range(N):
             xk = Z[k*nx:(k+1)*nx]
             slack = Z[(N+1)*nx + N*nu + k] #Slack Variable
             g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0
@@ -69,13 +69,15 @@ class QP:
 
         #Für die Equality Constrains g == 0 und für die Inequality Constraints g <= 0
         n_dynamics = (N+1)*self.nx
-        n_slack = N+1
+        n_slack = N
 
         lbg_dyn = np.zeros(n_dynamics)
         ubg_dyn = np.zeros(n_dynamics)
 
         lbg_slack = -np.inf*np.ones(n_slack)
         ubg_slack = np.zeros(n_slack)
+
+        k = lbg_slack.size
 
         self.lbg = np.concatenate((lbg_dyn, lbg_slack))
         self.ubg = np.concatenate((ubg_dyn, ubg_slack))
@@ -95,13 +97,13 @@ class QP:
         #Zustandsbegrenzung
         # evetl funktion sich xmin etc ziehen
 
-        for k in range(N ):
+        for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
             ubz[k*self.nx + 0] = 6            
        
         #Eingangsbegrenzung
-        for k in range(N-1):
+        for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
             ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
         #Slack Variable Begrenzung ( darf nicht negativ werden)
@@ -165,16 +167,16 @@ class QP:
         u_opt = np.zeros((self.nu,self.N))
         slack_opt = np.zeros(self.N+1)
 
-        for k in range(self.N):
+        for k in range(self.N+1):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
-            slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
-        for k in range (self.N-1):
+            
+        for k in range (self.N):
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
-
+            slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
         return x_opt, u_opt , slack_opt
    
         
-'''if __name__ == "__main__":
+if __name__ == "__main__":
     # KLEINER TEST
 
     # Beispielsystem
@@ -189,16 +191,22 @@ class QP:
     Q  = np.eye(nx)*1.0
     R  = np.eye(nu)*0.1
     QN = np.eye(nx)*2.0
+    Penalty = 1000
+
+
     
     for i in range(N):
-        mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
-    
+        mpc = QP(A_d, B_d, Q, R, QN,Penalty, N, nx, nu, Ts)
+
+        
         x0 = np.array([0.0, 0.0, 0.0])
         x_ref = np.array([2.0, 3.0, 0.0])
+
+        
     
         U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
         print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)'''
+        print("X_opt:\n", X_opt)
 
 
 
