@@ -125,6 +125,7 @@ class MPCClosedLoop(Node):
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
 
+
         # x_opt hat die Form (nx, N+1) und u_opt die Form (nu, N)
         # Verschieben der Zustände: Entferne das erste Element und hänge den letzten Zustand an
         x_warm = np.hstack((x_opt[:, 1:], x_opt[:, -1:]))
@@ -135,6 +136,7 @@ class MPCClosedLoop(Node):
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
         self.z0 = z0_new
 
+        self.get_logger().info(f'z0: {self.z0}')
 
         '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
         for k in range(self.N):
