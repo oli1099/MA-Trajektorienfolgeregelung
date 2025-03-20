@@ -129,21 +129,19 @@ class QP:
         lbz_mod = self.lbz.copy()
         ubz_mod = self.ubz.copy()
 
-   
+        x_values = z0[:(self.N+1)*self.nx].reshape((self.nx, self.N+1))
+        x_pred = x_values[0,:]
+        y_pred = x_values[1,:]
+        
+            
+        # Standard: Straßenbegrenzung 
+        y_min = 0.0
+        y_max = 4.0
 
-        for k in range(self.N+1):
-        # Der x-Wert des Warmstarts  für Zeitschritt k
-            x_pred = z0[k*self.nx + 0]
-            y_pred = z0[k*self.nx + 1]
-            
-            '''# Standard: Straßenbegrenzung 
-            y_min = 0.0
-            y_max = 4.0
-            
+        for index, value in enumerate(x_pred):
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
-            if  x_pred >= 1 and x_pred <= 2.0:
+            if value >= 1.0 and value <= 2.0:
                 y_min = 0.5
-
             else:
                 y_min = 0.0
             
@@ -151,7 +149,7 @@ class QP:
             ubz_mod[k*self.nx + 1] = y_max
 
             print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
-            f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")'''
+            f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
             print(f"Prädizierter x-Wert: {x_pred}")
             print(f"Prädizierter y-Wert: {y_pred}")
 
