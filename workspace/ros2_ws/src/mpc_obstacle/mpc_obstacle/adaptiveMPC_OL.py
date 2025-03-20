@@ -98,7 +98,9 @@ class QP:
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
-            ubz[k*self.nx + 0] = 6            
+            ubz[k*self.nx + 0] = 6          
+            lbz[k*self.nx + 1] = 0
+            ubz[k*self.nx + 1] = 4 
        
         #Eingangsbegrenzung
         for k in range(N):
@@ -145,8 +147,8 @@ class QP:
             else:
                 y_min = 0.0'''
             
-        lbz_mod[k*self.nx + 1] = y_min
-        ubz_mod[k*self.nx + 1] = y_max
+        #lbz_mod[k*self.nx + 1] = y_min
+        #ubz_mod[k*self.nx + 1] = y_max
 
             #print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             #f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
