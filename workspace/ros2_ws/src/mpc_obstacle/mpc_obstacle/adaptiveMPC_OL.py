@@ -165,14 +165,23 @@ class QP:
         u_opt = np.zeros((self.nu,self.N))
         slack_opt = np.zeros(self.N)
 
+        print(f"Optimale Lösung: {z_opt}")
+        
+
+
         for k in range(self.N+1):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
             
         for k in range (self.N):
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
             slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
+        
+        print(f"Optimale Zustände: {x_opt}")
+        print(f"Optimale Eingänge: {u_opt}")
+
         return x_opt, u_opt , slack_opt
-   
+
+
         
 '''if __name__ == "__main__":
     # KLEINER TEST
