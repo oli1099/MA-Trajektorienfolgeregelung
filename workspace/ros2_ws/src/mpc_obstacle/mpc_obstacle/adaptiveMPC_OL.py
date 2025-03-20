@@ -24,7 +24,7 @@ class QP:
             solver_opts = {"print_time":0}
         
         #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN und slack)
-        self.zdim = (N+1)*nx +N*nu #+ self.N+1
+        self.zdim = (N+1)*nx +N*nu + self.N+1
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
@@ -45,9 +45,9 @@ class QP:
             xk = Z[k*nx:(k+1)*nx]
             x_next = Z[(k+1)*nx:(k+2)*nx]
             uk = Z[(N+1)*nx +k*nu:(N+1)*nx + (k+1)*nu]
-            #slack = Z[(N+1)*nx + N*nu + k]
+            slack = Z[(N+1)*nx + N*nu + k]
                   
-            cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk #+ slack.T @ self.Penalty @ slack
+            cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk + slack.T @ self.Penalty @ slack
             g.append(x_next - (self.A_d @ xk + self.B_d @ uk))
             
             
@@ -55,12 +55,12 @@ class QP:
         xN = Z[N*nx : (N+1)*nx]
         cost += (xN - x_ref).T @ self.QN @ (xN - x_ref)
 
-        '''default_ymin =0
+        default_ymin =0
         #Soft Constraints (ymin -s-y<=0)
         for k in range(N+1):
             xk = Z[k*nx:(k+1)*nx]
             slack = Z[(N+1)*nx + N*nu + k] #Slack Variable
-            g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0'''
+            g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0
 
     
         #Nebenbedingungen
@@ -68,7 +68,7 @@ class QP:
         g = ca.vertcat(*g) #Aufsplitten der Liste und als spaltenvektor deklarieren
 
         #Für die Equality Constrains g == 0 und für die Inequality Constraints g <= 0
-        '''n_dynamics = (N+1)*self.nx
+        n_dynamics = (N+1)*self.nx
         n_slack = N+1
 
         lbg_dyn = np.zeros(n_dynamics)
@@ -78,13 +78,13 @@ class QP:
         ubg_slack = np.zeros(n_slack)
 
         self.lbg = np.concatenate((lbg_dyn, lbg_slack))
-        self.ubg = np.concatenate((ubg_dyn, ubg_slack))'''
+        self.ubg = np.concatenate((ubg_dyn, ubg_slack))
 
 
 
         #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
-        self.lbg = np.zeros(g.size1())
-        self.ubg = np.zeros(g.size1())
+        #self.lbg = np.zeros(g.size1())
+        #self.ubg = np.zeros(g.size1())
         
         #Inequality Constraints bestimmen für u < |1| und x muss die map dann sein
 
@@ -105,8 +105,9 @@ class QP:
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
             ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
         #Slack Variable Begrenzung ( darf nicht negativ werden)
-        #for k in range(N+1):
-            #lbz[(N+1)*nx + N*nu + k] = 0
+        for k in range(N+1):
+            lbz[(N+1)*nx + N*nu + k] = 0
+            ubz[(N+1)*nx + N*nu + k] = 1e20
             # Obere schranke bleibt unendlich
         
         
@@ -139,7 +140,7 @@ class QP:
             y_max = 4.0
             
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
-            if  x_pred >= 1 and x_pred <= 2.0:
+            '''if  x_pred >= 1 and x_pred <= 2.0:
                 y_min = 1.1 
 
             else:
@@ -150,7 +151,7 @@ class QP:
 
             print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
-            print(f"Prädizierter x-Wert: {x_pred}")
+            print(f"Prädizierter x-Wert: {x_pred}")'''
 
         sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
         
