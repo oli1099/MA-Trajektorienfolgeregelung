@@ -77,8 +77,6 @@ class QP:
         lbg_slack = -np.inf*np.ones(n_slack)
         ubg_slack = np.zeros(n_slack)
 
-        k = lbg_slack.size
-
         self.lbg = np.concatenate((lbg_dyn, lbg_slack))
         self.ubg = np.concatenate((ubg_dyn, ubg_slack))
 
@@ -154,8 +152,8 @@ class QP:
 
             print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")'''
-        print(f"Prädizierter x-Wert: {x_pred}")
-        print(f"Prädizierter y-Wert: {y_pred}")
+            print(f"Prädizierter x-Wert: {x_pred}")
+            print(f"Prädizierter y-Wert: {y_pred}")
 
         sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
         
