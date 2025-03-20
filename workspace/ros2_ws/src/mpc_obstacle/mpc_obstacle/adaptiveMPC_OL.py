@@ -142,8 +142,10 @@ class QP:
 
         for k, value in enumerate(x_pred):
             # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
+            print(f"Prädizierter x-Wert im Hindernisbereich: {value}")
             if value >= 1.0 and value <= 2.0:
                 y_min = 0.5
+                
             else:
                 y_min = 0.0
             
