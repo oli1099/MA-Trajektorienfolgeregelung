@@ -92,8 +92,8 @@ class QP:
         
         for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
-            x_pred = z0[k*self.nx + 0]
-            y_pred = z0[k*self.nx + 1]
+            x_pred = z0[k]
+            y_pred = z0[k*(self.N+1)]
 
             print(f"Prädizierter x-Wert: {x_pred}")
             print(f"Prädizierter y-Wert: {y_pred}")
