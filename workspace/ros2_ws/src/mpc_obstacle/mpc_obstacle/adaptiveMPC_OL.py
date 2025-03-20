@@ -134,6 +134,7 @@ class QP:
         for k in range(self.N+1):
         # Der x-Wert des Warmstarts  für Zeitschritt k
             x_pred = z0[k*self.nx + 0]
+            y_pred = z0[k*self.nx + 1]
             
             # Standard: Straßenbegrenzung 
             y_min = 0.0
@@ -152,6 +153,7 @@ class QP:
             print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
             f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
             print(f"Prädizierter x-Wert: {x_pred}")
+            print(f"Prädizierter y-Wert: {y_pred}")
 
         sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
         
