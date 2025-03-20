@@ -55,7 +55,7 @@ class QP:
         xN = Z[N*nx : (N+1)*nx]
         cost += (xN - x_ref).T @ self.QN @ (xN - x_ref) 
 
-        default_ymin =0
+        default_ymin =0.5
         #Soft Constraints (ymin -s-y<=0)
         for k in range(N):
             xk = Z[k*nx:(k+1)*nx]
