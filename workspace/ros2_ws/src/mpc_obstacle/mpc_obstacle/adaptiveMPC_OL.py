@@ -163,7 +163,7 @@ class QP:
         #Extrahiere X und U
         x_opt = np.zeros((self.nx,self.N+1))
         u_opt = np.zeros((self.nu,self.N))
-        slack_opt = np.zeros(self.N+1)
+        slack_opt = np.zeros(self.N)
 
         for k in range(self.N+1):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
