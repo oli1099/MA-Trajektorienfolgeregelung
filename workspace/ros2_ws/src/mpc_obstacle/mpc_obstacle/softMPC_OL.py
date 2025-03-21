@@ -51,7 +51,8 @@ class QP:
             cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk + slack.T @ self.Penalty @ slack
             g.append(x_next - (self.A_d @ xk + self.B_d @ uk))
 
-            #Soft Constraints (ymin -s-y<=0)
+        for k in range(N):
+        #Soft Constraints (ymin -s-y<=0)
             g.append(y_min_param[k] - xk[1] - slack) 
             
             
