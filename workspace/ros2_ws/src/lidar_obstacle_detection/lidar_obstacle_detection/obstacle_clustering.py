@@ -22,17 +22,23 @@ class LidarClustering(Node):
     
     def scan_callback(self, msg):
         
-        raw_ranges = np.array(msg.ranges)  # Länge z.B. 455
-        angles = np.linspace(msg.angle_min, msg.angle_max, len(raw_ranges))  # Länge ebenfalls 455
+        raw_ranges = np.array(msg.ranges)
+        angles = np.linspace(msg.angle_min, msg.angle_max, len(raw_ranges))
 
-        # Gültige Werte filtern (alle finite Werte)
-        valid = np.isfinite(raw_ranges)
-        ranges_valid = raw_ranges[valid]
-        angles_valid = angles[valid]
+        # Definiere den gewünschten Winkelbereich (hier -0.5 bis 0.5 Radiant)
+        desired_min_angle = -0.5
+        desired_max_angle = 0.5
 
-        # Umwandeln der gültigen LaserScan-Daten in 2D-Koordinaten
-        xs = ranges_valid * np.cos(angles_valid)
-        ys = ranges_valid * np.sin(angles_valid)
+        # Erzeuge einen Filter, der nur die Winkel im gewünschten Bereich auswählt
+        valid_angle_mask = (angles >= desired_min_angle) & (angles <= desired_max_angle)
+
+        # Filtere beide Arrays synchron
+        ranges_filtered = raw_ranges[valid_angle_mask]
+        angles_filtered = angles[valid_angle_mask]
+
+        # Berechne nun die 2D-Koordinaten
+        xs = ranges_filtered * np.cos(angles_filtered)
+        ys = ranges_filtered * np.sin(angles_filtered)
         points = np.vstack((xs, ys)).T
 
         # Anwenden von DBSCAN zum Clustern der Punkte
