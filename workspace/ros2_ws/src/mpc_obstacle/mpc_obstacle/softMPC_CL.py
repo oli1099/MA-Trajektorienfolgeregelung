@@ -31,7 +31,7 @@ class MPCClosedLoop(Node):
         self.Q = np.diag([0.1,0.1,0.005,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.0001*np.eye(self.nu)
         self.QN = self.Q
-        self.Penalty = 1e8
+        self.Penalty = 1e6
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 25  #Prediktionshorizont
@@ -193,7 +193,7 @@ class MPCClosedLoop(Node):
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
         self.ax.set_xlabel("y [m]")
         self.ax.set_ylabel("x [m]")
-        self.ax.grid(True)
+        #self.ax.grid(True)
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
 
