@@ -26,13 +26,13 @@ class LidarClustering(Node):
         print(np.isnan(ranges).sum(), np.isinf(ranges).sum())
         valid = np.isfinite(ranges)
         ranges = ranges[valid]
-        angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))[valid]
-
+        angles = np.linspace(msg.angle_min, msg.angle_max, len(ranges))
+        angles_valid = angles[valid]
         
         # Umwandeln der LaserScan-Daten in 2D-Koordinaten
         #angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
-        xs = np.array(msg.ranges) * np.cos(angles)
-        ys = np.array(msg.ranges) * np.sin(angles)
+        xs = np.array(msg.ranges) * np.cos(angles_valid)
+        ys = np.array(msg.ranges) * np.sin(angles_valid)
         points = np.vstack((xs, ys)).T
         
         # Anwenden von DBSCAN zum Clustern der Punkte
