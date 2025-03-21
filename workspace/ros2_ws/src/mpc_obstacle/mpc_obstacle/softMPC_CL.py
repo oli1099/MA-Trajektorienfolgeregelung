@@ -10,7 +10,7 @@ import math
 import time
 import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
-from .adaptiveMPC_OL import QP
+from .softMPC_OL import QP
 from MPC.SystemModel import DynamicModel
 
 import sys
