@@ -21,8 +21,16 @@ class LidarClustering(Node):
         self.marker_pub = self.create_publisher(MarkerArray, 'lidar_clusters', 10)
     
     def scan_callback(self, msg):
+        
+        ranges = np.array(msg.ranges)
+        print(np.isnan(ranges).sum(), np.isinf(ranges).sum())
+        valid = np.isfinite(ranges)
+        ranges = ranges[valid]
+        angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))[valid]
+
+        
         # Umwandeln der LaserScan-Daten in 2D-Koordinaten
-        angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
+        #angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
         xs = np.array(msg.ranges) * np.cos(angles)
         ys = np.array(msg.ranges) * np.sin(angles)
         points = np.vstack((xs, ys)).T
