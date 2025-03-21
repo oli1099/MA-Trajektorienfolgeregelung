@@ -35,7 +35,8 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 20  #Prediktionshorizont
+        self.Np = 20
+        self.Nc = 5  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -70,22 +71,21 @@ class MPCClosedLoop(Node):
         self.u_cl = []
 
         #Wir legen einen guess Wert für die 1. Iteration fest
-        self.x_guess =np.zeros((self.nx,self.N+1))
+        self.x_guess =np.zeros((self.nx,self.Np+1))
         self.x_guess[:,0]=self.x0
-        self.u_guess = np.zeros((self.nu,self.N))
+        self.u_guess = np.zeros((self.nu,self.Nc))
 
-        #self.slack_guess = np.zeros(self.N)
-        for i in range(self.N):
+        for i in range(self.Np):
             self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
-        for i in range (self.N-1):
+        for i in range (self.Nc-1):
              self.u_guess[:,i+1] = self.u_guess[:,i]
 
-        self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten()))#, self.slack_guess.flatten()))
+        self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten()))
         
 
         #QP initzialisieren
-        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Penalty,self.Safezone, 
-                                              self.N, self.nx, self.nu, self.Ts)
+        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Safezone, 
+                                              self.Nc, self.Np, self.nx, self.nu, self.Ts)
         
         
     def odom_callback(self,msg):
