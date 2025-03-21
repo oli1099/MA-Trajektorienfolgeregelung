@@ -138,7 +138,7 @@ class QP:
 
         for k in range(self.N):
             if x_pred[k]  >= (1  - self.Safezone) and x_pred[k] <= (2 + self.Safezone):
-                y_min_vector[k] = 0.5 + self.Safezone
+                y_min_vector[k] = 0.3 + self.Safezone
             else:
                 y_min_vector[k] = 0.0
 
