@@ -147,10 +147,10 @@ class QP:
 
         print(f"Optimale Lösung: {z_opt}")
         
-        for k in range(self.N+1):
+        for k in range(self.Np+1):
             x_opt[:,k] = z_opt[k*self.nx: (k+1)*self.nx]
             
-        for k in range (self.N):
+        for k in range (self.Nc):
             u_opt[:,k] = z_opt[(self.Np+1)*self.nx + k*self.nu:(self.Np+1)*self.nx + (k+1)*self.nu]
             #slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
         
