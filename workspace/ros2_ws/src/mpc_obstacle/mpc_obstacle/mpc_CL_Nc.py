@@ -35,7 +35,7 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 30 #Prediction Horizon
+        self.Np = 50 #Prediction Horizon
         self.Nc = 5  #Control Horizon
 
         #Mecanum-Chassis Objekt erstellen
