@@ -92,12 +92,12 @@ class QP:
         #Zustandsbegrenzung
         # evetl funktion sich xmin etc ziehen
 
-        for k in range(N +1):
+        '''for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = -0.1
             ubz[k*self.nx + 0] = 6          
             lbz[k*self.nx + 1] = -0.1
-            ubz[k*self.nx + 1] = np.inf
+            ubz[k*self.nx + 1] = np.inf'''
        
         #Eingangsbegrenzung
         for k in range(N):
