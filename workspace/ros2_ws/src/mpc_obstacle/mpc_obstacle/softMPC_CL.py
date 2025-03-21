@@ -193,9 +193,9 @@ class MPCClosedLoop(Node):
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
         obs_x = 1.5
-        obs_y = 0.5
+        obs_y = 0
         obs_width = 1.0
-        obs_height = 1.0
+        obs_height = 0.5
 
         safe_obs_x = obs_x - self.Safezone
         safe_obs_y = obs_y - self.Safezone
@@ -204,10 +204,10 @@ class MPCClosedLoop(Node):
 
         # Erstellen des Hindernis-Patches (gefüllter grauer Bereich)
         obstacle_patch = Rectangle((obs_x, obs_y), obs_width, obs_height,
-                                    color='gray', alpha=0.5, label="Hindernis")
+                                    color='gray', alpha=0.5)
         # Erstellen des Safe Zone-Patches (Umriss, gestrichelt)
         safezone_patch = Rectangle((safe_obs_x, safe_obs_y), safe_obs_width, safe_obs_height,
-                                fill=False, linestyle='--', edgecolor='red', label="Safe Zone")
+                                fill=False, linestyle='--', edgecolor='red')
 
         # Hinzufügen der Patches zum Plot
         self.ax.add_patch(obstacle_patch)
