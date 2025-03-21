@@ -60,6 +60,17 @@ class LidarClustering(Node):
                 self.create_point(x_min, y_min)  # Schließen des Rechtecks
             ]
 
+            # Dimensionen berechnen:
+            width = x_max - x_min
+            height = y_max - y_min
+            center_x = (x_min + x_max) / 2
+            center_y = (y_min + y_max) / 2
+
+            # Ausgabe im Terminal:
+            self.get_logger().info(
+                f"Cluster {cluster_id}: Center=({center_x:.2f}, {center_y:.2f}), Width={width:.2f}, Height={height:.2f}"
+            )
+
             marker = Marker()
             marker.header.frame_id = msg.header.frame_id
             marker.header.stamp = self.get_clock().now().to_msg()
