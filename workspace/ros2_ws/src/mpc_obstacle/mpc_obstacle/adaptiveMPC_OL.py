@@ -137,8 +137,8 @@ class QP:
         y_min_vector = np.zeros(self.N)
 
         for k in range(self.N):
-            if x_pred[k]  >= (1  - self.Safezone) and x_pred[k] <= (2 + self.Safezone):
-                y_min_vector[k] = 0.3 + self.Safezone
+            if x_pred[k]  >= (1.5  - self.Safezone) and x_pred[k] <= (2.5 + self.Safezone):
+                y_min_vector[k] = 0.5 + self.Safezone
             else:
                 y_min_vector[k] = 0.0
 

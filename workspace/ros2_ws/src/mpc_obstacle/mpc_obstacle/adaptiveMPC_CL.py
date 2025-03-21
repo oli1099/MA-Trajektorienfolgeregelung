@@ -36,7 +36,7 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 15  #Prediktionshorizont
+        self.N = 20  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -221,7 +221,7 @@ class MPCClosedLoop(Node):
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
         self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
-        self.ax.set_ylim([-1, 1.5])
+        self.ax.set_ylim([-0.3, 1.5])
 
 
 def main(args=None):
