@@ -6,13 +6,14 @@ from scipy.linalg import expm, block_diag
 import matplotlib.pyplot as plt
 
 class QP:
-    def __init__(self, A_d, B_d, Q, R, QN,Penalty, N, nx, nu, Ts,solver_opts=None):
+    def __init__(self, A_d, B_d, Q, R, QN,Penalty, Safezone,N, nx, nu, Ts,solver_opts=None):
         self.A_d = A_d
         self.B_d = B_d
         self.Q = Q
         self.R = R
         self.QN = QN
         self.Penalty = Penalty
+        self.Safezone = Safezone
         self.N = N
         self.nx = nx
         self.nu = nu
@@ -127,10 +128,11 @@ class QP:
         y_min_vector = np.zeros(self.N)
 
         for k in range(self.N):
-            if x_pred[k] >= 1.0 and x_pred[k] <= 2.0:
-                y_min_vector[k] = 0.5
+            if x_pred[k]  >= (1.0  - self.Safezone) and x_pred[k] <= (2.0 + self.Safezone):
+                y_min_vector[k] = 0.5 + self.Safezone
             else:
                 y_min_vector[k] = 0.0
+
 
         P_val = np.concatenate([x_current,x_ref,y_min_vector])
 

@@ -32,6 +32,7 @@ class MPCClosedLoop(Node):
         self.R = 0.0001*np.eye(self.nu)
         self.QN = self.Q
         self.Penalty = 1e6
+        self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 15  #Prediktionshorizont
@@ -83,7 +84,7 @@ class MPCClosedLoop(Node):
         
 
         #QP initzialisieren
-        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Penalty, 
+        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Penalty,self.Safezone, 
                                               self.N, self.nx, self.nu, self.Ts)
         
         
