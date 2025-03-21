@@ -29,14 +29,14 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([1,1,0.05,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.005*np.eye(self.nu)
+        self.Q = np.diag([0.04,0.04,0.001,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.00001*np.eye(self.nu)
         self.QN = self.Q
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 50 #Prediction Horizon
-        self.Nc = 25  #Control Horizon
+        self.Np = 30 #Prediction Horizon
+        self.Nc = 5  #Control Horizon
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
