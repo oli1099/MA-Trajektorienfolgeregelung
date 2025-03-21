@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'mpc_CL_obstacle = mpc_obstacle.mpc_CL_obstacle:main',
-            'adaptiveMPC_CL = mpc_obstacle.adaptiveMPC_CL:main'        ],
+            'adaptiveMPC_CL = mpc_obstacle.adaptiveMPC_CL:main',
+            'softMPC_CL = mpc_obstacle.softMPC_CL:main'        ],
     },
 )
