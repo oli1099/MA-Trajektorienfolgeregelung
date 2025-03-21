@@ -192,12 +192,12 @@ class MPCClosedLoop(Node):
 
         self.ax.legend()
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
-        self.ax.set_xlabel("y [m]")
-        self.ax.set_ylabel("x [m]")
+        self.ax.set_xlabel("x [m]")
+        self.ax.set_ylabel("y [m]")
         self.ax.grid(True)
 
-        self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
-        self.ax.set_ylim([0, 3])
+        #self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
+        #self.ax.set_ylim([0, 3])
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
 
 
