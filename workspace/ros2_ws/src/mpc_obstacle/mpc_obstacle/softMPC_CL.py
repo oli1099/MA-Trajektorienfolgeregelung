@@ -31,7 +31,7 @@ class MPCClosedLoop(Node):
         self.Q = np.diag([0.1,0.1,0.005,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.0001*np.eye(self.nu)
         self.QN = self.Q
-        self.Penalty = 1e6
+        self.Penalty = 1e8
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 25  #Prediktionshorizont
