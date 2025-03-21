@@ -22,23 +22,23 @@ class LidarClustering(Node):
     
     def scan_callback(self, msg):
         
-        ranges = np.array(msg.ranges)
-        print(np.isnan(ranges).sum(), np.isinf(ranges).sum())
-        valid = np.isfinite(ranges)
-        ranges = ranges[valid]
-        angles = np.linspace(msg.angle_min, msg.angle_max, len(ranges))
+        raw_ranges = np.array(msg.ranges)  # Länge z.B. 455
+        angles = np.linspace(msg.angle_min, msg.angle_max, len(raw_ranges))  # Länge ebenfalls 455
+
+        # Gültige Werte filtern (alle finite Werte)
+        valid = np.isfinite(raw_ranges)
+        ranges_valid = raw_ranges[valid]
         angles_valid = angles[valid]
-        
-        # Umwandeln der LaserScan-Daten in 2D-Koordinaten
-        #angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
-        xs = np.array(msg.ranges) * np.cos(angles_valid)
-        ys = np.array(msg.ranges) * np.sin(angles_valid)
+
+        # Umwandeln der gültigen LaserScan-Daten in 2D-Koordinaten
+        xs = ranges_valid * np.cos(angles_valid)
+        ys = ranges_valid * np.sin(angles_valid)
         points = np.vstack((xs, ys)).T
-        
+
         # Anwenden von DBSCAN zum Clustern der Punkte
         clustering = DBSCAN(eps=0.1, min_samples=5).fit(points)
         labels = clustering.labels_
-        
+
         marker_array = MarkerArray()
         marker_id = 0
         # Iteriere über alle gefundenen Cluster
@@ -47,7 +47,7 @@ class LidarClustering(Node):
             if cluster_id == -1:
                 continue
             cluster_points = points[labels == cluster_id]
-            
+
             # Berechnung des minimalen umschließenden Rechtecks:
             x_min, y_min = cluster_points.min(axis=0)
             x_max, y_max = cluster_points.max(axis=0)
@@ -59,7 +59,7 @@ class LidarClustering(Node):
                 self.create_point(x_min, y_max),
                 self.create_point(x_min, y_min)  # Schließen des Rechtecks
             ]
-            
+
             marker = Marker()
             marker.header.frame_id = msg.header.frame_id
             marker.header.stamp = self.get_clock().now().to_msg()
@@ -73,13 +73,7 @@ class LidarClustering(Node):
             marker.points = rect_points
             marker_array.markers.append(marker)
             marker_id += 1
-            
-            # Alternativ: Berechnung eines umschließenden Kreises
-            # Hier kannst du den Schwerpunkt des Clusters und den maximalen Abstand zu diesem Mittelpunkt berechnen.
-            # center = np.mean(cluster_points, axis=0)
-            # radius = np.max(np.linalg.norm(cluster_points - center, axis=1))
-            # Anschließend kannst du einen Kreis als Marker (z.B. Marker.LINE_STRIP mit kreisförmigen Punkten) darstellen.
-        
+
         self.marker_pub.publish(marker_array)
     
     def create_point(self, x, y):
