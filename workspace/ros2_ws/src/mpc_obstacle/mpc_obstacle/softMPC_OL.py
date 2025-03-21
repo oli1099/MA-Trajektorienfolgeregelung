@@ -94,10 +94,10 @@ class QP:
 
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
-            lbz[k*self.nx + 0] = 0
+            lbz[k*self.nx + 0] = -0.1
             ubz[k*self.nx + 0] = 6          
-            lbz[k*self.nx + 1] = 0
-            ubz[k*self.nx + 1] = 4 
+            lbz[k*self.nx + 1] = -0.1
+            ubz[k*self.nx + 1] = np.inf
        
         #Eingangsbegrenzung
         for k in range(N):
