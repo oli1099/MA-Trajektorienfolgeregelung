@@ -76,7 +76,8 @@ class MPCClosedLoop(Node):
         self.u_guess = np.zeros((self.nu,self.Nc))
 
         for i in range(self.Np):
-            self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,i]
+            idx_u = min(i, self.Nc - 1) 
+            self.x_guess[:,i+1]= self.Ad @ self.x_guess[:,i] + self.Bd @ self.u_guess[:,idx_u]
         for i in range (self.Nc-1):
              self.u_guess[:,i+1] = self.u_guess[:,i]
 
@@ -139,22 +140,6 @@ class MPCClosedLoop(Node):
         self.z0 = z0_new
         self.get_logger().info(f'z0: {self.z0}')
 
-
-        '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
-        for k in range(self.N):
-            z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
-        #Letzter Zustand wird nochmal drangehängt 
-        z0_new[self.N*self.nx : (self.N+1)*self.nx] = x_opt[:, self.N]
-        
-        #Analog für U
-        for k in range(self.N-1):
-            z0_new[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]=u_opt[:,k+1]
-        
-        # U nochmal dranhängen
-        z0_new[(self.N+1)*self.nx + (self.N-1)*self.nu:(self.N+1)*self.nx + self.N*self.nu]= u_opt[:,self.N-1]
-
-        self.z0 = z0_new'''
-
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
         v_robot = self.mpc_model.get_velocity(u_cl)  
@@ -165,9 +150,6 @@ class MPCClosedLoop(Node):
         twist.linear.y = float(v_robot[1])
         twist.angular.z = float(v_robot[2])
         self.control_pub.publish(twist)
-
-        
-
 
     def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
@@ -181,10 +163,6 @@ class MPCClosedLoop(Node):
         for i, pred in enumerate(self.predictions_list):
                 self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
             
-        '''if self.x_pred is not None:
-            # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
-
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
