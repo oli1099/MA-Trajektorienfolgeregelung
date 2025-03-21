@@ -35,8 +35,8 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 20
-        self.Nc = 5  #Prediktionshorizont
+        self.Np = 30 #Prediction Horizon
+        self.Nc = 5  #Control Horizon
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -112,7 +112,7 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
-            self.fig.savefig("MPC_Adaptive_CL_plot")
+            self.fig.savefig("MPC_Nc_CL_plot")
             self.timer.cancel()
             return
 
