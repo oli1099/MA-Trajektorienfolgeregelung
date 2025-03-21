@@ -78,8 +78,6 @@ class QP:
         self.lbg = np.concatenate((lbg_dyn, lbg_slack))
         self.ubg = np.concatenate((ubg_dyn, ubg_slack))
 
-
-
         #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
         #self.lbg = np.zeros(g.size1())
         #self.ubg = np.zeros(g.size1())
@@ -93,12 +91,12 @@ class QP:
         #Zustandsbegrenzung
         # evetl funktion sich xmin etc ziehen
 
-        '''for k in range(N +1):
+        for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = -0.1
             ubz[k*self.nx + 0] = 6          
             lbz[k*self.nx + 1] = -0.1
-            ubz[k*self.nx + 1] = np.inf'''
+            ubz[k*self.nx + 1] = np.inf
        
         #Eingangsbegrenzung
         for k in range(N):
