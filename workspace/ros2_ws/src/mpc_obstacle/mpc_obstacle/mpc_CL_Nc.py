@@ -29,8 +29,8 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([0.001,0.001,0.0001,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.000001*np.eye(self.nu)
+        self.Q = np.diag([0.1,0.1,0.01,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.00001*np.eye(self.nu)
         self.QN = self.Q
         self.Safezone = 0.2
 
