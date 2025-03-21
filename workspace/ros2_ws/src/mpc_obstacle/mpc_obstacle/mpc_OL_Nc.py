@@ -13,8 +13,8 @@ class QP:
         self.R = R
         self.QN = QN
         self.Safezone = Safezone
-        self.Np = Nc 
-        self.Nc = Np
+        self.Np = Np 
+        self.Nc = Nc
         self.nx = nx
         self.nu = nu
         self.Ts = Ts
