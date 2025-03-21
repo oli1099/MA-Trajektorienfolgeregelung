@@ -9,6 +9,7 @@ import numpy as np
 import math
 import time
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 from controller.mecanum import MecanumChassis
 from .softMPC_OL import QP
 from MPC.SystemModel import DynamicModel
@@ -191,14 +192,36 @@ class MPCClosedLoop(Node):
             actual_path_arr = np.array(self.actual_path)
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
+        obs_x = 0.5
+        obs_y = 1.0
+        obs_width = 1.0
+        obs_height = 1.0
+
+        safe_obs_x = obs_x - self.Safezone
+        safe_obs_y = obs_y - self.Safezone
+        safe_obs_width = obs_width + 2 * self.Safezone
+        safe_obs_height = obs_height + 2 * self.Safezone
+
+        # Erstellen des Hindernis-Patches (gefüllter grauer Bereich)
+        obstacle_patch = Rectangle((obs_x, obs_y), obs_width, obs_height,
+                                    color='gray', alpha=0.5, label="Hindernis")
+        # Erstellen des Safe Zone-Patches (Umriss, gestrichelt)
+        safezone_patch = Rectangle((safe_obs_x, safe_obs_y), safe_obs_width, safe_obs_height,
+                                fill=False, linestyle='--', edgecolor='red', label="Safe Zone")
+
+        # Hinzufügen der Patches zum Plot
+        self.ax.add_patch(obstacle_patch)
+        self.ax.add_patch(safezone_patch)
+
+
         self.ax.legend()
-        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
+        self.ax.set_title("MPC Vorhersage Obstacle & Tatsächlicher Pfad")
         self.ax.set_xlabel("x [m]")
         self.ax.set_ylabel("y [m]")
         self.ax.grid(True)
 
-        #self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
-        #self.ax.set_ylim([0, 3])
+        self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
+        self.ax.set_ylim([0, 3])
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
 
 
