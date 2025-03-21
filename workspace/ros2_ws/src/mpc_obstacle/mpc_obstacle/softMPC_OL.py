@@ -128,7 +128,7 @@ class QP:
 
         for k in range(self.N):
             if x_pred[k] >= 1.0 and x_pred[k] <= 2.0:
-                y_min_vector[k] = 0.5
+                y_min_vector[k] = 1
             else:
                 y_min_vector[k] = 0.0
 
