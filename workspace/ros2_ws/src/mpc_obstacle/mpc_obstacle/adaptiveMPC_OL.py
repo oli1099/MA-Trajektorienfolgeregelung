@@ -30,7 +30,8 @@ class QP:
         # Anfangs- und Zielzustand P = [x0; x_ref]
         P = ca.SX.sym('P',nx*2 + N)
         x_0 = P[0:nx]
-        x_ref = P[nx:]
+        x_ref = P[nx:2*nx]
+        y_min_param = P[2*nx:]
 
         #Inititalisieren der Kostenfunktion und der Anfangsbedingung
         cost = 0
@@ -50,7 +51,10 @@ class QP:
             cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk #+ slack.T @ self.Penalty @ slack
             g.append(x_next - (self.A_d @ xk + self.B_d @ uk))
             
-            
+        for k in range(N):
+        #Soft Constraints (ymin -s-y<=0)
+            g.append(y_min_param[k] - xk[1]) 
+
         #Terminalkosten
         xN = Z[N*nx : (N+1)*nx]
         cost += (xN - x_ref).T @ self.QN @ (xN - x_ref) 
@@ -68,23 +72,23 @@ class QP:
         g = ca.vertcat(*g) #Aufsplitten der Liste und als spaltenvektor deklarieren
 
         #Für die Equality Constrains g == 0 und für die Inequality Constraints g <= 0
-        '''n_dynamics = (N+1)*self.nx
-        n_slack = N
+        n_dynamics = (N+1)*self.nx
+        n_soft = N
 
         lbg_dyn = np.zeros(n_dynamics)
         ubg_dyn = np.zeros(n_dynamics)
 
-        lbg_slack = -np.inf*np.ones(n_slack)
-        ubg_slack = np.zeros(n_slack)
+        lbg_slack = -np.inf*np.ones(n_soft)
+        ubg_slack = np.zeros(n_soft)
 
         self.lbg = np.concatenate((lbg_dyn, lbg_slack))
-        self.ubg = np.concatenate((ubg_dyn, ubg_slack))'''
+        self.ubg = np.concatenate((ubg_dyn, ubg_slack))
 
 
 
         #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
-        self.lbg = np.zeros(g.size1())
-        self.ubg = np.zeros(g.size1())
+        #self.lbg = np.zeros(g.size1())
+        #self.ubg = np.zeros(g.size1())
         
         #Inequality Constraints bestimmen für u < |1| und x muss die map dann sein
 
@@ -97,9 +101,9 @@ class QP:
 
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
-            lbz[k*self.nx + 0] = 0
+            lbz[k*self.nx + 0] = -0.1
             ubz[k*self.nx + 0] = 6          
-            lbz[k*self.nx + 1] = 0
+            lbz[k*self.nx + 1] = -0.1
             ubz[k*self.nx + 1] = 4 
        
         #Eingangsbegrenzung
@@ -126,40 +130,23 @@ class QP:
         #self.z0 = np.zeros(self.zdim)
 
     def solveMPC(self,x_current, x_ref,z0):
-        P_val = np.concatenate([x_current,x_ref])
-        
-        lbz_mod = self.lbz.copy()
-        ubz_mod = self.ubz.copy()
-
         x_values = z0[:(self.N+1)*self.nx].reshape((self.nx, self.N+1))
         x_pred = x_values[0,:]
         y_pred = x_values[1,:]
-        
-            
-        # Standard: Straßenbegrenzung 
-        y_min = 0.0
-        y_max = 4.0
+        y_min_vector = np.zeros(self.N)
 
-        for k, value in enumerate(x_pred):
-            # Wenn der prädizierte x-Wert im Hindernisbereich liegt, setze y_min auf einen sicheren Wert
-            print(f"Prädizierter x-Wert im Hindernisbereich: {value}")
-            if value >= 1.0 and value <= 2.0:
-                y_min = 0.5
-                
+        for k in range(self.N):
+            if x_pred[k] >= 1.0 and x_pred[k] <= 2.0:
+                y_min_vector[k] = 0.5
             else:
-                y_min = 0.0
-            
-            lbz_mod[k*self.nx + 1] = y_min
-            ubz_mod[k*self.nx + 1] = y_max
+                y_min_vector[k] = 0.0
 
-            #print(f"Zeitschritt {k}: x in [{lbz_mod[k*self.nx + 0]}, {ubz_mod[k*self.nx + 0]}], "
-            #f"y in [{lbz_mod[k*self.nx + 1]}, {ubz_mod[k*self.nx + 1]}]")
+        P_val = np.concatenate([x_current,x_ref,y_min_vector])
+
         print(f"Prädizierter x-Wert: {x_pred}")
         print(f"Prädizierter y-Wert: {y_pred}")
 
-        print(f"Neue Bounds: {lbz_mod}, {ubz_mod}")
-
-        sol = self.solver(x0 = z0,p=P_val,lbx=lbz_mod, ubx= ubz_mod,lbg = self.lbg, ubg= self.ubg)    
+        sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)    
         
         #sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
