@@ -28,7 +28,7 @@ class QP:
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
-        P = ca.SX.sym('P',nx*2)
+        P = ca.SX.sym('P',nx*2 + N)
         x_0 = P[0:nx]
         x_ref = P[nx:]
 
