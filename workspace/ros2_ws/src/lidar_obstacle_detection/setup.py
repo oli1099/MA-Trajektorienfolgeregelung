@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'lidar_obstacle_detection = lidar_obstacle_detection.obstacle_clustering:main',
+            'obstacle_clustering = lidar_obstacle_detection.obstacle_clustering:main',
         ],
     },
 )
