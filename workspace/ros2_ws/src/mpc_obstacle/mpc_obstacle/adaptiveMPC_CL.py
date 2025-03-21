@@ -191,8 +191,8 @@ class MPCClosedLoop(Node):
             actual_path_arr = np.array(self.actual_path)
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
-        obs_x = 0.5
-        obs_y = 1.0
+        obs_x = 1.5
+        obs_y = 0.5
         obs_width = 1.0
         obs_height = 1.0
 
