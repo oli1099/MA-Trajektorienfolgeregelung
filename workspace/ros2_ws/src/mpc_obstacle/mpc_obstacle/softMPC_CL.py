@@ -28,10 +28,10 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([0.1,1,0.005,1,1,1]) #Höhere Bestrafung auf der Position
+        self.Q = np.diag([0.1,0.1,0.005,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.0001*np.eye(self.nu)
         self.QN = self.Q
-        self.Penalty = 1e6
+        self.Penalty = 1e10
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 25  #Prediktionshorizont
