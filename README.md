@@ -44,7 +44,11 @@ MPC Obstacel avoidence starten
 
     ros2 run mpc_obstacle mpc_CL_obstacle
 
-    ros2 run mpc_obstacle adaptiveMPC_CL  
+    ros2 run mpc_obstacle adaptiveMPC_CL  # ohne slack
+
+    ros2 run mpc_obstacle softMPC_CL      # mit slack
+
+    ros2 run mpc_obstacle mpc_CL_Nc       # Nc und Np
 
     
 Package Erstellen in ROS2:
