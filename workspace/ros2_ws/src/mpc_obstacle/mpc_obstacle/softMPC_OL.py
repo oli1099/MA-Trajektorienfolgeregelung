@@ -78,6 +78,9 @@ class QP:
         self.lbg = np.concatenate((lbg_dyn, lbg_slack))
         self.ubg = np.concatenate((ubg_dyn, ubg_slack))
 
+        print(f"lbg: {self.lbg}")
+        print(f"ubg: {self.ubg}")
+
         #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
         #self.lbg = np.zeros(g.size1())
         #self.ubg = np.zeros(g.size1())
@@ -144,7 +147,7 @@ class QP:
         u_opt = np.zeros((self.nu,self.N))
         slack_opt = np.zeros(self.N)
 
-        print(f"Optimale Lösung: {z_opt}")
+        #print(f"Optimale Lösung: {z_opt}")
         
 
 

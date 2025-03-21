@@ -28,10 +28,10 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.01*np.eye(self.nu)
+        self.Q = np.diag([0.1,0.1,0.005,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.0001*np.eye(self.nu)
         self.QN = self.Q
-        self.Penalty = 1e3
+        self.Penalty = 1e6
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 15  #Prediktionshorizont
@@ -136,7 +136,7 @@ class MPCClosedLoop(Node):
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten(), slacks_warm.flatten()))
         self.z0 = z0_new
-        self.get_logger().info(f'z0: {self.z0}')
+        #self.get_logger().info(f'z0: {self.z0}')
 
 
         '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
