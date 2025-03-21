@@ -28,9 +28,9 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([0.05,0.05,0.001
+        self.Q = np.diag([0.1,0.1,0.001
                           ,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 1e-6*np.eye(self.nu)
+        self.R = 0.0001*np.eye(self.nu)
         self.QN = self.Q
         self.Penalty = 1e10
 
@@ -111,7 +111,7 @@ class MPCClosedLoop(Node):
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
-            self.fig.savefig("MPC_Adaptive_CL_plot")
+            self.fig.savefig("MPC_slack_CL_plot")
             self.timer.cancel()
             return
 
