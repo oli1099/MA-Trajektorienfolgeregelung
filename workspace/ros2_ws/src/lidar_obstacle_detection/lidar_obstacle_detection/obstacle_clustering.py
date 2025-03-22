@@ -10,7 +10,7 @@ import math
 class LidarClustering(Node):
     def __init__(self):
         super().__init__('lidar_clustering_node')
-        # Abonnieren des Lidar-Topics
+        # Abonniere das Lidar-Topic
         self.subscription = self.create_subscription(
             LaserScan,
             '/ldlidar_node/scan',
@@ -21,52 +21,54 @@ class LidarClustering(Node):
         self.marker_pub = self.create_publisher(MarkerArray, 'lidar_clusters', 10)
     
     def scan_callback(self, msg):
+        raw_ranges = np.array(msg.ranges)  # z.B. Länge 455
+        # Winkel anpassen: Annahme, dass der Lidar von -0.5 bis 0.5 rad scannt
+        angles = np.linspace(-0.5, 0.5, len(raw_ranges))
         
-        raw_ranges = np.array(msg.ranges)  # Länge z.B. 455
-        #winkle anpassen 
-        angles = np.linspace(-0.5, 0.5, len(raw_ranges))  # Länge ebenfalls 455
-
-        # Gültige Werte filtern (alle finite Werte)
+        # Filtere alle gültigen (finite) Werte
         valid = np.isfinite(raw_ranges)
         ranges_valid = raw_ranges[valid]
         angles_valid = angles[valid]
-
-        # Umwandeln der gültigen LaserScan-Daten in 2D-Koordinaten
+        
+        # Umwandlung in 2D-Koordinaten (im Roboter-Koordinatensystem)
         xs = ranges_valid * np.cos(angles_valid)
         ys = ranges_valid * np.sin(angles_valid)
         points = np.vstack((xs, ys)).T
-
-        # Anwenden von DBSCAN zum Clustern der Punkte
+        
+        # Clusterbildung mittels DBSCAN
         clustering = DBSCAN(eps=0.1, min_samples=5).fit(points)
         labels = clustering.labels_
-
+        
         marker_array = MarkerArray()
         marker_id = 0
-
-
+        
         # Iteriere über alle gefundenen Cluster
         for cluster_id in set(labels):
-            # Ausreißer (Label -1) ignorieren
+            # Ignoriere Ausreißer (Label -1)
             if cluster_id == -1:
                 continue
-            cluster_points = points[labels == cluster_id]
 
-            # Berechnung des minimalen umschließenden Rechtecks:
+            cluster_points = points[labels == cluster_id]
+            
+            # Berechne das minimale umschließende Rechteck
             x_min, y_min = cluster_points.min(axis=0)
             x_max, y_max = cluster_points.max(axis=0)
-            # Erzeugen von Marker-Punkten für das Rechteck
-
-            # Dimensionen berechnen:
+            
+            # Berechne die Dimensionen und den Schwerpunkt des Clusters
             width = x_max - x_min
             height = y_max - y_min
             center_x = (x_min + x_max) / 2
             center_y = (y_min + y_max) / 2
-
-            distance = np.sqrt(center_x**2 + center_y**2)
-
+            
+            # Berechne den Abstand vom Roboter (Annahme: Roboter ist im Ursprung)
+            distance = math.sqrt(center_x**2 + center_y**2)
+            
+            # Filter: Nur Cluster, deren Schwerpunkt innerhalb eines 4-m breiten Straßenkoridors liegen
+            # Hier: abs(center_y) muss <= 2.0 m sein.
             if abs(center_y) > 2.0:
                 continue
             
+            # Erstelle Marker-Punkte für das Rechteck
             rect_points = [
                 self.create_point(x_min, y_min),
                 self.create_point(x_max, y_min),
@@ -74,26 +76,27 @@ class LidarClustering(Node):
                 self.create_point(x_min, y_max),
                 self.create_point(x_min, y_min)  # Schließen des Rechtecks
             ]
-
-            # Ausgabe im Terminal:
+            
+            # Ausgabe im Terminal
             self.get_logger().info(
                 f"Cluster {cluster_id}: Center=({center_x:.2f}, {center_y:.2f}), Distance={distance:.2f} m, Width={width:.2f}, Height={height:.2f}"
             )
-
+            
+            # Erzeuge den Marker für RViz
             marker = Marker()
             marker.header.frame_id = msg.header.frame_id
             marker.header.stamp = self.get_clock().now().to_msg()
             marker.ns = "clusters"
             marker.id = marker_id
-            marker.type = Marker.LINE_STRIP  # Linie, um das Rechteck darzustellen
+            marker.type = Marker.LINE_STRIP  # Darstellung als Linienzug
             marker.action = Marker.ADD
             marker.scale.x = 0.05  # Linienbreite
             marker.color.a = 1.0
-            marker.color.r = 1.0  # Rot – kann angepasst werden
+            marker.color.r = 1.0  # Farbe: Rot
             marker.points = rect_points
             marker_array.markers.append(marker)
             marker_id += 1
-
+        
         self.marker_pub.publish(marker_array)
     
     def create_point(self, x, y):
