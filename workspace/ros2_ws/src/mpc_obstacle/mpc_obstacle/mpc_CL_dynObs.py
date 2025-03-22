@@ -116,7 +116,7 @@ class MPCClosedLoop(Node):
         obsXrl = self.obstacle['obsXrl'] - self.Safezone
 
         xmin = carX
-        xmax = 30
+        xmax = 1e6
 
         # Schwellenwert wann das Auto in der linken spur ist 
         threshold = 0.1
