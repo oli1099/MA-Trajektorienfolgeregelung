@@ -77,7 +77,7 @@ class QP:
                     [1,  0,  0, 0, 0, 0],   # Oberes x-Limit: x <= xmax
                     [-1, 0,  0, 0, 0, 0]    # Unteres x-Limit: -x <= xmin  (d.h. x >= -xmin)
                 ])
-            G = np.array([w/2, w/2, -cI, xmax, -xmin])
+            G = np.array([w/2, w/2, -cI, xmax, xmin])
             g.append(F @ xk - G) 
 
         #Terminalkosten
