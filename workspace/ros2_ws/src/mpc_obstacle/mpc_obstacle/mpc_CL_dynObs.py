@@ -120,14 +120,20 @@ class MPCClosedLoop(Node):
 
         # Schwellenwert wann das Auto in der linken spur ist 
         threshold = 0.1
+        epsilon = 0.01
 
         if carX <= obsXrl:
             if abs(carY - obsYrl) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
-                cS = np.tan(np.arctan2((obsYrl-carY),(obsXrl-carX)))
-                cI = obsYrl - cS*obsXrl
+                if abs(obsXrl - carX) < epsilon:
+                # Fallback: Wenn die Differenz zu klein ist, setze cS auf 0 und cI auf obsYrl
+                    cS = 0.0
+                    cI = obsYrl
+                else:
+                    cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
+                    cI = obsYrl - cS * obsXrl
         else:
             if abs(carY - obsYrl) <= threshold:
                 cS = 0
