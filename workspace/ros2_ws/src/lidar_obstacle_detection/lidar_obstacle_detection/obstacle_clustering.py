@@ -23,7 +23,7 @@ class LidarClustering(Node):
     def scan_callback(self, msg):
         raw_ranges = np.array(msg.ranges)  # z.B. Länge 455
         # Winkel anpassen: Annahme, dass der Lidar von -0.5 bis 0.5 rad scannt
-        angles = np.linspace(-0.5, 0.5, len(raw_ranges))
+        angles = np.linspace(msg.range_min, msg.range_max, len(raw_ranges))
         
         # Filtere alle gültigen (finite) Werte
         valid = np.isfinite(raw_ranges)
