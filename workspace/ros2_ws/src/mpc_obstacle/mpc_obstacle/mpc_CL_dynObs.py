@@ -183,7 +183,7 @@ class MPCClosedLoop(Node):
 
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))#, slacks_warm.flatten()))
-        z0_new[0:self.nx] = self.xmeasure
+        #z0_new[0:self.nx] = self.xmeasure
         self.z0 = z0_new
         self.get_logger().info(f'z0: {self.z0}')
 
