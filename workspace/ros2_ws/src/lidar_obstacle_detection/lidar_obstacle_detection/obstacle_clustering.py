@@ -13,7 +13,7 @@ class LidarClustering(Node):
         # Abonnieren des Lidar-Topics
         self.subscription = self.create_subscription(
             LaserScan,
-            '/slam_toolbox/scan_visualization',
+            '/ldlidar_node/scan',
             self.scan_callback,
             10
         )
@@ -77,8 +77,8 @@ class LidarClustering(Node):
 
             # Ausgabe im Terminal:
             self.get_logger().info(
-                    f"Cluster {cluster_id}: Center=({center_x:.2f}, {center_y:.2f}), Distance={distance:.2f} m, Width={width:.2f}, Height={height:.2f}"
-                )
+                f"Cluster {cluster_id}: Center=({center_x:.2f}, {center_y:.2f}), Distance={distance:.2f} m, Width={width:.2f}, Height={height:.2f}"
+            )
 
             marker = Marker()
             marker.header.frame_id = msg.header.frame_id
