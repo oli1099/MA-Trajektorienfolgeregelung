@@ -22,7 +22,7 @@ class QP:
         #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
     
         if solver_opts  is None:
-            solver_opts = {"print_time":0,"error_on_fail":False}
+            solver_opts = {"print_time":0}
         
         #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN und slack)
         self.zdim = (Np+1)*nx +Nc*nu #+ self.N
