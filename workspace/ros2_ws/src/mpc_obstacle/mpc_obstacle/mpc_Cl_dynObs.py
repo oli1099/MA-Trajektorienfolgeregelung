@@ -157,7 +157,7 @@ class MPCClosedLoop(Node):
         cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
 
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
-        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.Q, xmax, xmin)
+        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
