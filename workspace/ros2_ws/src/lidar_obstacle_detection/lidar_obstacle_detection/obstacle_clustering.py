@@ -13,7 +13,7 @@ class LidarClustering(Node):
         # Abonnieren des Lidar-Topics
         self.subscription = self.create_subscription(
             LaserScan,
-            '/ldlidar_node/scan',
+            '/slam_toolbox/scan_visualization',
             self.scan_callback,
             10
         )
