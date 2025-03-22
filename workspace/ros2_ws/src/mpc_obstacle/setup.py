@@ -23,6 +23,7 @@ setup(
             'mpc_CL_obstacle = mpc_obstacle.mpc_CL_obstacle:main',
             'adaptiveMPC_CL = mpc_obstacle.adaptiveMPC_CL:main',
             'slackMPC_CL = mpc_obstacle.slackMPC_CL:main',
-            'mpc_CL_Nc = mpc_obstacle.mpc_CL_Nc:main '        ],
+            'mpc_CL_Nc = mpc_obstacle.mpc_CL_Nc:main ' ,
+            'mpc_CL_dynObs = mpc_obstacle.mpc_CL_dynObs:main'       ],
     },
 )
