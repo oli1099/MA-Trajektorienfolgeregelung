@@ -42,6 +42,8 @@ class LidarClustering(Node):
 
         marker_array = MarkerArray()
         marker_id = 0
+
+
         # Iteriere über alle gefundenen Cluster
         for cluster_id in set(labels):
             # Ausreißer (Label -1) ignorieren
@@ -53,6 +55,18 @@ class LidarClustering(Node):
             x_min, y_min = cluster_points.min(axis=0)
             x_max, y_max = cluster_points.max(axis=0)
             # Erzeugen von Marker-Punkten für das Rechteck
+
+            # Dimensionen berechnen:
+            width = x_max - x_min
+            height = y_max - y_min
+            center_x = (x_min + x_max) / 2
+            center_y = (y_min + y_max) / 2
+
+            distance = np.sqrt(center_x**2 + center_y**2)
+
+            if abs(center_y) > 2.0:
+                continue
+            
             rect_points = [
                 self.create_point(x_min, y_min),
                 self.create_point(x_max, y_min),
@@ -61,16 +75,10 @@ class LidarClustering(Node):
                 self.create_point(x_min, y_min)  # Schließen des Rechtecks
             ]
 
-            # Dimensionen berechnen:
-            width = x_max - x_min
-            height = y_max - y_min
-            center_x = (x_min + x_max) / 2
-            center_y = (y_min + y_max) / 2
-
             # Ausgabe im Terminal:
             self.get_logger().info(
-                f"Cluster {cluster_id}: Center=({center_x:.2f}, {center_y:.2f}), Width={width:.2f}, Height={height:.2f}"
-            )
+                    f"Cluster {cluster_id}: Center=({center_x:.2f}, {center_y:.2f}), Distance={distance:.2f} m, Width={width:.2f}, Height={height:.2f}"
+                )
 
             marker = Marker()
             marker.header.frame_id = msg.header.frame_id
