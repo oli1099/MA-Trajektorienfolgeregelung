@@ -168,10 +168,10 @@ class MPCClosedLoop(Node):
             actual_path_arr = np.array(self.actual_path)
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
-        obs_x = 1.5
+        obs_x = 0.5
         obs_y = 0
-        obs_width = 1.0
-        obs_height = 0.5
+        obs_width = 0.5
+        obs_height = 0.25
 
         safe_obs_x = obs_x - self.Safezone
         safe_obs_y = obs_y - self.Safezone
