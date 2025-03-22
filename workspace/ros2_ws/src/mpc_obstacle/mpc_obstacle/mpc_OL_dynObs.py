@@ -70,14 +70,14 @@ class QP:
         # Für jeden Prädiktionsschritt fügen wir 5 gemischte Constraints hinzu:
         for k in range(Np):
             xk = Z[k*nx:(k+1)*nx]
-            F = np.array([
-                    [0,  1,  0, 0, 0, 0],   # Oberes y-Limit: y <= W/2
-                    [0, -1,  0, 0, 0, 0],   # Unteres y-Limit: -y <= W/2  (d.h. y >= -W/2)
-                    [cS, -1, 0, 0, 0, 0],   # Hindernisvermeidung: cS*x - y <= -cI  (d.h. y >= cS*x + cI)
-                    [1,  0,  0, 0, 0, 0],   # Oberes x-Limit: x <= xmax
-                    [-1, 0,  0, 0, 0, 0]    # Unteres x-Limit: -x <= xmin  (d.h. x >= -xmin)
-                ])
-            G = np.array([w/2, w/2, -cI, xmax, -xmin])
+            F = ca.vertcat(
+                    ca.horzcat(0,  1,  0, 0, 0, 0),   # Oberes y-Limit: y <= W/2
+                    ca.horzcat(0, -1,  0, 0, 0, 0),   # Unteres y-Limit: -y <= W/2  (d.h. y >= -W/2)
+                    ca.horzcat(cS, -1, 0, 0, 0, 0),   # Hindernisvermeidung: cS*x - y <= -cI  (d.h. y >= cS*x + cI)
+                    ca.horzcat(1,  0,  0, 0, 0, 0),   # Oberes x-Limit: x <= xmax
+                    ca.horzcat(-1, 0,  0, 0, 0, 0)    # Unteres x-Limit: -x <= xmin  (d.h. x >= -xmin)
+                )
+            G = ca.vertcat(w/2, w/2, -cI, xmax, -xmin)
             g.append(F @ xk - G) 
 
         #Terminalkosten
