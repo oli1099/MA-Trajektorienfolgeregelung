@@ -126,7 +126,7 @@ class MPCClosedLoop(Node):
                 cS = 0
                 cI = obsYrl
             else:
-                cS = np.tan(np.atan2((obsYrl-carY)/(obsXrl-carX),1))
+                cS = np.tan(np.arctan2((obsYrl-carY),(obsXrl-carX)))
                 cI = obsYrl - cS*obsXrl
         else:
             if abs(carY - obsYrl) <= threshold:
