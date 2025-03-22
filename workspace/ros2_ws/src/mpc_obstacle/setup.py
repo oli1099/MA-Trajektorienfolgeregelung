@@ -22,7 +22,7 @@ setup(
         'console_scripts': [
             'mpc_CL_obstacle = mpc_obstacle.mpc_CL_obstacle:main',
             'adaptiveMPC_CL = mpc_obstacle.adaptiveMPC_CL:main',
-            'softMPC_CL = mpc_obstacle.softMPC_CL:main',
+            'slackMPC_CL = mpc_obstacle.slackMPC_CL:main',
             'mpc_CL_Nc = mpc_obstacle.mpc_CL_Nc:main '        ],
     },
 )

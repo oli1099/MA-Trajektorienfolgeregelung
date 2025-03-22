@@ -11,7 +11,7 @@ import time
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from controller.mecanum import MecanumChassis
-from .softMPC_OL import QP
+from .slackMPC_OL import QP
 from MPC.SystemModel import DynamicModel
 
 import sys

@@ -23,6 +23,7 @@ class LidarClustering(Node):
     def scan_callback(self, msg):
         
         raw_ranges = np.array(msg.ranges)  # Länge z.B. 455
+        #winkle anpassen 
         angles = np.linspace(-0.5, 0.5, len(raw_ranges))  # Länge ebenfalls 455
 
         # Gültige Werte filtern (alle finite Werte)
