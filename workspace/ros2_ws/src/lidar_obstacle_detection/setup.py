@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'obstacle_clustering = lidar_obstacle_detection.obstacle_clustering:main',
             'obstacle_detection_map = lidar_obstacle_detection.obstacle_detection_map:main',
+            'obstacle_detection_map = lidar_obstacle_detection.obstacle_map:main'
         ],
     },
 )
