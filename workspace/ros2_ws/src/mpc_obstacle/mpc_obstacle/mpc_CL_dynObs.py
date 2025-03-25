@@ -36,14 +36,14 @@ class MPCClosedLoop(Node):
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.Np = 25 #Prediction Horizon
-        self.Nc = 5  #Control Horizon
+        self.Nc = 10  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
             'obsXrl': 1.5,  # x-Koordinate
             'obsYrl': 0.5   # y-Koordinate
         }
-        self.road_width = 100.0  # Breite der Straße (Beispielwert)
+        self.road_width = 10.0  # Breite der Straße (Beispielwert)
 
 
         #Mecanum-Chassis Objekt erstellen

@@ -25,7 +25,7 @@ class QP:
             solver_opts = {"print_time":0}
         
         #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN und slack)
-        self.zdim = (Np+1)*nx +Nc*nu #+ self.N
+        self.zdim = (Np+1)*nx +Nc*nu 
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
