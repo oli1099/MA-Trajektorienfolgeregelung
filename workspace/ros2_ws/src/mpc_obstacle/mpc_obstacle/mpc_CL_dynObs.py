@@ -198,7 +198,7 @@ class MPCClosedLoop(Node):
                 cI = obsYrl
             else:
                 cS = 0
-                cI = self.road_width/2
+                cI = -1e8
         return cS, cI, xmin, xmax
         
     
