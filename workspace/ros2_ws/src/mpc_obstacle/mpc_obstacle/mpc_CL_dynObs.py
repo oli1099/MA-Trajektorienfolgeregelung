@@ -40,7 +40,7 @@ class MPCClosedLoop(Node):
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
-            'obsXrl': 1.5,  # x-Koordinate
+            'obsXrl': 2,  # x-Koordinate
             'obsYrl': 0.5,   # y-Koordinate
             'obslength': 1.0 # Breite des Hindernisses
         }
