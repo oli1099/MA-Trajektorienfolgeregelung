@@ -272,9 +272,9 @@ class MPCClosedLoop(Node):
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
         obs_x = self.obstacle['obsXrl']
-        obs_y = self.obstacle['obsYrl']
+        obs_y = 0
         obs_width = 1.0
-        obs_height = 0.5
+        obs_height = self.obstacle['obsYrl']
 
         safe_obs_x = obs_x - self.Safezone
         safe_obs_y = obs_y - self.Safezone
