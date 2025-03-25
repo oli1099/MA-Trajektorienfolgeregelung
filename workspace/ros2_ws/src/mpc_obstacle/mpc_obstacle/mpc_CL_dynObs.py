@@ -41,7 +41,8 @@ class MPCClosedLoop(Node):
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
             'obsXrl': 1.5,  # x-Koordinate
-            'obsYrl': 0.5   # y-Koordinate
+            'obsYrl': 0.5,   # y-Koordinate
+            'obslength': 1.0 # Breite des Hindernisses
         }
         self.road_width = 4.0  # Breite der Straße (Beispielwert)
 
@@ -170,6 +171,7 @@ class MPCClosedLoop(Node):
         carY = x_current[1]
         obsYrl = self.obstacle['obsYrl'] + self.Safezone
         obsXrl = self.obstacle['obsXrl'] - self.Safezone
+        obslength = self.obstacle['obslength']
 
         xmin = carX
         xmax = 1e6
@@ -193,12 +195,12 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if abs(carY - obsYrl) <= threshold:
-                cS = 0
-                cI = obsYrl -0.1
-            else:
+            if carX >= obsXrl + obslength:
                 cS = 0
                 cI = -1e8
+            else:
+                cS = 0
+                cI = obsYrl -0.1
         return cS, cI, xmin, xmax
         
     
