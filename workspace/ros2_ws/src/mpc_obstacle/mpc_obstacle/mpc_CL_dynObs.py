@@ -195,7 +195,7 @@ class MPCClosedLoop(Node):
         else:
             if abs(carY - obsYrl) <= threshold:
                 cS = 0
-                cI = obsYrl
+                cI = obsYrl -0.1
             else:
                 cS = 0
                 cI = -1e8
