@@ -14,7 +14,7 @@ class MapObstacleDetection(Node):
             OccupancyGrid,
             '/map',
             self.map_callback,
-            10
+            1
         )
         self.marker_pub = self.create_publisher(MarkerArray, 'map_obstacles', 10)
 
