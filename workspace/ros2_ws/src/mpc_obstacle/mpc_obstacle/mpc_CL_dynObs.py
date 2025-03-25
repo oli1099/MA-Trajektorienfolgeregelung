@@ -108,7 +108,7 @@ class MPCClosedLoop(Node):
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
-    def compute_obstacle_constraints(self, x_current):
+    '''def compute_obstacle_constraints(self, x_current):
         carX = x_current[0]
         carY = x_current[1]
         
@@ -163,9 +163,9 @@ class MPCClosedLoop(Node):
             cI = obsYrl
             xmin = carX - 0.1
         
-        return cS, cI, xmin, xmax
+        return cS, cI, xmin, xmax'''
 
-    '''def compute_obstacle_constraints(self,x_current):
+    def compute_obstacle_constraints(self,x_current):
         carX = x_current[0] 
         carY = x_current[1]
         obsYrl = self.obstacle['obsYrl'] + self.Safezone
@@ -197,7 +197,7 @@ class MPCClosedLoop(Node):
             else:
                 cS = 0
                 cI = -1e8
-        return cS, cI, xmin, xmax'''
+        return cS, cI, xmin, xmax
         
     
     def mpc_closedloop(self):
