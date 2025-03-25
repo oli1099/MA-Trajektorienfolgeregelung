@@ -43,7 +43,7 @@ class MPCClosedLoop(Node):
             'obsXrl': 1.5,  # x-Koordinate
             'obsYrl': 0.5   # y-Koordinate
         }
-        self.road_width = 10.0  # Breite der Straße (Beispielwert)
+        self.road_width = 100.0  # Breite der Straße (Beispielwert)
 
 
         #Mecanum-Chassis Objekt erstellen
