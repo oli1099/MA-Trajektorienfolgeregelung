@@ -179,7 +179,7 @@ class MPCClosedLoop(Node):
         epsilon = 0.01
 
         if carX <= obsXrl:
-            if abs(carY - obsYrl) <= threshold:
+            if  carY >= obsYrl#abs(carY - obsYrl) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
@@ -191,12 +191,12 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if abs(carY - obsYrl) <= threshold:
+            '''if abs(carY - obsYrl) <= threshold:
                 cS = 0
                 cI = obsYrl
-            else:
-                cS = 0
-                cI = -1e8
+            else:'''
+            cS = 0
+            cI = -1e8
         return cS, cI, xmin, xmax
         
     
