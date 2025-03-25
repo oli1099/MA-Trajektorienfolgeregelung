@@ -193,7 +193,7 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if abs(carY - adjence_lanecenter) <= threshold:
+            if abs(carY - obsYrl) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
