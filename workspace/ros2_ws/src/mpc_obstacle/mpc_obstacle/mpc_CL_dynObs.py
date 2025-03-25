@@ -43,7 +43,7 @@ class MPCClosedLoop(Node):
             'obsXrl': 1.5,  # x-Koordinate
             'obsYrl': 0.5   # y-Koordinate
         }
-        self.road_width = 100.0  # Breite der Straße (Beispielwert)
+        self.road_width = 4.0  # Breite der Straße (Beispielwert)
 
 
         #Mecanum-Chassis Objekt erstellen
@@ -174,12 +174,14 @@ class MPCClosedLoop(Node):
         xmin = carX
         xmax = 1e6
 
+        adjence_lanecenter = self.road_width/2
+
         # Schwellenwert wann das Auto in der linken spur ist 
-        threshold = 0.001
+        threshold = 0.2
         epsilon = 0.01
 
         if carX <= obsXrl:
-            if  carY >= obsYrl: #abs(carY - obsYrl) <= threshold:
+            if  abs(carY - adjence_lanecenter) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
@@ -191,12 +193,12 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if abs(carY - obsYrl) <= threshold:
+            if abs(carY - adjence_lanecenter) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
                 cS = 0
-                cI = -1e8
+                cI = self.road_width/2
         return cS, cI, xmin, xmax
         
     
