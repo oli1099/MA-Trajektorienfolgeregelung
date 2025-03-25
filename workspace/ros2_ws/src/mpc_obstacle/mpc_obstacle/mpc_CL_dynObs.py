@@ -110,7 +110,7 @@ class MPCClosedLoop(Node):
           
     
     def compute_obstacle_constraints(self,x_current):
-        carX = x_current[0]
+        carX = x_current[0] -0.2
         carY = x_current[1]
         obsYrl = self.obstacle['obsYrl'] + self.Safezone
         obsXrl = self.obstacle['obsXrl'] - self.Safezone
@@ -140,7 +140,7 @@ class MPCClosedLoop(Node):
                 cI = obsYrl
             else:
                 cS = 0
-                cI = -1e6
+                cI = -1e8
         return cS, cI, xmin, xmax
         
     
