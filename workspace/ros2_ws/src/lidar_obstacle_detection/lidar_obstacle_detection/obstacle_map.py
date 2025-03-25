@@ -17,7 +17,7 @@ class ObstacleDetector(Node):
             self.occupancy_callback,
             10)
         # Publisher für die Marker, die in RViz2 angezeigt werden
-        self.marker_pub = self.create_publisher(MarkerArray, '/obstacle_markers', 10)
+        self.marker_pub = self.create_publisher(MarkerArray, '/obstacle_markers', 1)
 
     def occupancy_callback(self, msg):
         # Parameter aus der OccupancyGrid-Nachricht auslesen
