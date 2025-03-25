@@ -179,7 +179,7 @@ class MPCClosedLoop(Node):
         epsilon = 0.01
 
         if carX <= obsXrl:
-            if  carY >= obsYrl#abs(carY - obsYrl) <= threshold:
+            if  carY >= obsYrl: #abs(carY - obsYrl) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
