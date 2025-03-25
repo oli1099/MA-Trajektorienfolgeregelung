@@ -195,7 +195,7 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if carX >= obsXrl + obslength:
+            if carX >= obsXrl + obslength + self.Safezone:
                 cS = 0
                 cI = -1e8
             else:
