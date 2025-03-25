@@ -36,7 +36,7 @@ class MPCClosedLoop(Node):
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.Np = 25 #Prediction Horizon
-        self.Nc = 10  #Control Horizon
+        self.Nc = 5  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
@@ -140,7 +140,7 @@ class MPCClosedLoop(Node):
                 cI = obsYrl
             else:
                 cS = 0
-                cI = self.road_width/2
+                cI = -1e6
         return cS, cI, xmin, xmax
         
     
