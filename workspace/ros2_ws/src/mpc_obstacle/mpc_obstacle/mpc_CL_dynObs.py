@@ -175,7 +175,7 @@ class MPCClosedLoop(Node):
         xmax = 1e6
 
         # Schwellenwert wann das Auto in der linken spur ist 
-        threshold = 0.1
+        threshold = 0.001
         epsilon = 0.01
 
         if carX <= obsXrl:
