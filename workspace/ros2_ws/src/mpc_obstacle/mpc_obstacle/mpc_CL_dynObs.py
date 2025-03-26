@@ -128,12 +128,12 @@ class MPCClosedLoop(Node):
         if obsXrl - carX > 1:
             return 0, -self.road_width/2, xmin, xmax
 
-        if carX <= obsXrl  :
+        if carX <= obsXrl +0.05  :
             if  abs(carY - adjence_lanecenter) <= threshold:
                 cS = 0
                 cI = obsYrl
             else:
-                if abs(obsXrl - carX) < epsilon:
+                if abs(obsXrl +0.05 - carX) < epsilon:
                 # Fallback: Wenn die Differenz zu klein ist, setze cS auf 0 und cI auf obsYrl
                     cS = 0.0
                     cI = obsYrl
@@ -146,7 +146,7 @@ class MPCClosedLoop(Node):
                 cI = -self.road_width/2
             else:
                 cS = 0
-                cI = obsYrl -0.1
+                cI = obsYrl -0.05
         return cS, cI, xmin, xmax
         
     
