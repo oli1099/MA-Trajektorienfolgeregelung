@@ -1,6 +1,7 @@
 
 
 import rclpy
+import csv
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
@@ -148,6 +149,33 @@ class MPCClosedLoop(Node):
                 cS = 0
                 cI = obsYrl -0.1
         return cS, cI, xmin, xmax
+    
+    def save_data_to_csv(self,filename ):
+            # Erstelle den Header: Zeitstempel, aktuelle x, aktuelle y, dann für jeden Vorhersageschritt pred_x_i und pred_y_i.
+        header = ['timestamp', 'actual_x', 'actual_y']
+        for i in range(self.Np + 1):
+            header.append(f'pred_x_{i}')
+            header.append(f'pred_y_{i}')
+        
+        # Öffne die CSV-Datei zum Schreiben
+        with open(filename, mode='w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(header)
+            
+            # Gehe über alle gespeicherten Messungen und Vorhersagen
+            # Es wird hier angenommen, dass self.actual_path und self.predictions_list synchron gefüllt werden.
+            for act, pred in zip(self.actual_path, self.predictions_list):
+                # Zeitstempel (hier aktueller Zeitwert)
+                row = [time.time(), act[0], act[1]]
+                # pred ist ein NumPy-Array der Form (nx, Np+1)
+                # Wir extrahieren hier die x- und y-Koordinaten, also die ersten beiden Zeilen
+                pred_x = pred[0, :]
+                pred_y = pred[1, :]
+                # Füge für jeden Zeitschritt in der prädizierten Trajektorie die Werte hinzu
+                for x_val, y_val in zip(pred_x, pred_y):
+                    row.append(x_val)
+                    row.append(y_val)
+                writer.writerow(row)
         
     
     def mpc_closedloop(self):
@@ -164,6 +192,7 @@ class MPCClosedLoop(Node):
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_Nc_CL_plot")
             self.timer.cancel()
+            self.save_data_to_csv()
             return
 
         cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
