@@ -251,7 +251,7 @@ class MPCClosedLoop(Node):
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
         self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
-        self.ax.set_ylim([-0.3, 5])
+        self.ax.set_ylim([-0.3, 3])
 
 
 def main(args=None):
