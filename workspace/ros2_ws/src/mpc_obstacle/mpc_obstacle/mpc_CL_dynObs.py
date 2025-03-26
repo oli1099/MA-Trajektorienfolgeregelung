@@ -109,63 +109,6 @@ class MPCClosedLoop(Node):
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
-    '''def compute_obstacle_constraints(self, x_current):
-        carX = x_current[0]
-        carY = x_current[1]
-        
-        # Hindernis-Koordinaten mit Safezone
-        obsXrl = self.obstacle['obsXrl'] - self.Safezone  # "RearRightSafeX"
-        obsYrl = self.obstacle['obsYrl'] + self.Safezone  # "RearRightSafeY"
-        
-        # Eine kleine Toleranz zum Umschalten:
-        margin_behind = 0.2  # Falls du "klar hinter" sein willst
-        margin_ahead  = 0.2  # Falls du "klar vorbei" sein willst
-        
-        # Standardwerte, die "keine" (oder kaum) Beschränkung bewirken
-        cS   = 0.0
-        cI   = -1e6
-        xmin = carX - 0.1  # z.B. etwas Luft nach hinten
-        xmax = 1e6
-        
-        # 1) Sind wir *weit* hinter dem Hindernis?
-        #    => Erzeuge eine "weiche" Gerade von (carX, carY) zum Hindernis, 
-        #       damit y >= cS*x + cI, aber nur wenn es Sinn macht.
-        if carX < (obsXrl - margin_behind):
-            # Berechne Steigung und Achsenabschnitt
-            dx = (obsXrl - carX)
-            dy = (obsYrl - carY)
-            if abs(dx) < 1e-3:
-                # Wenn x fast identisch -> vermeide extreme Division
-                cS = 0.0
-                cI = obsYrl
-            else:
-                slope = dy / dx
-                cS    = slope
-                cI    = obsYrl - slope * obsXrl
-
-            # xmin kann hier = (carX - 0.1) bleiben
-            # oder du lässt es sein, je nach Wunsch:
-            xmin = carX - 0.1
-
-        # 2) Sind wir *weit* vor dem Hindernis (schon vorbei)?
-        #    => Schalte Constraint *ganz* aus (-> y >= -1e6).
-        elif carX > (obsXrl + margin_ahead):
-            cS = 0.0
-            cI = -1e6  # => y >= -1e6, also keine echte Beschränkung
-            xmin = carX - 0.1  # falls du die Hinterroll-Grenze möchtest
-            xmax = 1e6
-        
-        # 3) Falls wir "nahe" beim Hindernis sind (Übergangsbereich):
-        #    => z.B. eine mildere Gerade oder 
-        #       "paralleles Fahren" => y >= obsYrl, falls das Sinn ergibt.
-        else:
-            # Wenn du "parallel" fährst, willst du z.B. minimal über obsYrl sein:
-            cS = 0.0
-            cI = obsYrl
-            xmin = carX - 0.1
-        
-        return cS, cI, xmin, xmax'''
-
     def compute_obstacle_constraints(self,x_current):
         carX = x_current[0] 
         carY = x_current[1]
@@ -185,7 +128,7 @@ class MPCClosedLoop(Node):
         if obsXrl - carX > 1:
             return 0, -self.road_width/2, xmin, xmax
 
-        if carX <= obsXrl +0.1 :
+        if carX <= obsXrl  :
             if  abs(carY - adjence_lanecenter) <= threshold:
                 cS = 0
                 cI = obsYrl
@@ -203,7 +146,7 @@ class MPCClosedLoop(Node):
                 cI = -self.road_width/2
             else:
                 cS = 0
-                cI = obsYrl -0.01
+                cI = obsYrl -0.05
         return cS, cI, xmin, xmax
         
     
@@ -307,7 +250,7 @@ class MPCClosedLoop(Node):
         self.ax.grid(True)
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
-        self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
+        self.ax.set_xlim([0, 10])  # x-Achse von 0 bis 5
         self.ax.set_ylim([-0.3, 1])
 
 
