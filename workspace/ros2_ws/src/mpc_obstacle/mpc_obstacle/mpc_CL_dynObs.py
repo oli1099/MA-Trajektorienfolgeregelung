@@ -128,7 +128,7 @@ class MPCClosedLoop(Node):
         if obsXrl - carX > 1:
             return 0, -self.road_width/2, xmin, xmax
 
-        if carX <= obsXrl + self.Safezone :
+        if carX <= obsXrl :
             if  abs(carY - adjence_lanecenter) <= threshold:
                 cS = 0
                 cI = obsYrl
