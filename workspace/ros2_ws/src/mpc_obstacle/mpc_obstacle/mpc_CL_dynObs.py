@@ -150,7 +150,7 @@ class MPCClosedLoop(Node):
                 cI = obsYrl -0.1
         return cS, cI, xmin, xmax
     
-    def save_data_to_csv(self,filename ):
+    def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
             # Erstelle den Header: Zeitstempel, aktuelle x, aktuelle y, dann für jeden Vorhersageschritt pred_x_i und pred_y_i.
         header = ['timestamp', 'actual_x', 'actual_y']
         for i in range(self.Np + 1):
