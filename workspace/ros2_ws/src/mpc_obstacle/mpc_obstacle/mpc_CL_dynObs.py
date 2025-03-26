@@ -133,7 +133,7 @@ class MPCClosedLoop(Node):
                 cS = 0
                 cI = obsYrl
             else:
-                if abs(obsXrl  - carX) < epsilon:
+                if abs(obsXrl  + self.Safezone - carX) < epsilon:
                 # Fallback: Wenn die Differenz zu klein ist, setze cS auf 0 und cI auf obsYrl
                     cS = 0.0
                     cI = obsYrl
