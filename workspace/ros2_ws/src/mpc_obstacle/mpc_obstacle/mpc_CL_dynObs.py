@@ -156,7 +156,7 @@ class MPCClosedLoop(Node):
             return
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if error < 0.1:
+        if error < 0.05:
             motor_stopp  = Twist()
             motor_stopp.linear.x = 0.0 
             motor_stopp.linear.y = 0.0
@@ -250,8 +250,8 @@ class MPCClosedLoop(Node):
         self.ax.grid(True)
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
-        self.ax.set_xlim([0, 10])  # x-Achse von 0 bis 5
-        self.ax.set_ylim([-0.3, 1])
+        self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
+        self.ax.set_ylim([-0.3, 5])
 
 
 def main(args=None):
