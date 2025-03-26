@@ -179,8 +179,11 @@ class MPCClosedLoop(Node):
         adjence_lanecenter = self.road_width/2
 
         # Schwellenwert wann das Auto in der linken spur ist 
-        threshold = 0.2
+        threshold = 0.1
         epsilon = 0.01
+
+        if obsXrl - carX > 1:
+            return 0, -self.road_width/2, xmin, xmax
 
         if carX <= obsXrl:
             if  abs(carY - adjence_lanecenter) <= threshold:
@@ -195,12 +198,12 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if carX >= obsXrl + obslength + self.Safezone:
+            if carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = 0
-                cI = -1e8
+                cI = -self.road_width/2
             else:
                 cS = 0
-                cI = obsYrl -0.1
+                cI = obsYrl -0.01
         return cS, cI, xmin, xmax
         
     
