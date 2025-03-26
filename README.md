@@ -50,6 +50,8 @@ MPC Obstacel avoidence starten
 
     ros2 run mpc_obstacle mpc_CL_Nc       # Nc und Np
 
+    ros2 run mpc_obstacle mpc_CL_dynObs   #Dyn Obs
+
     colcon build --packages-select
 
     
