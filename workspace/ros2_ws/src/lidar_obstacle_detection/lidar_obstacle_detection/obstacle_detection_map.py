@@ -6,18 +6,28 @@ from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Point
 import numpy as np
 import cv2  # Stelle sicher, dass OpenCV (python3-opencv) installiert ist
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 
 class MapObstacleDetection(Node):
     def __init__(self):
         super().__init__('map_obstacle_detection_node')
+        qos_profile = QoSProfile(
+            depth=10,
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            durability=DurabilityPolicy.VOLATILE
+        )
         self.map_sub = self.create_subscription(
             OccupancyGrid,
             '/map',
             self.map_callback,
-            1
+            qos_profile
         )
-        self.marker_pub = self.create_publisher(MarkerArray, 'map_obstacles', 10)
+        self.marker_pub = self.create_publisher(MarkerArray, 'map_obstacles', qos_profile)
 
+        self.obstacle_threshold = 50   # Schwellwert, um Hindernisse zu erkennen (kann angepasst werden)
+        self.min_contour_area = 5      # Mindestfläche, um auch kleinere Hindernisse zu berücksichtigen
+
+    
     def map_callback(self, msg):
         # Informationen zur Karte
         width = msg.info.width
@@ -29,7 +39,7 @@ class MapObstacleDetection(Node):
         # Umwandeln der Kartendaten in ein 2D-Numpy-Array
         data = np.array(msg.data).reshape((height, width))
         # Schwellwert: Werte >50 (von 100) werden als Hindernis interpretiert, -1 = unbekannt werden ignoriert
-        obstacle_mask = (data > 50)
+        obstacle_mask = (data > self.obstacle_threshold)
         # Erstellen eines binären Bildes: Hindernisse = 255, freier Raum = 0
         obstacle_img = np.zeros_like(data, dtype=np.uint8)
         obstacle_img[obstacle_mask] = 255
@@ -42,7 +52,7 @@ class MapObstacleDetection(Node):
 
         for cnt in contours:
             # Kleine Konturen ignorieren (optional)
-            if cv2.contourArea(cnt) < 10:
+            if cv2.contourArea(cnt) < self.min_contour_area:
                 continue
             
              # Berechne den Schwerpunkt der Kontur
