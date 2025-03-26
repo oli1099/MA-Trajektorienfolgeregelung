@@ -136,7 +136,7 @@ class MPCClosedLoop(Node):
                 if abs(obsXrl  + self.Safezone - carX) < epsilon:
                 # Fallback: Wenn die Differenz zu klein ist, setze cS auf 0 und cI auf obsYrl
                     cS = 0.0
-                    cI = obsYrl
+                    cI = obsYrl -0.01
                 else:
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
