@@ -67,13 +67,18 @@ class QP:
         lbz = -np.inf * np.ones(self.zdim) 
         ubz = np.inf*np.ones(self.zdim)
 
-        #Zustandsbegrenzung
-        # evetl funktion sich xmin etc ziehen
+        #Zustandsbegrenzung Straße modellieren
+        for k in range(Np +1):
+            # X wird begrenzt auf 0 bis 6
+            lbz[k*self.nx + 0] = 0
+            ubz[k*self.nx + 0] = 5       
+            lbz[k*self.nx + 1] = 0
+            ubz[k*self.nx + 1] = 2
        
         #Eingangsbegrenzung
         for k in range(N):
-            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
-            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
+            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
+            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
         
         self.lbz = np.array(lbz).flatten()
         self.ubz = ubz
