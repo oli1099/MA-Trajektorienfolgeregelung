@@ -9,6 +9,7 @@ import numpy as np
 import math
 import time
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 from controller.mecanum import MecanumChassis
 from .MPC_OpenLoop import QP
 from .SystemModel import DynamicModel
@@ -173,30 +174,35 @@ class MPCClosedLoop(Node):
         return math.atan2(siny_cosp, cosy_cosp)
     
     def plot_callback(self):
-        #self.ax.clear()
+        
+        self.ax.cla()  # Vorherigen Plot löschen
 
-        # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
+        # 1. Zeichne die Straße als Rechteck (Startpunkt: (0,0), Länge: 5 m, Breite: 2 m)
+        road = patches.Rectangle((0, 0), 5, 2, edgecolor='black', facecolor='gray', alpha=0.3)
+        self.ax.add_patch(road)
+
+        # 2. Zeichne die Fahrbahnmarkierung (mittlere Linie der Straße bei y = 1)
+        self.ax.plot([0, 5], [1, 1], 'w--', linewidth=2, label='Fahrbahnmarkierung')
+
+        # 3. Zeichne die MPC-Vorhersagen, falls vorhanden
         for i, pred in enumerate(self.predictions_list):
-                self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
-            
-        '''if self.x_pred is not None:
-            # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
+            self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
 
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
-            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
+            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
 
         self.ax.legend()
         self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
-        self.ax.set_xlabel("y [m]")
-        self.ax.set_ylabel("x [m]")
+        self.ax.set_xlabel("x [m]")  # Länge
+        self.ax.set_ylabel("y [m]")  # Breite
+        self.ax.set_xlim(0, 5)
+        self.ax.set_ylim(0, 2)
         self.ax.grid(True)
 
-        # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
-
-
+        # Aktualisieren des Plots
+        plt.pause(0.001)
 
 def main(args=None):
     rclpy.init(args=args)
