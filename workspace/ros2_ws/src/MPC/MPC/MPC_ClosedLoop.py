@@ -194,7 +194,7 @@ class MPCClosedLoop(Node):
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
 
         self.ax.legend()
-        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
+        self.ax.set_title("MPC Spurwechsel")
         self.ax.set_xlabel("x [m]")  # Länge
         self.ax.set_ylabel("y [m]")  # Breite
         self.ax.set_xlim(0, 5)
