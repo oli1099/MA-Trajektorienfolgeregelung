@@ -68,7 +68,7 @@ class QP:
         ubz = np.inf*np.ones(self.zdim)
 
         #Zustandsbegrenzung Straße modellieren
-        for k in range(Np +1):
+        for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
             ubz[k*self.nx + 0] = 5       
