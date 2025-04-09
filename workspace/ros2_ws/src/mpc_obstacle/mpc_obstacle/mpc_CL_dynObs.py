@@ -126,7 +126,7 @@ class MPCClosedLoop(Node):
         threshold = 0.2
         epsilon = 0.01
 
-        if obsXrl - carX > 1:
+        if obsXrl - carX > 1: # Erst ab 1 meter zum Hinderniss soll reagiert werden
             return 0, -self.road_width/2, xmin, xmax
 
         if carX <= obsXrl :
@@ -147,7 +147,7 @@ class MPCClosedLoop(Node):
                 cI = -self.road_width/2
             else:
                 cS = 0
-                cI = obsYrl -0.1
+                cI = obsYrl -0.01 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
         return cS, cI, xmin, xmax
     
     def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
