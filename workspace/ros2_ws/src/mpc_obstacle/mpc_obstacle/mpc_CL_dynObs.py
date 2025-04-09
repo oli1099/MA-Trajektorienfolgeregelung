@@ -147,7 +147,7 @@ class MPCClosedLoop(Node):
                 cI = -self.road_width/2
             else:
                 cS = 0
-                cI = obsYrl -0.05 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
+                cI = obsYrl -0.08 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
         return cS, cI, xmin, xmax
     
     def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
