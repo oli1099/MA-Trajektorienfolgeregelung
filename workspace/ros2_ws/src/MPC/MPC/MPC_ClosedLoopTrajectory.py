@@ -42,9 +42,11 @@ class MPCClosedLoopTrajectory(Node):
         #Liste für aktuellen Pfad
         self.actual_path = []
         self.predictions_list = []
+        self.actual_u = []
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
+        self.fig_u ,self.ax_u = plt.subplots()
         self.x_pred = None
 
 
@@ -64,7 +66,7 @@ class MPCClosedLoopTrajectory(Node):
         self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
         self.num_waypoints = len(self.trajectory)
         
-        self.total_time = 27
+        self.total_time = 30
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
@@ -248,6 +250,7 @@ class MPCClosedLoopTrajectory(Node):
         motor_stopp.angular.z = 0.0
         self.control_pub.publish(motor_stopp)
         self.fig.savefig("MPCtrajectorytime_plot1.png")
+        self.fig_u.savefig("MPCtrajectorytime_u_plot.png")
     
     def plot_callback(self):
         
@@ -276,6 +279,25 @@ class MPCClosedLoopTrajectory(Node):
         self.ax.set_xlim(0, 5)
         self.ax.set_ylim(0, 2) 
         self.ax.grid(True)
+
+        self.ax_u.cla()  # Zweiten Plot zurücksetzen
+        if self.actual_u:
+            # Wandeln der Liste in einen NumPy-Array (jede Zeile entspricht einem Regelzyklus)
+            u_arr = np.array(self.actual_u)  # Shape: (Anzahl Zeitschritte, 4)
+            t = np.arange(u_arr.shape[0])  # Zeit bzw. Iterationsindex
+            # Plot für jedes der 4 Räder
+            self.ax_u.plot(t, u_arr[:, 0], label='Rad 1')
+            self.ax_u.plot(t, u_arr[:, 1], label='Rad 2')
+            self.ax_u.plot(t, u_arr[:, 2], label='Rad 3')
+            self.ax_u.plot(t, u_arr[:, 3], label='Rad 4')
+            
+            self.ax_u.set_title("Stellgröße u – Winkelgeschwindigkeiten der Räder")
+            self.ax_u.set_xlabel("Zeit (Iterationsschritte)")
+            self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
+            self.ax_u.legend()
+            self.ax_u.grid(True)
+    
+
 
         # Aktualisieren des Plots
         plt.pause(0.001)
