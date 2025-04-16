@@ -41,10 +41,13 @@ class MPCClosedLoop(Node):
 
         #Liste für aktuellen Pfad
         self.actual_path = []
+        self.actual_u = []
         self.predictions_list = []
+        self.predictions_u =[]
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
+        self.fig_u, self.ax_u = plt.subplots()
         self.x_pred = None
 
 
@@ -64,8 +67,10 @@ class MPCClosedLoop(Node):
         self.xmeasure_received = None 
         self.set_initial_position = None
         self.x_ref = [2,1.5,0,0,0,0]
-        self.x0 = [0,0.5,0,0,0,0]
+        self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
+
+        #self.actual_u.append(self.u0[0],self.u0[1])
 
         #Speicher für geschlossenen Trajektorie
         self.x_cl = []
@@ -89,7 +94,7 @@ class MPCClosedLoop(Node):
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
                                               self.N, self.nx, self.nu, self.Ts)
         
-    def set_init_pose(self):
+    '''def set_init_pose(self):
         """
         Wird einmalig aufgerufen, um die Startpose an '/set_pose' zu senden.
         Danach wird der Timer deaktiviert, damit nicht erneut publiziert wird.
@@ -115,7 +120,7 @@ class MPCClosedLoop(Node):
 
         # Timer ausschalten, damit die Nachricht nicht dauernd gesendet wird.
         self.destroy_timer(self.set_pose_timer)
-        self.set_initial_position = True
+        self.set_initial_position = True'''
 
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
@@ -126,10 +131,11 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
-        if self.xmeasure_received is None and self.set_initial_position is None:
+        if self.xmeasure_received is None: # and self.set_initial_position is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
 
@@ -151,6 +157,9 @@ class MPCClosedLoop(Node):
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
+        self.predictions_u.append(u_opt.copy())
+        self.actual_u.append(u_cl.copy())
+
         
         self.get_logger().info(f"Optimale Zustände: {x_opt}")
 
@@ -230,6 +239,24 @@ class MPCClosedLoop(Node):
         self.ax.set_xlim(0, 5)
         self.ax.set_ylim(0, 2)
         self.ax.grid(True)
+
+        self.ax_u.cla()  # Zweiten Plot zurücksetzen
+        if self.actual_u:
+            # Wandeln der Liste in einen NumPy-Array (jede Zeile entspricht einem Regelzyklus)
+            u_arr = np.array(self.actual_u)  # Shape: (Anzahl Zeitschritte, 4)
+            t = np.arange(u_arr.shape[0])  # Zeit bzw. Iterationsindex
+            # Plot für jedes der 4 Räder
+            self.ax_u.plot(t, u_arr[:, 0], label='Rad 1')
+            self.ax_u.plot(t, u_arr[:, 1], label='Rad 2')
+            self.ax_u.plot(t, u_arr[:, 2], label='Rad 3')
+            self.ax_u.plot(t, u_arr[:, 3], label='Rad 4')
+            
+            self.ax_u.set_title("Stellgröße u – Winkelgeschwindigkeiten der Räder")
+            self.ax_u.set_xlabel("Zeit (Iterationsschritte)")
+            self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
+            self.ax_u.legend()
+            self.ax_u.grid(True)
+    
 
         # Aktualisieren des Plots
         plt.pause(0.001)
