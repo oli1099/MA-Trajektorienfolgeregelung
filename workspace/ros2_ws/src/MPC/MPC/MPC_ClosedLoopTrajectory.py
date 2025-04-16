@@ -61,7 +61,7 @@ class MPCClosedLoopTrajectory(Node):
         
         #Anfangszustand festlegen
 
-        self.trajectory = [(0.5,0.5,0),(1,1,0),(1.5,1.5,0),(2,1.5,0),(2.5,1.5,0),(3,1,0),(3.5,0.5,0),(4,0.5,0)]
+        self.trajectory = [(0,0,0),(0.5,0,0),(1,0.5,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.5,0),(3.5,0,0),(4,0,0)]
         self.num_waypoints = len(self.trajectory)
         
         self.total_time = 30
@@ -96,7 +96,7 @@ class MPCClosedLoopTrajectory(Node):
         #QP initzialisieren
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
                                               self.N, self.nx, self.nu, self.Ts)
-    def set_init_pose(self):
+    '''def set_init_pose(self):
         """
         Wird einmalig aufgerufen, um die Startpose an '/set_pose' zu senden.
         Danach wird der Timer deaktiviert, damit nicht erneut publiziert wird.
@@ -122,7 +122,7 @@ class MPCClosedLoopTrajectory(Node):
 
         # Timer ausschalten, damit die Nachricht nicht dauernd gesendet wird.
         self.destroy_timer(self.set_pose_timer)
-        self.set_initial_position = True
+        self.set_initial_position = True'''
  
         
     def odom_callback(self,msg):
@@ -139,7 +139,7 @@ class MPCClosedLoopTrajectory(Node):
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
-        if self.xmeasure_received is None and self.set_initial_position is None:
+        if self.xmeasure_received is None:# and self.set_initial_position is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
         if self.start_timer is None:
