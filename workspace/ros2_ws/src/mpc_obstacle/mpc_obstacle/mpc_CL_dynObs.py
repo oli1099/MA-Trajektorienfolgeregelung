@@ -54,9 +54,11 @@ class MPCClosedLoop(Node):
         #Liste für aktuellen Pfad
         self.actual_path = []
         self.predictions_list = []
+        self.actual_u = []
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
+        self.fig_u ,self.ax_u = plt.subplots()
         self.x_pred = None
 
 
@@ -204,6 +206,7 @@ class MPCClosedLoop(Node):
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
+        self.actual_u.append(u_cl.copy())
         
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))#,slack_opt.flatten()))
@@ -281,6 +284,24 @@ class MPCClosedLoop(Node):
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
         self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
         self.ax.set_ylim([-0.3, 3])
+
+        self.ax_u.cla()  # Zweiten Plot zurücksetzen
+        if self.actual_u:
+            # Wandeln der Liste in einen NumPy-Array (jede Zeile entspricht einem Regelzyklus)
+            u_arr = np.array(self.actual_u)  # Shape: (Anzahl Zeitschritte, 4)
+            t = np.arange(u_arr.shape[0])  # Zeit bzw. Iterationsindex
+            # Plot für jedes der 4 Räder
+            self.ax_u.plot(t, u_arr[:, 0], label='Rad 1')
+            self.ax_u.plot(t, u_arr[:, 1], label='Rad 2')
+            self.ax_u.plot(t, u_arr[:, 2], label='Rad 3')
+            self.ax_u.plot(t, u_arr[:, 3], label='Rad 4')
+            
+            self.ax_u.set_title("Stellgröße u – Winkelgeschwindigkeiten der Räder")
+            self.ax_u.set_xlabel("Zeit (Iterationsschritte)")
+            self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
+            self.ax_u.legend()
+            self.ax_u.grid(True)
+    
 
 
 def main(args=None):
