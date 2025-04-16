@@ -15,10 +15,10 @@ class TrajectoryPController(Node):
         super().__init__('trajectory_pcontroller')
         """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
         # Trajektorie festlegen
-        self.trajectory = [(0.0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
+        self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 35
+        self.total_time = 30
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
