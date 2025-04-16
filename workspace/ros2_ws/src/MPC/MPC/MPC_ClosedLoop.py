@@ -147,6 +147,7 @@ class MPCClosedLoop(Node):
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_CL_plot")
+            self.fig_u.savefig("MPC_CL_u_plot")
             self.timer.cancel()
             return
 
