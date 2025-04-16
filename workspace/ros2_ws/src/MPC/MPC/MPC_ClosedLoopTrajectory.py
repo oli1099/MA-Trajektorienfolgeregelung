@@ -56,7 +56,7 @@ class MPCClosedLoopTrajectory(Node):
 
 
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
-        self.set_pose_timer = self.create_timer(0.5, self.set_init_pose)
+        #self.set_pose_timer = self.create_timer(0.5, self.set_init_pose)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
@@ -68,7 +68,7 @@ class MPCClosedLoopTrajectory(Node):
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
-        self.set_initial_position = None
+        #self.set_initial_position = None
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
         #self.x_ref = [3,2.1,0,0,0,0]
