@@ -3,7 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 from ros_robot_controller_msgs.msg import MotorsState, MotorState
 import numpy as np
 import math
@@ -52,16 +52,18 @@ class MPCClosedLoop(Node):
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
+        self.set_position = self.create_publisher(PoseWithCovarianceStamped,'set_pose',10)
 
-        self.timer = self.create_timer(0.2, self.mpc_closedloop)
+        self.timer = self.create_timer(0.1, self.mpc_closedloop)
+        self.set_pose_timer = self.create_timer(1, self.set_init_pose)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3,1.5,0,0,0,0]
-        self.x0 = [0,0,0,0,0,0]
+        self.x_ref = [2,1.5,0,0,0,0]
+        self.x0 = [0,0.5,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
         #Speicher für geschlossenen Trajektorie
@@ -86,7 +88,34 @@ class MPCClosedLoop(Node):
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
                                               self.N, self.nx, self.nu, self.Ts)
         
-        
+    def set_init_pose(self):
+        """
+        Wird einmalig aufgerufen, um die Startpose an '/set_pose' zu senden.
+        Danach wird der Timer deaktiviert, damit nicht erneut publiziert wird.
+        """
+        msg = PoseWithCovarianceStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'odom'  # oder 'odom' oder ein anderes Frame
+
+        # Gewünschte Startposition + Orientierung
+        msg.pose.pose.position.x = 0.0
+        msg.pose.pose.position.y = 0.5
+        msg.pose.pose.position.z = 0.0
+        msg.pose.pose.orientation.x = 0.0
+        msg.pose.pose.orientation.y = 0.0
+        msg.pose.pose.orientation.z = 0.0
+        msg.pose.pose.orientation.w = 1.0
+
+        # Kovarianzmatrix initial auf 0
+        msg.pose.covariance = [0.0]*36
+
+        self.get_logger().info("Publishing initial pose (x=0.0, y=0.5).")
+        self.set_position.publish(msg)
+
+        # Timer ausschalten, damit die Nachricht nicht dauernd gesendet wird.
+        self.destroy_timer(self.set_pose_timer)
+        self.set_initial_position = True
+
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
                                   msg.pose.pose.position.y, #y
@@ -99,7 +128,7 @@ class MPCClosedLoop(Node):
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
-        if self.xmeasure_received is None:
+        if self.xmeasure_received is None and self.set_initial_position is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
 
