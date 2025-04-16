@@ -73,8 +73,8 @@ class QP:
             lbz[k*self.nx + 0] = 0
             ubz[k*self.nx + 0] = 5       
             lbz[k*self.nx + 1] = 0
-            ubz[k*self.nx + 1] = 2
-       
+            ubz[k*self.nx + 1] = 2 
+            #Zustandsbegrenzung auf 0 bis 2       
         #Eingangsbegrenzung
         for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10

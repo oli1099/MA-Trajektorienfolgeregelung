@@ -9,6 +9,7 @@ import numpy as np
 import math
 import time
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 from controller.mecanum import MecanumChassis
 from .MPC_OpenLoopTrajectory import QP
 from .SystemModel import DynamicModel
@@ -57,7 +58,7 @@ class MPCClosedLoopTrajectory(Node):
         
         #Anfangszustand festlegen
 
-        self.trajectory = [(0,0,0),(0.5,0.5,0),(1,1,0),(1.5,1,0),(2,1,0),(2,0.5,0),(1,0.5,0),(0,0,0)]
+        self.trajectory = [(0,0.5,0),(0.5,0.5,0),(1,1,0),(1.5,1.5,0),(2,1.5,0),(2.5,1.5,0),(3,1,0),(3.5,0.5,0),(4,0.5,0)]
         self.num_waypoints = len(self.trajectory)
         
         self.total_time = 35
@@ -68,7 +69,7 @@ class MPCClosedLoopTrajectory(Node):
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
         #self.x_ref = [3,2.1,0,0,0,0]
-        self.x0 = [0,0,0,0,0,0]
+        self.x0 = [0,0.5,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
         #Speicher für geschlossenen Trajektorie
@@ -219,34 +220,35 @@ class MPCClosedLoopTrajectory(Node):
         self.fig.savefig("MPCtrajectorytime_plot1.png")
     
     def plot_callback(self):
-        #self.ax.clear()
+        
+        self.ax.cla()  # Vorherigen Plot löschen
 
-        # Solltrajektorie extrahieren
-        traj_x = [pt[0] for pt in self.trajectory]
-        traj_y = [pt[1] for pt in self.trajectory]
-        self.ax.plot(traj_x, traj_y, 'g--')
+        # 1. Zeichne die Straße als Rechteck (Startpunkt: (0,0), Länge: 5 m, Breite: 2 m)
+        road = patches.Rectangle((0, 0), 5, 2, edgecolor='black', facecolor='gray', alpha=0.3)
+        self.ax.add_patch(road)
 
+        # 2. Zeichne die Fahrbahnmarkierung (mittlere Linie der Straße bei y = 1)
+        self.ax.plot([0, 5], [1, 1], 'w--', linewidth=2, label='Fahrbahnmarkierung')
 
-        # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
+        # 3. Zeichne die MPC-Vorhersagen, falls vorhanden
         for i, pred in enumerate(self.predictions_list):
-                self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
-            
-        '''if self.x_pred is not None:
-            # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=1, label='Vorhersage (N Schritte)')'''
+            self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
 
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
-            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
+            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
 
         self.ax.legend()
-        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
-        self.ax.set_xlabel("y [m]")
-        self.ax.set_ylabel("x [m]")
+        self.ax.set_title("MPC Spurwechsel")
+        self.ax.set_xlabel("x [m]")  # Länge
+        self.ax.set_ylabel("y [m]")  # Breite
+        self.ax.set_xlim(0, 5)
+        self.ax.set_ylim(0, 2) 
         self.ax.grid(True)
 
-        # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
+        # Aktualisieren des Plots
+        plt.pause(0.001)
 
 
 
