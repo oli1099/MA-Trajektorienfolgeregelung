@@ -150,8 +150,8 @@ class TrajectoryPController(Node):
 
 
         #Geschwindigkeit Begrenzung
-        v_x = max(min(v_x, 0.459), -0.459)
-        v_y = max(min(v_y, 0.459), -0.459)
+        v_x = max(min(v_x, 0.2298), -0.2298)
+        v_y = max(min(v_y, 0.2298), -0.2298)
 
         theta = max(min(theta,1),-1)
 
