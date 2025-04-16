@@ -9,6 +9,7 @@ import math
 import time
 import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
+from MPC.SystemModel import DynamicModel
 
 class TrajectoryPController(Node):
     def __init__(self):
@@ -35,7 +36,10 @@ class TrajectoryPController(Node):
         self.v_ff= 0
 
         # Liste für aktuelle path
+        self.mpc_model = DynamicModel()
         self.actual_path = []
+        self.actual_u = []
+
 
         #Index für die Stützpunkte
         self.waypoints_index = 0
@@ -63,7 +67,8 @@ class TrajectoryPController(Node):
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
-
+        self.fig_u, self.ax_u = plt.subplots()
+        
     def odom_callback(self,msg):
         self.current_position = (msg.pose.pose.position.x,msg.pose.pose.position.y)
         self.current_orientation = self.quaternion_to_yaw(msg.pose.pose.orientation)
@@ -152,6 +157,9 @@ class TrajectoryPController(Node):
 
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
 
+        omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
+        self.actual_u.append([omega_vec])
+
         #Geschwindigkeit an Motor übergeben
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
@@ -210,6 +218,26 @@ class TrajectoryPController(Node):
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+
+        self.ax_u.cla()  # Zweiten Plot zurücksetzen
+        if self.actual_u:
+            # Wandeln der Liste in einen NumPy-Array (jede Zeile entspricht einem Regelzyklus)
+            u_arr = np.array(self.actual_u)  # Shape: (Anzahl Zeitschritte, 4)
+            t = np.arange(u_arr.shape[0])  # Zeit bzw. Iterationsindex
+            # Plot für jedes der 4 Räder
+            self.ax_u.plot(t, u_arr[:, 0], label='Rad 1')
+            self.ax_u.plot(t, u_arr[:, 1], label='Rad 2')
+            self.ax_u.plot(t, u_arr[:, 2], label='Rad 3')
+            self.ax_u.plot(t, u_arr[:, 3], label='Rad 4')
+            
+            self.ax_u.set_title("Stellgröße u – Winkelgeschwindigkeiten der Räder")
+            self.ax_u.set_xlabel("Zeit (Iterationsschritte)")
+            self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
+            self.ax_u.legend()
+            self.ax_u.grid(True)
+    
+
+
 
 
 def main(args=None):

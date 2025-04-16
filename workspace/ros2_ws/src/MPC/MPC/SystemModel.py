@@ -85,9 +85,25 @@ class DynamicModel:
 
                v = (np.sqrt(2)*self.r)*J_pseudo @ omega_vec
                return v
+        def get_omega(self,vx,vy,theta):
+                factor = 1.0 / np.sqrt(2)
+                A = np.array([
+                        [1,  1,   self.lx - self.ly],
+                        [1, -1,   self.ly - self.lx],
+                        [1,  1,  -(self.lx + self.ly)],
+                        [1, -1,   self.lx + self.ly]
+                ])
+                M = factor*A
+                v_vec = np.array([vx, vy, theta])
+
+                return (M @ v_vec) / self.r
+               
+               
 
 if __name__ == "__main__":
        omega_vec = np.array([5,5,5,5])
        mpc_model = DynamicModel()
        v = mpc_model.get_velocity(omega_vec)
+       omega = mpc_model.get_omega(0.459, 0, 0)
+       print("omega:\n", omega)
        print("V:\n", v)
