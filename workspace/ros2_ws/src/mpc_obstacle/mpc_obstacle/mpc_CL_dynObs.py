@@ -193,6 +193,7 @@ class MPCClosedLoop(Node):
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_Nc_CL_plot")
+            self.fig_u.savefig("MPC_Nc_CL_u_plot")
             self.timer.cancel()
             self.save_data_to_csv()
             return
