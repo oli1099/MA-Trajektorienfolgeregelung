@@ -192,7 +192,7 @@ class TrajectoryPController(Node):
         motor_v=self.mecanum_chassis.set_velocity(0,0,0)
         self.motor_pub.publish(motor_v)
         self.fig.savefig("trajectorytime_plot1.png")
-        self.fig_u.savefig("u_plot1.png")
+        self.fig_u.savefig("u_plot2.png")
         #self.shutdowntimer.cancel()
 
     def plot_callback(self):
