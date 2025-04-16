@@ -158,7 +158,7 @@ class TrajectoryPController(Node):
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
 
         omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
-        self.actual_u.append([omega_vec])
+        self.actual_u.append(omega_vec)
 
         #Geschwindigkeit an Motor übergeben
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
@@ -236,6 +236,9 @@ class TrajectoryPController(Node):
             self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
             self.ax_u.legend()
             self.ax_u.grid(True)
+
+            self.fig_u.canvas.draw()
+            self.fig_u.canvas.flush_events()
     
 
 
