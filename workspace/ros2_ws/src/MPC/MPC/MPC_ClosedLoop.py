@@ -55,7 +55,7 @@ class MPCClosedLoop(Node):
         self.set_position = self.create_publisher(PoseWithCovarianceStamped,'set_pose',10)
 
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
-        self.set_pose_timer = self.create_timer(1, self.set_init_pose)
+        self.set_pose_timer = self.create_timer(0.5, self.set_init_pose)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
