@@ -65,7 +65,7 @@ class MPCClosedLoop(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
-        self.timer = self.create_timer(0.1, self.mpc_closedloop)
+        self.timer = self.create_timer(0.2, self.mpc_closedloop)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
@@ -147,7 +147,7 @@ class MPCClosedLoop(Node):
                 cI = -self.road_width/2
             else:
                 cS = 0
-                cI = obsYrl -0.12 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
+                cI = obsYrl -0.1 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
         return cS, cI, xmin, xmax
     
     def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
