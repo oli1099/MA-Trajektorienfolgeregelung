@@ -152,12 +152,14 @@ class TrajectoryPController(Node):
         #Geschwindigkeit Begrenzung
         v_x = max(min(v_x, 0.2298), -0.22989)
         v_y = max(min(v_y, 0.2298), -0.2298)
+       
 
         theta = max(min(theta,1),-1)
 
         self.get_logger().info(f"V_x={v_x}, V_y ={v_y}")
 
         omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
+        self.get_logger().info(f"Omega_vec={omega_vec}")
         self.actual_u.append(omega_vec)
 
         #Geschwindigkeit an Motor übergeben

@@ -104,6 +104,6 @@ if __name__ == "__main__":
        omega_vec = np.array([5,5,5,5])
        mpc_model = DynamicModel()
        v = mpc_model.get_velocity(omega_vec)
-       omega = mpc_model.get_omega(0.459, 0, 0)
+       omega = mpc_model.get_omega(0.13, 0.08, 0)
        print("omega:\n", omega)
        print("V:\n", v)
