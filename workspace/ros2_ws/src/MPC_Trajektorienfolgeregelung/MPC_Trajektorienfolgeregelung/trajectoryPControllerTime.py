@@ -150,8 +150,8 @@ class TrajectoryPController(Node):
 
 
         #Geschwindigkeit Begrenzung
-        v_x = max(min(v_x, 0.2298), -0.22989)
-        v_y = max(min(v_y, 0.2298), -0.2298)
+        #v_x = max(min(v_x, 0.2298), -0.22989)
+        #v_y = max(min(v_y, 0.2298), -0.2298)
        
 
         theta = max(min(theta,1),-1)
@@ -162,14 +162,16 @@ class TrajectoryPController(Node):
         self.get_logger().info(f"Omega_vec={omega_vec}")
         self.actual_u.append(omega_vec)
 
+        omega_vec = np.clip(omega_vec, -5.0, 5.0)  # Begrenzung der Stellgrößen
+        v_robot =self.mpc_model.get_velocity(omega_vec)
         #Geschwindigkeit an Motor übergeben
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
 
         twist = Twist()
-        twist.linear.x = float(v_x)
-        twist.linear.y = float(v_y)
-        twist.angular.z = float(theta)
+        twist.linear.x = float(v_robot[0])
+        twist.linear.y = float(v_robot[1])
+        twist.angular.z = float(v_robot[2])
         self.stop_pub.publish(twist)
 
         self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
