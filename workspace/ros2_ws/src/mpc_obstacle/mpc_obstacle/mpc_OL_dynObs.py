@@ -101,7 +101,7 @@ class QP:
         self.lbg = np.concatenate((lbg_dyn, lbg_mixed))
         self.ubg = np.concatenate((ubg_dyn, ubg_mixed))
         
-        #Inequality Constraints bestimmen für u < |10| und x muss die map dann sein
+        #Inequality Constraints bestimmen für u < |5| und x muss die map dann sein
 
         #Standardgrenzen erstellen 
         lbz = -np.inf * np.ones(self.zdim) 
@@ -118,8 +118,8 @@ class QP:
        
         #Eingangsbegrenzung
         for k in range(Nc):
-            lbz[(Np+1)*nx+k*nu:(Np+1)*nx +(k+1)*nu] = -10
-            ubz[(Np+1)*nx+k*nu:(Np+1)*nx +(k+1)*nu] = 10        
+            lbz[(Np+1)*nx+k*nu:(Np+1)*nx +(k+1)*nu] = -5
+            ubz[(Np+1)*nx+k*nu:(Np+1)*nx +(k+1)*nu] = 5        
         
         self.lbz = np.array(lbz).flatten()
         self.ubz = np.array(ubz).flatten()

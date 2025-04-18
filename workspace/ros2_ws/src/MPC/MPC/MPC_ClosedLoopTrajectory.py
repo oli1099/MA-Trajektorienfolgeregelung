@@ -66,7 +66,7 @@ class MPCClosedLoopTrajectory(Node):
         self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
         self.num_waypoints = len(self.trajectory)
         
-        self.total_time = 30
+        self.total_time = 32
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
@@ -250,7 +250,7 @@ class MPCClosedLoopTrajectory(Node):
         motor_stopp.angular.z = 0.0
         self.control_pub.publish(motor_stopp)
         self.fig.savefig("MPCtrajectorytime_plot1.png")
-        self.fig_u.savefig("MPCtrajectorytime_u_plot.png")
+        self.fig_u.savefig("MPCtrajectorytime_u_plot1.png")
     
     def plot_callback(self):
         
@@ -273,7 +273,7 @@ class MPCClosedLoopTrajectory(Node):
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
 
         self.ax.legend()
-        self.ax.set_title("MPC Spurwechsel")
+        self.ax.set_title("MPC Trajectory")
         self.ax.set_xlabel("x [m]")  # Länge
         self.ax.set_ylabel("y [m]")  # Breite
         self.ax.set_xlim(0, 5)

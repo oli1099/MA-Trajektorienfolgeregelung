@@ -29,11 +29,11 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([0.1,0.1,0.01,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.00001*np.eye(self.nu)
+        self.Q = np.diag([100,100,100,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
 
-        self.Ts = 0.2 #Diskretisierungszeit
+        self.Ts = 0.1 #Diskretisierungszeit
         self.N = 25   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
@@ -140,7 +140,7 @@ class MPCClosedLoop(Node):
             return
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if error < 0.1:
+        if error < 0.05:
             motor_stopp  = Twist()
             motor_stopp.linear.x = 0.0 
             motor_stopp.linear.y = 0.0
