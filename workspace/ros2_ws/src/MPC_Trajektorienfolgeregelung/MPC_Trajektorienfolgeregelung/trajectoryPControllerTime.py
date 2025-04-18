@@ -19,7 +19,7 @@ class TrajectoryPController(Node):
         self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 30
+        self.total_time = 32
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -160,13 +160,14 @@ class TrajectoryPController(Node):
 
         omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
         self.get_logger().info(f"Omega_vec={omega_vec}")
-        self.actual_u.append(omega_vec)
+        
 
         omega_vec = np.clip(omega_vec, -5.0, 5.0)  # Begrenzung der Stellgrößen
         v_robot =self.mpc_model.get_velocity(omega_vec)
         #Geschwindigkeit an Motor übergeben
         motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
+        self.actual_u.append(omega_vec)
 
         twist = Twist()
         twist.linear.x = float(v_robot[0])
