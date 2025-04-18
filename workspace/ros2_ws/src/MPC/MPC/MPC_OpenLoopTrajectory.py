@@ -80,8 +80,8 @@ class QP:
 
         #Eingangsbegrenzung
         for k in range(N):
-            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
-            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
+            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
+            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
         
         self.lbz = np.array(lbz).flatten()
         self.ubz = ubz
