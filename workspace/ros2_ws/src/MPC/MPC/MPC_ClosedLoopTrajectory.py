@@ -161,6 +161,7 @@ class MPCClosedLoopTrajectory(Node):
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
+        self.actual_u.append(u_cl.copy())
         
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
