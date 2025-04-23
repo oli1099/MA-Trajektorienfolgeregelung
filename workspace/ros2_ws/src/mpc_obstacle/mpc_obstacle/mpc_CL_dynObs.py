@@ -223,7 +223,7 @@ class MPCClosedLoop(Node):
             self.fig_theta.savefig("MPC_Nc_CL_theta_plot")
             self.fig_time.savefig("MPC_Nc_CL_time_plot")
             
-            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list,self.solve_times)
+            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list, self.solve_times)
             self.saveData.save_all("MPC_CL_dynObs")
 
             self.timer.cancel()
