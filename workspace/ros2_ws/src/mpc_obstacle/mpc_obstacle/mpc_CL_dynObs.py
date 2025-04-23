@@ -57,10 +57,15 @@ class MPCClosedLoop(Node):
         self.actual_path = []
         self.predictions_list = []
         self.actual_u = []
+        self.actul_theta = []
+        self.predicted_theta_list = [] 
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
         self.fig_u ,self.ax_u = plt.subplots()
+        # in __init__ nach fig_u
+        self.fig_theta, self.ax_theta = plt.subplots()
+
         self.x_pred = None
 
 
@@ -207,6 +212,7 @@ class MPCClosedLoop(Node):
         cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
 
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        self.actul_theta.append(self.xmeasure[2])
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
         u_cl = u_opt[:,0]
@@ -214,6 +220,7 @@ class MPCClosedLoop(Node):
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
+        self.predicted_theta_list.append(x_opt[2, :].copy())
         self.actual_u.append(u_cl.copy())
         
 
@@ -309,7 +316,20 @@ class MPCClosedLoop(Node):
             self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
             self.ax_u.legend()
             self.ax_u.grid(True)
-    
+        self.ax_theta.cla()
+        
+        if self.actual_theta:
+            t = np.arange(len(self.actual_theta))
+            # gemessener Winkel
+            self.ax_theta.plot(t, self.actual_theta, label='gemessener Yaw')
+            # optional: alle Prädiktionen als leichte Linien
+            for pred in self.predicted_theta_list:
+                self.ax_theta.plot(t, np.full_like(t, np.nan), alpha=0)  # dummy, falls du Preds nicht gegen t plotten willst
+            self.ax_theta.set_title("Yaw (θ) über Zeit")
+            self.ax_theta.set_xlabel("Iterationsschritt")
+            self.ax_theta.set_ylabel("θ [rad]")
+            self.ax_theta.legend()
+            self.ax_theta.grid(True)
 
 
 def main(args=None):
