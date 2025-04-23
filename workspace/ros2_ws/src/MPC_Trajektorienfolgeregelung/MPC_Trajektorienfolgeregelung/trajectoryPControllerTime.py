@@ -9,7 +9,8 @@ import math
 import time
 import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
-from MPC.SystemModel import DynamicModel
+from SystemModel import DynamicModel
+from .SaveData import SaveData
 
 class TrajectoryPController(Node):
     def __init__(self):
@@ -198,6 +199,10 @@ class TrajectoryPController(Node):
         self.motor_pub.publish(motor_v)
         self.fig.savefig("trajectorytime_plot1.png")
         self.fig_u.savefig("u_plot2.png")
+        
+        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+        self.saveData.save_all("TrajectoryPController")
+
         #self.shutdowntimer.cancel()
 
     def plot_callback(self):
