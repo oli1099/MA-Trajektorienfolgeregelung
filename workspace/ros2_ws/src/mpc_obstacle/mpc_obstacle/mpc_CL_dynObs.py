@@ -154,7 +154,7 @@ class MPCClosedLoop(Node):
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone :
                 cS = 0
-                cI = -self.road_width/2
+                cI = 0#-self.road_width/2
             else:
                 cS = 0
                 cI = obsYrl -0.1 
