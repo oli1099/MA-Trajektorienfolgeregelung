@@ -203,6 +203,7 @@ class TrajectoryPController(Node):
         
         self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
         self.saveData.save_all("TrajectoryPController")
+        self.timer.cancel()
 
         #self.shutdowntimer.cancel()
 
