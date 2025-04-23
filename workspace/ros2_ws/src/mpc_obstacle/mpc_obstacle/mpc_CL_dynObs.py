@@ -1,5 +1,5 @@
 
-
+import time
 import rclpy
 import csv
 from rclpy.node import Node
@@ -60,12 +60,14 @@ class MPCClosedLoop(Node):
         self.actual_u = []
         self.actual_theta = []
         self.predicted_theta_list = [] 
+        self.solve_times = []              
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
         self.fig_u ,self.ax_u = plt.subplots()
         # in __init__ nach fig_u
         self.fig_theta, self.ax_theta = plt.subplots()
+        self.fig_time, self.ax_time = plt.subplots() 
 
         self.x_pred = None
 
@@ -219,6 +221,7 @@ class MPCClosedLoop(Node):
             self.fig.savefig("MPC_Nc_CL_plot")
             self.fig_u.savefig("MPC_Nc_CL_u_plot")
             self.fig_theta.savefig("MPC_Nc_CL_theta_plot")
+            self.fig_time.savefig("MPC_Nc_CL_time_plot")
             
             self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list)
             self.saveData.save_all("MPC_CL_dynObs")
@@ -232,7 +235,11 @@ class MPCClosedLoop(Node):
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         self.actual_theta.append(self.xmeasure[2])
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
+        t0 = time.perf_counter()
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
+        t1 = time.perf_counter()
+        dt = t1-t0
+        self.solve_times.append(dt)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
@@ -348,6 +355,14 @@ class MPCClosedLoop(Node):
             self.ax_theta.set_ylabel("θ [rad]")
             self.ax_theta.legend()
             self.ax_theta.grid(True)
+        if self.solve_times:
+            self.ax_time.cla()
+            self.ax_time.plot(self.solve_times, marker='o')
+            self.ax_time.set_title("QP-Solve-Dauer pro Iteration")
+            self.ax_time.set_xlabel("Iteration")
+            self.ax_time.set_ylabel("Dauer [s]")
+            self.ax_time.grid(True)
+            self.fig_time.tight_layout()
 
 
 def main(args=None):
