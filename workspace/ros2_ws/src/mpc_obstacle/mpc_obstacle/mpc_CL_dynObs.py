@@ -38,7 +38,7 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 15 #Prediction Horizon
+        self.Np = 20 #Prediction Horizon
         self.Nc = 5  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
@@ -315,8 +315,8 @@ class MPCClosedLoop(Node):
         self.ax.grid(True)
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
-        self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
-        self.ax.set_ylim([-0.3, 3])
+        self.ax.set_xlim([0, 3])  # x-Achse von 0 bis 5
+        self.ax.set_ylim([-0.3, 0.75])
 
         self.ax_u.cla()  # Zweiten Plot zurücksetzen
         if self.actual_u:
