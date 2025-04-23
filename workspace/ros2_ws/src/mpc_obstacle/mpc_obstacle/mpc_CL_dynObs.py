@@ -45,7 +45,7 @@ class MPCClosedLoop(Node):
         self.obstacle = {
             'obsXrl': 1.5,  # x-Koordinate
             'obsYrl': 0.15,   # y-Koordinate
-            'obslength': 0.5 # Breite des Hindernisses
+            'obslength': 0.3 # Breite des Hindernisses
         }
         self.road_width = 2.0  # Breite der Straße (Beispielwert)
 
