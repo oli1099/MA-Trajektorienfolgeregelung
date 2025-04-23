@@ -48,6 +48,7 @@ class MPCClosedLoop(Node):
             'obslength': 0.3 # Breite des Hindernisses
         }
         self.road_width = 2.0  # Breite der Straße (Beispielwert)
+        self.return_distance = 1.5
 
 
         #Mecanum-Chassis Objekt erstellen
@@ -146,7 +147,7 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if carX >= obsXrl + obslength + 2*self.Safezone:
+            if carX >= obsXrl + obslength + self.return_distance:# 2*self.Safezone:
                 cS = 0
                 cI = -self.road_width/2
             else:
