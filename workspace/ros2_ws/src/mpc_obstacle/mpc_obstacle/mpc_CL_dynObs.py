@@ -57,7 +57,7 @@ class MPCClosedLoop(Node):
         self.actual_path = []
         self.predictions_list = []
         self.actual_u = []
-        self.actul_theta = []
+        self.actual_theta = []
         self.predicted_theta_list = [] 
         plt.ion()
         plt.show()
@@ -317,7 +317,7 @@ class MPCClosedLoop(Node):
             self.ax_u.legend()
             self.ax_u.grid(True)
         self.ax_theta.cla()
-        
+
         if self.actual_theta:
             t = np.arange(len(self.actual_theta))
             # gemessener Winkel
