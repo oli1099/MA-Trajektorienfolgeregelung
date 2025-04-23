@@ -58,7 +58,7 @@ class MPCClosedLoopTrajectory(Node):
         #self.set_position = self.create_publisher(PoseWithCovarianceStamped,'set_pose',10)
 
 
-        self.timer = self.create_timer(0.2, self.mpc_closedloop)
+        self.timer = self.create_timer(0.1, self.mpc_closedloop)
         #self.set_pose_timer = self.create_timer(0.5, self.set_init_pose)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
@@ -255,6 +255,7 @@ class MPCClosedLoopTrajectory(Node):
 
         self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
         self.saveData.save_all("mpc_trajectory")
+        self.timer.cancel()
     
     def plot_callback(self):
         

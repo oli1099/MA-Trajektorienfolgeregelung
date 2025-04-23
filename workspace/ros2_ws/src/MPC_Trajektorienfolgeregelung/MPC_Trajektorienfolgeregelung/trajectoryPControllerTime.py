@@ -19,7 +19,7 @@ class TrajectoryPController(Node):
         self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
         
         #Zeitliste erstellen
-        self.total_time = 32
+        self.total_time = 30
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -73,8 +73,8 @@ class TrajectoryPController(Node):
         self.current_position = (msg.pose.pose.position.x,msg.pose.pose.position.y)
         self.current_orientation = self.quaternion_to_yaw(msg.pose.pose.orientation)
 
-        if self.current_position is not None:
-            self.actual_path.append(self.current_position)
+        #if self.current_position is not None:
+           
 
         if self.start_timer is None:
             self.start_timer = self.get_clock().now()
@@ -120,7 +120,7 @@ class TrajectoryPController(Node):
             desired_state = (x_des, y_des, theta_des)
               
         
-
+        self.actual_path.append(self.current_position)
         # Fehlerberechnung
 
         error_x = desired_state[0] - self.current_position[0]
