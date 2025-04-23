@@ -137,28 +137,38 @@ class MPCClosedLoop(Node):
         epsilon = 0.01
 
         if obsXrl - carX > 0.5: # Erst ab 1 meter zum Hinderniss soll reagiert werden
-            return 0, -self.road_width/2, xmin, xmax, 0, self.road_width/2
+            return 0, -self.road_width/2, xmin, xmax, 0, self.road_width
 
         if carX <= obsXrl :
             if  abs(carY - adjence_lanecenter) <= threshold:
                 cS = 0
                 cI = obsYrl
+                m = 0
+                b = self.road_width
             else:
                 if abs(obsXrl - carX) < epsilon:
                 # Fallback: Wenn die Differenz zu klein ist, setze cS auf 0 und cI auf obsYrl
                     cS = 0.0
-                    cI = obsYrl 
+                    cI = obsYrl
+                    m = 0
+                    b = self.road_width 
                 else:
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
+                    m = 0
+                    b = self.road_width
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
                 m = np.tan(np.arctan2(( - carY), (self.return_distance)))
                 b = obsYrl + m * (obsXrl + obslength + 2*self.Safezone)
                 xmax = obsXrl + obslength + 2*self.Safezone + self.return_distance
+                cS = 0
+                cI =-self.road_width/2
             elif carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance + self.road_width:
                 cS = 0
                 cI = -self.road_width/2
+                m = 0
+                b = self.road_width
             
             
             
@@ -167,7 +177,9 @@ class MPCClosedLoop(Node):
                 cI = 0#-self.road_width/2'''
             else:
                 cS = 0
-                cI = obsYrl -0.1 
+                cI = obsYrl -0.1
+                m = 0
+                b = self.road_width 
                
 
 
