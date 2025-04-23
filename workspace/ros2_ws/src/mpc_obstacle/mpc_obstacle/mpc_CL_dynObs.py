@@ -43,11 +43,11 @@ class MPCClosedLoop(Node):
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
-            'obsXrl': 2,  # x-Koordinate
-            'obsYrl': 0.5,   # y-Koordinate
-            'obslength': 1.0 # Breite des Hindernisses
+            'obsXrl': 1.5,  # x-Koordinate
+            'obsYrl': 0.25,   # y-Koordinate
+            'obslength': 0.5 # Breite des Hindernisses
         }
-        self.road_width = 4.0  # Breite der Straße (Beispielwert)
+        self.road_width = 1.0  # Breite der Straße (Beispielwert)
 
 
         #Mecanum-Chassis Objekt erstellen
