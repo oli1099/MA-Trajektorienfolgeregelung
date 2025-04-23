@@ -151,13 +151,13 @@ class MPCClosedLoop(Node):
                 else:
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
-        elif carX >= obsXrl + obslength + 2*self.Safezone:
-                cS = (-self.road_width/2)/(self.return_distance)
-                cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
                     cS = 0
                     cI = -self.road_width/2
+            elif carX >= obsXrl + obslength + 2*self.Safezone:
+                cS = np.tan(np.arctan2((0 - carY), (self.return_distance)))#(-self.road_width/2)/(self.return_distance)
+                cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
             else:
                 cS = 0
                 cI = obsYrl -0.1 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
