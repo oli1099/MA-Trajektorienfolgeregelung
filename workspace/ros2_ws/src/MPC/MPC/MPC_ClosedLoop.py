@@ -131,7 +131,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        
 
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
@@ -156,7 +156,7 @@ class MPCClosedLoop(Node):
             self.saveData.save_all("mpc_cl")
             self.timer.cancel()
             return
-
+        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
         u_cl = u_opt[:,0]
