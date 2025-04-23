@@ -13,6 +13,7 @@ from matplotlib.patches import Rectangle
 from controller.mecanum import MecanumChassis
 from .adaptiveMPC_OL import QP
 from MPC.SystemModel import DynamicModel
+from MPC.SaveData import SaveData
 
 import sys
 
@@ -29,14 +30,23 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([0.1,0.1,0.01,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.00001*np.eye(self.nu)
+        self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
+        self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
-        self.Penalty = 1e6
+        #self.Penalty = 1e6
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.N = 25  #Prediktionshorizont
+
+        # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
+        self.obstacle = {
+            'obsXrl': 2,  # x-Koordinate
+            'obsYrl': 0.5,   # y-Koordinate
+            'obslength': 1.0 # Breite des Hindernisses
+        }
+        self.road_width = 4.0  # Breite der Straße (Beispielwert)
+
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -44,9 +54,11 @@ class MPCClosedLoop(Node):
         #Liste für aktuellen Pfad
         self.actual_path = []
         self.predictions_list = []
+        self.actual_u = []
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
+        self.fig_u ,self.ax_u = plt.subplots()
         self.x_pred = None
 
 
@@ -85,7 +97,7 @@ class MPCClosedLoop(Node):
         
 
         #QP initzialisieren
-        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Penalty,self.Safezone, 
+        self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Safezone, 
                                               self.N, self.nx, self.nu, self.Ts)
         
         
@@ -97,32 +109,82 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
-          
+    
+    def compute_obstacle_constraints(self,x_current):
+        carX = x_current[0] 
+        carY = x_current[1]
+        obsYrl = self.obstacle['obsYrl'] + self.Safezone
+        obsXrl = self.obstacle['obsXrl'] - self.Safezone
+        obslength = self.obstacle['obslength']
+
+        xmin = carX
+        xmax = 1e6
+
+        adjence_lanecenter = self.road_width/2
+
+        # Schwellenwert wann das Auto in der linken spur ist 
+        threshold = 0.2
+        epsilon = 0.01
+
+        if obsXrl - carX > 1: # Erst ab 1 meter zum Hinderniss soll reagiert werden
+            return 0, -self.road_width/2, xmin, xmax
+
+        if carX <= obsXrl :
+            if  abs(carY - adjence_lanecenter) <= threshold:
+                cS = 0
+                cI = obsYrl
+            else:
+                if abs(obsXrl - carX) < epsilon:
+                # Fallback: Wenn die Differenz zu klein ist, setze cS auf 0 und cI auf obsYrl
+                    cS = 0.0
+                    cI = obsYrl 
+                else:
+                    cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
+                    cI = obsYrl - cS * obsXrl
+        else:
+            if carX >= obsXrl + obslength + 2*self.Safezone:
+                cS = 0
+                cI = -self.road_width/2
+            else:
+                cS = 0
+                cI = obsYrl -0.1 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
+        return cS, cI, xmin, xmax
+
     def mpc_closedloop(self):
         if self.xmeasure_received is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if error < 0.1:
+        if error < 0.05:
             motor_stopp  = Twist()
             motor_stopp.linear.x = 0.0 
             motor_stopp.linear.y = 0.0
             motor_stopp.angular.z = 0.0
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_Adaptive_CL_plot")
+            self.fig_u.savefig("MPC_Adaptive_CL_plot_u")
+
+            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+            self.saveData.save_all("MPC_CL_Adaptive")
+
+
             self.timer.cancel()
             return
+        
+        cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
 
+        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
-        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
+        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
+        self.actual_u.append(u_cl.copy())
         
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))#,slack_opt.flatten()))
@@ -182,19 +244,15 @@ class MPCClosedLoop(Node):
         for i, pred in enumerate(self.predictions_list):
                 self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
             
-        '''if self.x_pred is not None:
-            # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
-
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
-        obs_x = 1.5
+        obs_x = self.obstacle['obsXrl']
         obs_y = 0
         obs_width = 1.0
-        obs_height = 0.5
+        obs_height = self.obstacle['obsYrl']
 
         safe_obs_x = obs_x - self.Safezone
         safe_obs_y = obs_y - self.Safezone
@@ -214,15 +272,32 @@ class MPCClosedLoop(Node):
 
 
         self.ax.legend()
-        self.ax.set_title("MPC Obstacle Vorhersage & Tatsächlicher Pfad")
+        self.ax.set_title("MPC Obstacle Vorhersage & Tatsächlicher Pfad nu N")
         self.ax.set_xlabel("x [m]")
         self.ax.set_ylabel("y [m]")
         self.ax.grid(True)
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
         self.ax.set_xlim([0, 5])  # x-Achse von 0 bis 5
-        self.ax.set_ylim([-0.3, 1])
+        self.ax.set_ylim([-0.3, 3])
 
+        self.ax_u.cla()  # Zweiten Plot zurücksetzen
+        if self.actual_u:
+            # Wandeln der Liste in einen NumPy-Array (jede Zeile entspricht einem Regelzyklus)
+            u_arr = np.array(self.actual_u)  # Shape: (Anzahl Zeitschritte, 4)
+            t = np.arange(u_arr.shape[0])  # Zeit bzw. Iterationsindex
+            # Plot für jedes der 4 Räder
+            self.ax_u.plot(t, u_arr[:, 0], label='Rad 1')
+            self.ax_u.plot(t, u_arr[:, 1], label='Rad 2')
+            self.ax_u.plot(t, u_arr[:, 2], label='Rad 3')
+            self.ax_u.plot(t, u_arr[:, 3], label='Rad 4')
+            
+            self.ax_u.set_title("Stellgröße u – Winkelgeschwindigkeiten der Räder")
+            self.ax_u.set_xlabel("Zeit (Iterationsschritte)")
+            self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
+            self.ax_u.legend()
+            self.ax_u.grid(True)
+    
 
 def main(args=None):
     rclpy.init(args=args)

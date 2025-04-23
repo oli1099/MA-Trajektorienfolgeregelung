@@ -13,6 +13,7 @@ import matplotlib.patches as patches
 from controller.mecanum import MecanumChassis
 from .MPC_OpenLoopTrajectory import QP
 from .SystemModel import DynamicModel
+from .SaveData import SaveData
 
 import sys
 
@@ -135,7 +136,6 @@ class MPCClosedLoopTrajectory(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         if self.start_timer is None:
             self.start_timer = self.get_clock().now()
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
@@ -153,7 +153,7 @@ class MPCClosedLoopTrajectory(Node):
         if current_time >= self.total_time:
             self.stop_robot()
             return
-
+        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, Xref,self.z0)
         u_cl = u_opt[:,0]
@@ -252,6 +252,9 @@ class MPCClosedLoopTrajectory(Node):
         self.control_pub.publish(motor_stopp)
         self.fig.savefig("MPCtrajectorytime_plot1.png")
         self.fig_u.savefig("MPCtrajectorytime_u_plot1.png")
+
+        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+        self.saveData.save_all("mpc_trajectory")
     
     def plot_callback(self):
         

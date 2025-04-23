@@ -6,13 +6,12 @@ from scipy.linalg import expm, block_diag
 import matplotlib.pyplot as plt
 
 class QP:
-    def __init__(self, A_d, B_d, Q, R, QN,Penalty,Safezone, N, nx, nu, Ts,solver_opts=None):
+    def __init__(self, A_d, B_d, Q, R, QN,Safezone, N, nx, nu, Ts,solver_opts=None):
         self.A_d = A_d
         self.B_d = B_d
         self.Q = Q
         self.R = R
         self.QN = QN
-        self.Penalty = Penalty
         self.Safezone = Safezone
         self.N = N
         self.nx = nx
@@ -29,10 +28,14 @@ class QP:
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
-        P = ca.SX.sym('P',nx*2 + N)
+        P = ca.SX.sym('P',nx*2 + 5)
         x_0 = P[0:nx]
         x_ref = P[nx:2*nx]
-        y_min_param = P[2*nx:]
+        cS = P[2*nx] #Steigung der Sicherheitsgerade
+        cI = P[2*nx+1] #y-Achsenabschnitt der Sicherheitsgerade
+        w = P[2*nx+2] #Straßenbreite
+        xmax = P[2*nx+3] #obere Grenze (nächstes Hindeniss)
+        xmin = P[2*nx+4] #untere Grenze (Fahrzeugposition)
 
         #Inititalisieren der Kostenfunktion und der Anfangsbedingung
         cost = 0
@@ -53,20 +56,20 @@ class QP:
             g.append(x_next - (self.A_d @ xk + self.B_d @ uk))
             
         for k in range(N):
-        #Soft Constraints (ymin -s-y<=0)
-            g.append(y_min_param[k] - xk[1]) 
+            xk = Z[k*nx:(k+1)*nx]
+            F = ca.vertcat(
+                    ca.horzcat(0,  1,  0, 0, 0, 0),   # Oberes y-Limit: y <= W/2
+                    ca.horzcat(0, -1,  0, 0, 0, 0),   # Unteres y-Limit: -y <= W/2  (d.h. y >= -W/2)
+                    ca.horzcat(cS, -1, 0, 0, 0, 0),   # Hindernisvermeidung: cS*x - y <= -cI  (d.h. y >= cS*x + cI)
+                    ca.horzcat(1,  0,  0, 0, 0, 0),   # Oberes x-Limit: x <= xmax
+                    ca.horzcat(-1, 0,  0, 0, 0, 0)    # Unteres x-Limit: -x <= xmin  (d.h. x >= -xmin)
+                )
+            G = ca.vertcat(w/2, w/2, -cI, xmax, -xmin)
+            g.append(F @ xk - G)  
 
         #Terminalkosten
         xN = Z[N*nx : (N+1)*nx]
         cost += (xN - x_ref).T @ self.QN @ (xN - x_ref) 
-
-        '''default_ymin =0.5
-        #Soft Constraints (ymin -s-y<=0)
-        for k in range(N):
-            xk = Z[k*nx:(k+1)*nx]
-            slack = Z[(N+1)*nx + N*nu + k] #Slack Variable
-            g.append(default_ymin - xk[1] - slack) #ymin - y - s <= 0'''
-
     
         #Nebenbedingungen
 
@@ -74,24 +77,16 @@ class QP:
 
         #Für die Equality Constrains g == 0 und für die Inequality Constraints g <= 0
         n_dynamics = (N+1)*self.nx
-        n_soft = N
+        n_mixed = N*5
 
         lbg_dyn = np.zeros(n_dynamics)
         ubg_dyn = np.zeros(n_dynamics)
 
-        lbg_slack = -np.inf*np.ones(n_soft)
-        ubg_slack = np.zeros(n_soft)
+        lbg_mixed = -np.inf*np.ones(n_mixed)
+        ubg_mixed = np.zeros(n_mixed)
 
-        self.lbg = np.concatenate((lbg_dyn, lbg_slack))
-        self.ubg = np.concatenate((ubg_dyn, ubg_slack))
-
-
-
-        #Equality Constraints rechte Seite von  x_k+1 - Ad*x - Bd*u = 0
-        #self.lbg = np.zeros(g.size1())
-        #self.ubg = np.zeros(g.size1())
-        
-        #Inequality Constraints bestimmen für u < |1| und x muss die map dann sein
+        self.lbg = np.concatenate((lbg_dyn, lbg_mixed))
+        self.ubg = np.concatenate((ubg_dyn, ubg_mixed))
 
         #Standardgrenzen erstellen 
         lbz = -np.inf * np.ones(self.zdim) 
@@ -100,17 +95,17 @@ class QP:
         #Zustandsbegrenzung
         # evetl funktion sich xmin etc ziehen
 
-        for k in range(N +1):
+        '''for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = -0.1
             ubz[k*self.nx + 0] = 6          
             lbz[k*self.nx + 1] = -0.1
-            ubz[k*self.nx + 1] = 4 
+            ubz[k*self.nx + 1] = 4''' 
        
         #Eingangsbegrenzung
         for k in range(N):
-            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -10
-            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 10
+            lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
+            ubz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = 5
         #Slack Variable Begrenzung ( darf nicht negativ werden)
         '''for k in range(N):
             lbz[(N+1)*nx + N*nu + k] = 0
@@ -130,19 +125,12 @@ class QP:
 
         #self.z0 = np.zeros(self.zdim)
 
-    def solveMPC(self,x_current, x_ref,z0):
+    def solveMPC(self,x_current, x_ref,z0,cS_val, cI_val, W_val, xmax_val,x_min_val):
         x_values = z0[:(self.N+1)*self.nx].reshape((self.nx, self.N+1))
         x_pred = x_values[0,:]
         y_pred = x_values[1,:]
-        y_min_vector = np.zeros(self.N)
 
-        for k in range(self.N):
-            if x_pred[k]  >= (1.5  - self.Safezone) and x_pred[k] <= (2.5 + self.Safezone):
-                y_min_vector[k] = 0.5 + self.Safezone
-            else:
-                y_min_vector[k] = 0.0
-
-        P_val = np.concatenate([x_current,x_ref,y_min_vector])
+        P_val = np.concatenate([x_current,x_ref,np.array([cS_val, cI_val, W_val, xmax_val, x_min_val])])
 
         print(f"Prädizierter x-Wert: {x_pred}")
         print(f"Prädizierter y-Wert: {y_pred}")

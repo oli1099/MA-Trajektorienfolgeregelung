@@ -14,6 +14,8 @@ from matplotlib.patches import Rectangle
 from controller.mecanum import MecanumChassis
 from .mpc_OL_dynObs import QP
 from MPC.SystemModel import DynamicModel
+from MPC.SaveData import SaveData
+
 
 import sys
 
@@ -109,7 +111,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def compute_obstacle_constraints(self,x_current):
@@ -152,7 +154,7 @@ class MPCClosedLoop(Node):
                 cI = obsYrl -0.1 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
         return cS, cI, xmin, xmax
     
-    def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
+    '''def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
             # Erstelle den Header: Zeitstempel, aktuelle x, aktuelle y, dann für jeden Vorhersageschritt pred_x_i und pred_y_i.
         header = ['timestamp', 'actual_x', 'actual_y']
         for i in range(self.Np + 1):
@@ -177,7 +179,7 @@ class MPCClosedLoop(Node):
                 for x_val, y_val in zip(pred_x, pred_y):
                     row.append(x_val)
                     row.append(y_val)
-                writer.writerow(row)
+                writer.writerow(row)'''
         
     
     def mpc_closedloop(self):
@@ -194,12 +196,17 @@ class MPCClosedLoop(Node):
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_Nc_CL_plot")
             self.fig_u.savefig("MPC_Nc_CL_u_plot")
+            
+            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+            self.saveData.save_all("MPC_CL_dynObs")
+
             self.timer.cancel()
-            self.save_data_to_csv()
+            #self.save_data_to_csv()
             return
 
         cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
 
+        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
         u_cl = u_opt[:,0]
