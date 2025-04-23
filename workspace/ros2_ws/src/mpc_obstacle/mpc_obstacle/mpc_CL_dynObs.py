@@ -43,7 +43,7 @@ class MPCClosedLoop(Node):
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
-            'obsXrl': 1.5,  # x-Koordinate
+            'obsXrl': 1,  # x-Koordinate
             'obsYrl': 0.15,   # y-Koordinate
             'obslength': 0.3 # Breite des Hindernisses
         }
@@ -82,7 +82,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3.5,0,0,0,0,0]
+        self.x_ref = [4,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -136,7 +136,7 @@ class MPCClosedLoop(Node):
         threshold = 0.2
         epsilon = 0.01
 
-        if obsXrl - carX > 1: # Erst ab 1 meter zum Hinderniss soll reagiert werden
+        if obsXrl - carX > 0.5: # Erst ab 1 meter zum Hinderniss soll reagiert werden
             return 0, -self.road_width/2, xmin, xmax
 
         if carX <= obsXrl :
@@ -151,11 +151,11 @@ class MPCClosedLoop(Node):
                 else:
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
-        else:
-            if carX >= obsXrl + obslength + 2*self.Safezone:
+        elif carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = (-self.road_width/2)/(self.return_distance)
                 cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
-                if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
+        else:
+            if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
                     cS = 0
                     cI = -self.road_width/2
             else:
