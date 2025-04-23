@@ -151,7 +151,7 @@ class MPCClosedLoop(Node):
             self.fig_u.savefig("MPC_CL_u_plot")
 
             self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
-            self.get_logger().info("Working directory:", os.getcwd())
+            #self.get_logger().info("Working directory:", os.getcwd())
             self.saveData.save_all("mpc_cl")
             self.timer.cancel()
             return
