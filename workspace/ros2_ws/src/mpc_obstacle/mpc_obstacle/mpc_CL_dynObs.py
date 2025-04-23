@@ -38,14 +38,14 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 20 #Prediction Horizon
+        self.Np = 15 #Prediction Horizon
         self.Nc = 5  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
             'obsXrl': 1,  # x-Koordinate
             'obsYrl': 0.15,   # y-Koordinate
-            'obslength': 0.3 # Breite des Hindernisses
+            'obslength': 0.5 # Breite des Hindernisses
         }
         self.road_width = 2.0  # Breite der Straße (Beispielwert)
         self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
@@ -82,7 +82,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [3,0,0,0,0,0]
+        self.x_ref = [2.5,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -152,18 +152,9 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if carX >= obsXrl + obslength + 2*self.Safezone and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
-                cS = np.tan(np.arctan2(( - carY), (self.return_distance)))
-                -cI = -obsYrl + cS * (obsXrl + obslength + 2*self.Safezone)
-            elif carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance + self.road_width:
+            if carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = 0
                 cI = -self.road_width/2
-            
-            
-            
-                '''if carX >= obsXrl + obslength + 2*self.Safezone:
-                cS = 0
-                cI = 0#-self.road_width/2'''
             else:
                 cS = 0
                 cI = obsYrl -0.1 
@@ -229,7 +220,7 @@ class MPCClosedLoop(Node):
             self.fig_u.savefig("MPC_Nc_CL_u_plot")
             self.fig_theta.savefig("MPC_Nc_CL_theta_plot")
             
-            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list)
             self.saveData.save_all("MPC_CL_dynObs")
 
             self.timer.cancel()

@@ -1,15 +1,19 @@
 import numpy as np
 import pandas as pd
-import argparse
 
 class SaveData:
     def __init__(self,
-                 predictions_list=None,  # Liste von np.ndarray (2×N)
-                 actual_path=None,       # Liste von (x,y)-Tuples
-                 actual_u=None):         # Liste von [u1,u2,u3,u4]
+                 predictions_list=None,    # Liste von np.ndarray (nx × Np+1)
+                 actual_path=None,         # Liste von (x,y)-Tuples
+                 actual_u=None,            # Liste von [u1,u2,u3,u4]
+                 actual_theta=None,        # Liste von θ-Werten (gemessener Yaw)
+                 predicted_theta_list=None # Liste von np.ndarray (1 × Np+1) für prädizierte θ
+                ):
         self.predictions_list = predictions_list or []
         self.actual_path = actual_path or []
         self.actual_u = actual_u or []
+        self.actual_theta = actual_theta or []
+        self.predicted_theta_list = predicted_theta_list or []
 
     def save_predictions(self, basename):
         """Schreibt <basename>_predictions.csv"""
@@ -37,8 +41,29 @@ class SaveData:
         df.to_csv(fname)
         print(f"-> Control inputs: {fname}")
 
+    def save_actual_theta(self, basename):
+        """Schreibt <basename>_actual_theta.csv" 
+        """
+        df = pd.DataFrame({'theta': self.actual_theta})
+        df.index.name = 'time_step'
+        fname = f"{basename}_actual_theta.csv"
+        df.to_csv(fname)
+        print(f"-> Actual theta: {fname}")
+
+    def save_predicted_theta(self, basename):
+        """Schreibt <basename>_predicted_theta.csv"""
+        rows = []
+        for traj_id, theta_pred in enumerate(self.predicted_theta_list):
+            for t_idx, theta in enumerate(theta_pred):
+                rows.append({'trajectory_id': traj_id, 'time_step': t_idx, 'theta': float(theta)})
+        fname = f"{basename}_predicted_theta.csv"
+        pd.DataFrame(rows).to_csv(fname, index=False)
+        print(f"-> Predicted theta: {fname}")
+
     def save_all(self, basename):
-        """Alle drei Dateien auf Basis von `basename` erzeugen."""
+        """Alle Dateien auf Basis von `basename` erzeugen."""
         self.save_predictions(basename)
         self.save_actual_path(basename)
         self.save_control_inputs(basename)
+        self.save_actual_theta(basename)
+        self.save_predicted_theta(basename)
