@@ -82,7 +82,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [4,0,0,0,0,0]
+        self.x_ref = [3,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -152,17 +152,13 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if carX >= obsXrl + obslength + 2*self.Safezone and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
-                cS = np.tan(np.arctan2(( - carY), (self.return_distance)))
-                cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
-            elif carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance + self.road_width:
+            if carX >= obsXrl + obslength + 2*self.Safezone :
                 cS = 0
                 cI = -self.road_width/2
             else:
                 cS = 0
                 cI = obsYrl -0.1 
-                xmax = 1e6#Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
-        
+               
 
 
 
