@@ -48,6 +48,7 @@ class MPCClosedLoop(Node):
             'obslength': 0.3 # Breite des Hindernisses
         }
         self.road_width = 2.0  # Breite der Straße (Beispielwert)
+        self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
 
 
         #Mecanum-Chassis Objekt erstellen
@@ -152,8 +153,11 @@ class MPCClosedLoop(Node):
                     cI = obsYrl - cS * obsXrl
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone:
-                cS = 0
-                cI = -self.road_width/2
+                cS = (-self.road_width/2)/(self.return_distance)
+                cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
+                if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
+                    cS = 0
+                    cI = -self.road_width/2
             else:
                 cS = 0
                 cI = obsYrl -0.1 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
