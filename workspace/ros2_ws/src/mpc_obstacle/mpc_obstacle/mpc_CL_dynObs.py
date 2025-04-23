@@ -212,7 +212,7 @@ class MPCClosedLoop(Node):
         cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
 
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
-        self.actul_theta.append(self.xmeasure[2])
+        self.actual_theta.append(self.xmeasure[2])
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
         u_cl = u_opt[:,0]
