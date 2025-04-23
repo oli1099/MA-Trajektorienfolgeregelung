@@ -9,7 +9,7 @@ import math
 import time
 import matplotlib.pyplot as plt
 from controller.mecanum import MecanumChassis
-from .SystemModel import DynamicModel
+from MPC.SystemModel import DynamicModel
 from .SaveData import SaveData
 
 class TrajectoryPController(Node):
