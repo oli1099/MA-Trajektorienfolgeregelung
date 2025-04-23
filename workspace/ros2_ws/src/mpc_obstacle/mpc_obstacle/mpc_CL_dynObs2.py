@@ -137,7 +137,7 @@ class MPCClosedLoop(Node):
         epsilon = 0.01
 
         if obsXrl - carX > 0.5: # Erst ab 1 meter zum Hinderniss soll reagiert werden
-            return 0, -self.road_width/2, xmin, xmax
+            return 0, -self.road_width/2, xmin, xmax, 0, self.road_width/2
 
         if carX <= obsXrl :
             if  abs(carY - adjence_lanecenter) <= threshold:
