@@ -38,7 +38,7 @@ class MPCClosedLoop(Node):
         self.Safezone = 0.2
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 25 #Prediction Horizon
+        self.Np = 40 #Prediction Horizon
         self.Nc = 5  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
