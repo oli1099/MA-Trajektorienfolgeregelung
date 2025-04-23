@@ -1,5 +1,5 @@
 
-
+import os
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
@@ -13,6 +13,7 @@ import matplotlib.patches as patches
 from controller.mecanum import MecanumChassis
 from .MPC_OpenLoop import QP
 from .SystemModel import DynamicModel
+from .SaveData import SaveData
 
 import sys
 
@@ -148,6 +149,10 @@ class MPCClosedLoop(Node):
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_CL_plot")
             self.fig_u.savefig("MPC_CL_u_plot")
+
+            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+            print("Working directory:", os.getcwd())
+            self.saveData.save_all("mpc_cl")
             self.timer.cancel()
             return
 
