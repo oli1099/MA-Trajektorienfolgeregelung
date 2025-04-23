@@ -201,6 +201,7 @@ class MPCClosedLoop(Node):
             self.control_pub.publish(motor_stopp)
             self.fig.savefig("MPC_Nc_CL_plot")
             self.fig_u.savefig("MPC_Nc_CL_u_plot")
+            self.fig_theta.savefig("MPC_Nc_CL_theta_plot")
             
             self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
             self.saveData.save_all("MPC_CL_dynObs")
