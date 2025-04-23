@@ -152,7 +152,22 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
         else:
-            if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
+            if carX >= obsXrl + obslength + 2*self.Safezone and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
+                cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl + obslength + 2*self.Safezone)))
+                cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
+            elif carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance + self.road_width:
+                cS = 0
+                cI = -self.road_width/2
+            else:
+                cS = 0
+                cI = obsYrl -0.1 
+                xmax = 1e6#Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
+        
+
+
+
+
+            '''if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
                     cS = 0
                     cI = -self.road_width/2
             elif carX >= obsXrl + obslength + 2*self.Safezone:
@@ -162,7 +177,7 @@ class MPCClosedLoop(Node):
             else:
                 cS = 0
                 cI = obsYrl -0.1 
-                xmax = 1e6#Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
+                xmax = 1e6#Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable'''
         return cS, cI, xmin, xmax
     
     '''def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
