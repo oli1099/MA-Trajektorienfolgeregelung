@@ -7,13 +7,15 @@ class SaveData:
                  actual_path=None,         # Liste von (x,y)-Tuples
                  actual_u=None,            # Liste von [u1,u2,u3,u4]
                  actual_theta=None,        # Liste von θ-Werten (gemessener Yaw)
-                 predicted_theta_list=None # Liste von np.ndarray (1 × Np+1) für prädizierte θ
+                 predicted_theta_list=None,# Liste von np.ndarray (1 × Np+1) für prädizierte θ
+                 solve_times=None          # Liste von Laufzeitdauern (in Sekunden)
                 ):
         self.predictions_list = predictions_list or []
         self.actual_path = actual_path or []
         self.actual_u = actual_u or []
         self.actual_theta = actual_theta or []
         self.predicted_theta_list = predicted_theta_list or []
+        self.solve_times = solve_times or []
 
     def save_predictions(self, basename):
         """Schreibt <basename>_predictions.csv"""
@@ -42,8 +44,7 @@ class SaveData:
         print(f"-> Control inputs: {fname}")
 
     def save_actual_theta(self, basename):
-        """Schreibt <basename>_actual_theta.csv" 
-        """
+        """Schreibt <basename>_actual_theta.csv"""
         df = pd.DataFrame({'theta': self.actual_theta})
         df.index.name = 'time_step'
         fname = f"{basename}_actual_theta.csv"
@@ -60,6 +61,14 @@ class SaveData:
         pd.DataFrame(rows).to_csv(fname, index=False)
         print(f"-> Predicted theta: {fname}")
 
+    def save_solve_times(self, basename):
+        """Schreibt <basename>_solve_times.csv"""
+        df = pd.DataFrame({'solve_time': self.solve_times})
+        df.index.name = 'iteration'
+        fname = f"{basename}_solve_times.csv"
+        df.to_csv(fname)
+        print(f"-> Solve times: {fname}")
+
     def save_all(self, basename):
         """Alle Dateien auf Basis von `basename` erzeugen."""
         self.save_predictions(basename)
@@ -67,3 +76,4 @@ class SaveData:
         self.save_control_inputs(basename)
         self.save_actual_theta(basename)
         self.save_predicted_theta(basename)
+        self.save_solve_times(basename)
