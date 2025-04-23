@@ -158,9 +158,11 @@ class MPCClosedLoop(Node):
             elif carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = np.tan(np.arctan2((0 - carY), (self.return_distance)))#(-self.road_width/2)/(self.return_distance)
                 cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
+                xmax= obsXrl + obslength + 2*self.Safezone + self.return_distance
             else:
                 cS = 0
-                cI = obsYrl -0.1 #Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
+                cI = obsYrl -0.1 
+                xmax = 1e6#Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable
         return cS, cI, xmin, xmax
     
     '''def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
