@@ -153,7 +153,7 @@ class MPCClosedLoop(Node):
                     cI = obsYrl - cS * obsXrl
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
-                cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl + obslength + 2*self.Safezone)))
+                cS = np.tan(np.arctan2(( - carY), (self.return_distance)))
                 cI = obsYrl + cS * (obsXrl + obslength + 2*self.Safezone)
             elif carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance + self.road_width:
                 cS = 0
@@ -292,7 +292,7 @@ class MPCClosedLoop(Node):
 
         obs_x = self.obstacle['obsXrl']
         obs_y = 0
-        obs_width = 1.0
+        obs_width = self.obstacle['obslength']
         obs_height = self.obstacle['obsYrl']
 
         safe_obs_x = obs_x - self.Safezone
