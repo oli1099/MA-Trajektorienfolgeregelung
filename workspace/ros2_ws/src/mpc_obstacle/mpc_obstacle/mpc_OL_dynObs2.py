@@ -136,7 +136,7 @@ class QP:
 
         #self.z0 = np.zeros(self.zdim)
 
-    def solveMPC(self,x_current, x_ref,z0,cS_val, cI_val, W_val, xmax_val, x_min_val, m_val, b_val):
+    def solveMPC(self, x_current, x_ref, z0, cS_val, cI_val, W_val, xmax_val, x_min_val, m_val, b_val):
         x_values = z0[:(self.Np+1)*self.nx].reshape((self.nx, self.Np+1))
         x_pred = x_values[0,:]
         y_pred = x_values[1,:]
