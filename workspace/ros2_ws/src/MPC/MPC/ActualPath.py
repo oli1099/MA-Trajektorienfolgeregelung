@@ -7,15 +7,15 @@ from matplotlib.patches import Rectangle
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=20_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=20_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=20_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1_loop=0.05'
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1'
 ]
 
 # Dateinamen
@@ -35,8 +35,8 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-    'Nc=3', 'Nc=5,Np=20', 'Nc=10', 'Nc=15', 'Nc=5,Np=40',
-    'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20(dup)', 'Nc=5,Np=15', 'Nc=5,Np=15,Loop=0.05'
+    'Nc=3', 'Nc=5,Np=43', 'Nc=10', 'Np=40', 'Nc=5,Np=35',
+    'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20', 'Nc=5,Np=15', 'Nc=5,Np=10'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
