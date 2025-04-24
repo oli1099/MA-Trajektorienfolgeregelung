@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
@@ -24,6 +25,14 @@ actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
 
+# Obstacle-Parameter
+obstacle = {
+    'obsXrl': 1.0,      # x-Koordinate (links unten)
+    'obsYrl': 0.15,     # y-Halbhöhe
+    'obslength': 0.75   # Breite in x-Richtung
+}
+safezone = 0.2
+
 # Labels und Plot-Stile
 labels = [
     'Nc=3', 'Nc=5,Np=20', 'Nc=10', 'Nc=15', 'Nc=5,Np=40',
@@ -37,24 +46,41 @@ def plot_actual_paths():
     """
     Plottet alle actual paths für alle Konfigurationen.
     """
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
     for idx, folder in enumerate(folders):
-        style = {
-            'color': colors[idx % len(colors)],
-            'linestyle': linestyles[idx % len(linestyles)],
-            'label': labels[idx]
-        }
         path = os.path.join(folder, actual_path_file)
         if os.path.isfile(path):
             df = pd.read_csv(path)
-            plt.plot(df['x'], df['y'], **style)
+            ax.plot(
+                df['x'], df['y'],
+                color=colors[idx], linestyle=linestyles[idx % len(linestyles)],
+                linewidth=1.5, label=labels[idx]
+            )
         else:
             print(f"Datei nicht gefunden: {path}")
-    plt.title('Actual Paths Vergleich')
-    plt.xlabel('X-Position')
-    plt.ylabel('Y-Position')
-    plt.legend()
-    plt.grid(True)
+
+    # Hindernis
+    ox = obstacle['obsXrl']
+    oy = 0.0
+    ow = obstacle['obslength']
+    oh = obstacle['obsYrl']
+    # Grau gefüllt
+    obs_patch = Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5)
+    # Safezone (rot, gestrichelt)
+    sz_patch = Rectangle(
+        (ox - safezone, oy - safezone),
+        ow + 2*safezone,
+        oh + 2*safezone,
+        fill=False, linestyle='--', edgecolor='red', linewidth=1.5
+    )
+    ax.add_patch(obs_patch)
+    ax.add_patch(sz_patch)
+
+    ax.set_title('Actual Paths Vergleich mit Hindernis')
+    ax.set_xlabel('X [m]')
+    ax.set_ylabel('Y [m]')
+    ax.legend(loc='best', fontsize='small')
+    ax.grid(True)
     plt.tight_layout()
     plt.show()
 
@@ -66,32 +92,54 @@ def plot_single_with_predictions(folder_index):
     """
     if not 0 <= folder_index < len(folders):
         raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
+
     folder = folders[folder_index]
     label = labels[folder_index]
+    fig, ax = plt.subplots(figsize=(8, 6))
 
-    plt.figure(figsize=(8, 6))
     # Actual path
     path_act = os.path.join(folder, actual_path_file)
     if os.path.isfile(path_act):
         df_act = pd.read_csv(path_act)
-        plt.plot(df_act['x'], df_act['y'], color='blue', linestyle='-', linewidth=2, label=f"Actual {label}")
+        ax.plot(
+            df_act['x'], df_act['y'],
+            color='blue', linestyle='-', linewidth=2,
+            label=f"Actual {label}"
+        )
     else:
         print(f"Actual-Datei nicht gefunden: {path_act}")
+
     # Predictions
     path_pred = os.path.join(folder, predictions_file)
     if os.path.isfile(path_pred):
         df_pred = pd.read_csv(path_pred)
         for traj_id, traj in df_pred.groupby('trajectory_id'):
-            plt.plot(traj['x'], traj['y'], color='red', linestyle='--', linewidth=1, alpha=0.7,
-                     label="Prediction" if traj_id == 0 else None)
+            ax.plot(
+                traj['x'], traj['y'],
+                color='red', linestyle='--', linewidth=1, alpha=0.7,
+                label="Prediction" if traj_id == 0 else None
+            )
     else:
         print(f"Predictions-Datei nicht gefunden: {path_pred}")
 
-    plt.title(f'Konfiguration: {label} (Pfad & Predictions)')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.legend()
-    plt.grid(True)
+    # Hindernis
+    ox = obstacle['obsXrl']
+    oy = 0.0
+    ow = obstacle['obslength']
+    oh = 2*obstacle['obsYrl']
+    ax.add_patch(Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5))
+    ax.add_patch(Rectangle(
+        (ox - safezone, oy - safezone),
+        ow + 2*safezone,
+        oh + 2*safezone,
+        fill=False, linestyle='--', edgecolor='red'
+    ))
+
+    ax.set_title(f'Konfiguration: {label} mit Hindernis')
+    ax.set_xlabel('X [m]')
+    ax.set_ylabel('Y [m]')
+    ax.legend(loc='best', fontsize='small')
+    ax.grid(True)
     plt.tight_layout()
     plt.show()
 

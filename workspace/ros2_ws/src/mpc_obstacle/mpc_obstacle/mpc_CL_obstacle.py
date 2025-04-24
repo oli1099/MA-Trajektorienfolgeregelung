@@ -28,12 +28,12 @@ class MPC_CL_obstacle(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-        self.Q = np.diag([0.1,0.1,0.05,1,1,1]) #Höhere Bestrafung auf der Position
+        self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 350   #Prediktionshorizont
+        self.N = 25   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -52,7 +52,7 @@ class MPC_CL_obstacle(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
-        self.timer = self.create_timer(0.2, self.mpc_closedloop)
+        self.timer = self.create_timer(0.1, self.mpc_closedloop)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
@@ -184,10 +184,12 @@ class MPC_CL_obstacle(Node):
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
 
         self.ax.legend()
-        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
+        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad nur N")
         self.ax.set_xlabel("y [m]")
         self.ax.set_ylabel("x [m]")
         self.ax.grid(True)
+
+        
 
         # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
 

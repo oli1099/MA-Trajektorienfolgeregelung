@@ -35,16 +35,16 @@ class MPCClosedLoop(Node):
         self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
-        self.Safezone = 0.2
+        self.Safezone = 0.1
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 20 #Prediction Horizon
-        self.Nc = 20  #Control Horizon
+        self.Np = 5 #Prediction Horizon
+        self.Nc = 10  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
             'obsXrl': 1,  # x-Koordinate
-            'obsYrl': 0.15,   # y-Koordinate
+            'obsYrl': 0.25,   # y-Koordinate
             'obslength': 0.75 # Breite des Hindernisses
         }
         self.road_width = 2.0  # Breite der Straße (Beispielwert)
