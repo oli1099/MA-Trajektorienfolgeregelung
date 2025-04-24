@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
+folders = [
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.2'
+]
+
+# Dateinamen
+actual_path_file        = 'MPC_CL_dynObs_actual_path.csv'
+predictions_file        = 'MPC_CL_dynObs_predictions.csv'
+actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
+predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
+solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
+
+# Labels und Plot-Stile
+labels = [
+    'Nc=3', 'Nc=5,Np=20', 'Nc=10', 'Nc=15', 'Nc=5,Np=40',
+    'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20(dup)', 'Nc=5,Np=15', 'Nc=5,Np=25,T=0.2'
+]
+colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+linestyles = ['-', '--', '-.', ':']
+
+
+def plot_actual_paths():
+    """
+    Plottet alle actual paths für alle Konfigurationen.
+    """
+    plt.figure(figsize=(10, 6))
+    for idx, folder in enumerate(folders):
+        style = {
+            'color': colors[idx % len(colors)],
+            'linestyle': linestyles[idx % len(linestyles)],
+            'label': labels[idx]
+        }
+        path = os.path.join(folder, actual_path_file)
+        if os.path.isfile(path):
+            df = pd.read_csv(path)
+            plt.plot(df['x'], df['y'], **style)
+        else:
+            print(f"Datei nicht gefunden: {path}")
+    plt.title('Actual Paths Vergleich')
+    plt.xlabel('X-Position')
+    plt.ylabel('Y-Position')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_single_with_predictions(folder_index):
+    """
+    Plottet actual path und prediction-Trajektorien für eine Konfiguration.
+    Actual path blau, Predictions rot gestrichelt.
+    """
+    if not 0 <= folder_index < len(folders):
+        raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
+    folder = folders[folder_index]
+    label = labels[folder_index]
+
+    plt.figure(figsize=(8, 6))
+    # Actual path
+    path_act = os.path.join(folder, actual_path_file)
+    if os.path.isfile(path_act):
+        df_act = pd.read_csv(path_act)
+        plt.plot(df_act['x'], df_act['y'], color='blue', linestyle='-', linewidth=2, label=f"Actual {label}")
+    else:
+        print(f"Actual-Datei nicht gefunden: {path_act}")
+    # Predictions
+    path_pred = os.path.join(folder, predictions_file)
+    if os.path.isfile(path_pred):
+        df_pred = pd.read_csv(path_pred)
+        for traj_id, traj in df_pred.groupby('trajectory_id'):
+            plt.plot(traj['x'], traj['y'], color='red', linestyle='--', linewidth=1, alpha=0.7,
+                     label="Prediction" if traj_id == 0 else None)
+    else:
+        print(f"Predictions-Datei nicht gefunden: {path_pred}")
+
+    plt.title(f'Konfiguration: {label} (Pfad & Predictions)')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_all_actual_theta():
+    """
+    Plottet alle actual theta-Verläufe in einem gemeinsamen Plot.
+    """
+    plt.figure(figsize=(10, 5))
+    for idx, folder in enumerate(folders):
+        theta_path = os.path.join(folder, actual_theta_file)
+        if os.path.isfile(theta_path):
+            df_theta = pd.read_csv(theta_path)
+            plt.plot(df_theta['theta'], color=colors[idx % len(colors)],
+                     linestyle=linestyles[idx % len(linestyles)],
+                     linewidth=1.5, label=labels[idx])
+        else:
+            print(f"Actual Theta-Datei nicht gefunden: {theta_path}")
+    plt.title('Actual Theta Vergleich aller Konfigurationen')
+    plt.xlabel('Zeit Schritt')
+    plt.ylabel('Theta (rad)')
+    plt.legend(loc='best', fontsize='small', ncol=2)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_single_theta_with_predictions(folder_index):
+    """
+    Plottet actual theta und predicted theta für eine einzelne Konfiguration.
+    Actual Theta blau, Predicted Theta rot gestrichelt.
+    """
+    if not 0 <= folder_index < len(folders):
+        raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
+    folder = folders[folder_index]
+    label = labels[folder_index]
+
+    plt.figure(figsize=(8, 5))
+    # Actual Theta
+    theta_path = os.path.join(folder, actual_theta_file)
+    if os.path.isfile(theta_path):
+        df_theta = pd.read_csv(theta_path)
+        plt.plot(df_theta['theta'], color='blue', linestyle='-', linewidth=2, label=f"Actual Theta {label}")
+    else:
+        print(f"Actual Theta-Datei nicht gefunden: {theta_path}")
+    # Predicted Theta
+    pred_path = os.path.join(folder, predicted_theta_file)
+    if os.path.isfile(pred_path):
+        df_pred = pd.read_csv(pred_path)
+        for traj_id, traj in df_pred.groupby('trajectory_id'):
+            plt.plot(traj['theta'], color='red', linestyle='--', linewidth=1,
+                     alpha=0.7, label="Predicted Theta" if traj_id == 0 else None)
+    else:
+        print(f"Predicted Theta-Datei nicht gefunden: {pred_path}")
+
+    plt.title(f'Konfiguration: {label} (Theta actual & predicted)')
+    plt.xlabel('Zeit Schritt')
+    plt.ylabel('Theta (rad)')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_solve_times_single(folder_index):
+    """
+    Plottet die Laufzeit pro Zeitschritt für eine einzelne Konfiguration.
+    :param folder_index: Index in der `folders`-Liste.
+    """
+    if not 0 <= folder_index < len(folders):
+        raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
+    folder = folders[folder_index]
+    label = labels[folder_index]
+    path = os.path.join(folder, solve_times_file)
+    if not os.path.isfile(path):
+        print(f"Solve times-Datei nicht gefunden: {path}")
+        return
+
+    df = pd.read_csv(path)
+    df.index.name = 'iteration'
+    plt.figure(figsize=(8, 5))
+    plt.plot(df['solve_time'], linestyle='-', marker='o', label=f"Solve Time {label}")
+    plt.title(f'Laufzeit pro Zeitschritt: {label}')
+    plt.xlabel('Iteration')
+    plt.ylabel('Zeit (s)')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_solve_times_summary():
+    """
+    Plottet Zusammenfassung der Solve-Times für alle Konfigurationen:
+    - Gesamtzeit
+    - Durchschnittszeit pro Zeitschritt
+    - Schnellste und langsamste Zeit
+    """
+    totals, means, mins, maxs = [], [], [], []
+    for folder in folders:
+        path = os.path.join(folder, solve_times_file)
+        if os.path.isfile(path):
+            df = pd.read_csv(path)
+            times = df['solve_time']
+            totals.append(times.sum())
+            means.append(times.mean())
+            mins.append(times.min())
+            maxs.append(times.max())
+        else:
+            totals.append(0)
+            means.append(0)
+            mins.append(0)
+            maxs.append(0)
+            print(f"Solve times-Datei nicht gefunden: {path}")
+
+    x = range(len(folders))
+    width = 0.2
+
+    plt.figure(figsize=(12, 6))
+    plt.bar([i - 1.5*width for i in x], totals, width, label='Totalzeit')
+    plt.bar([i - 0.5*width for i in x], means, width, label='Mittelzeit/Schritt')
+    plt.bar([i + 0.5*width for i in x], mins, width, label='Schnellste Zeit')
+    plt.bar([i + 1.5*width for i in x], maxs, width, label='Langsamste Zeit')
+
+    plt.xticks(list(x), labels, rotation=45, ha='right')
+    plt.title('Solve-Times Zusammenfassung aller Konfigurationen')
+    plt.xlabel('Konfiguration')
+    plt.ylabel('Zeit (s)')
+    plt.legend()
+    plt.grid(axis='y')
+    plt.tight_layout()
+    plt.show()
+
+
+if __name__ == '__main__':
+    # Beispielaufrufe:
+    plot_actual_paths()
+    plot_single_with_predictions(3)    
+    plot_all_actual_theta()
+    plot_single_theta_with_predictions(3)
+    plot_solve_times_single(3)
+    plot_solve_times_summary()
+    pass
