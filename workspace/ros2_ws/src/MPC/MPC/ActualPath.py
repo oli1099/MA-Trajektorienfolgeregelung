@@ -15,7 +15,7 @@ folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.2'
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1_loop=0.05'
 ]
 
 # Dateinamen
@@ -28,15 +28,15 @@ solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
 # Obstacle-Parameter
 obstacle = {
     'obsXrl': 1.0,      # x-Koordinate (links unten)
-    'obsYrl': 0.15,     # y-Halbhöhe
+    'obsYrl': 0.25,     # y-Halbhöhe
     'obslength': 0.75   # Breite in x-Richtung
 }
-safezone = 0.2
+safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
     'Nc=3', 'Nc=5,Np=20', 'Nc=10', 'Nc=15', 'Nc=5,Np=40',
-    'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20(dup)', 'Nc=5,Np=15', 'Nc=5,Np=25,T=0.2'
+    'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20(dup)', 'Nc=5,Np=15', 'Nc=5,Np=15,Loop=0.05'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
