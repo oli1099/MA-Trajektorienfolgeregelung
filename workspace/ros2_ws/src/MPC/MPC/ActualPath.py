@@ -4,11 +4,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
+
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=20_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
@@ -35,7 +38,7 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-    'Nc=3', 'Nc=5,Np=43', 'Nc=10', 'Np=40', 'Nc=5,Np=35',
+    'Nc=1', 'Nc=3', 'Nc=10','Nc=5,Np=43', 'Nc=15', 'Np=40', 'Nc=5,Np=35',
     'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20', 'Nc=5,Np=15', 'Nc=5,Np=10'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
@@ -53,7 +56,7 @@ def plot_actual_paths():
             df = pd.read_csv(path)
             ax.plot(
                 df['x'], df['y'],
-                color=colors[idx], linestyle=linestyles[idx % len(linestyles)],
+                color=colors[idx % len(colors)], linestyle=linestyles[idx % len(linestyles)],
                 linewidth=1.5, label=labels[idx]
             )
         else:
