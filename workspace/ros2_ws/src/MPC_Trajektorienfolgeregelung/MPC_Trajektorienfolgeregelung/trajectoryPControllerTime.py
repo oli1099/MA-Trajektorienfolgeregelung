@@ -17,10 +17,42 @@ class TrajectoryPController(Node):
         super().__init__('trajectory_pcontroller')
         """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
         # Trajektorie festlegen
-        self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
-        
+       # self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
+        self.trajectory = [
+    (0.00, 0.00, 0),
+    (0.06, 0.00, 0),
+    (0.14, 0.00, 0),
+    (0.26, 0.00, 0),
+    (0.34, 0.00, 0),
+    (0.42, 0.00, 0),
+    (0.51, 0.06, 0),
+    (0.56, 0.12, 0),
+    (0.63, 0.18, 0),
+    (0.69, 0.23, 0),
+    (0.76, 0.29, 0),
+    (0.85, 0.34, 0),
+    (0.93, 0.36, 0),
+    (1.05, 0.38, 0),
+    (1.13, 0.38, 0),
+    (1.23, 0.39, 0),
+    (1.33, 0.40, 0),
+    (1.43, 0.40, 0),
+    (1.53, 0.40, 0),
+    (1.63, 0.40, 0),
+    (1.73, 0.40, 0),
+    (1.83, 0.40, 0),
+    (1.93, 0.39, 0),
+    (2.07, 0.37, 0),
+    (2.16, 0.32, 0),
+    (2.21, 0.28, 0),
+    (2.28, 0.22, 0),
+    (2.34, 0.16, 0),
+    (2.40, 0.09, 0),
+    (2.46, 0.04, 0)
+]
+
         #Zeitliste erstellen
-        self.total_time = 32
+        self.total_time = 30
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -41,6 +73,9 @@ class TrajectoryPController(Node):
         self.actual_path = []
         self.actual_u = []
         self.predictions_list = []
+        self.actual_theta = []
+        self.predicted_theta_list = [] 
+        self.solve_times = []         
 
 
         #Index für die Stützpunkte
@@ -201,7 +236,7 @@ class TrajectoryPController(Node):
         self.fig.savefig("trajectorytime_plot1.png")
         self.fig_u.savefig("u_plot2.png")
         
-        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_uself.actual_theta, self.predicted_theta_list, self.solve_times)
         self.saveData.save_all("TrajectoryPController")
         self.timer.cancel()
 

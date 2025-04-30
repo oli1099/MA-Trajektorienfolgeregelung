@@ -9,16 +9,20 @@ from matplotlib.patches import Rectangle
 folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1'
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1000_T=0.1',
 ]
 
 # Dateinamen
@@ -27,6 +31,7 @@ predictions_file        = 'MPC_CL_dynObs_predictions.csv'
 actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
+control_inputs_file     = 'MPC_CL_dynObs_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -38,8 +43,22 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-    'Nc=1', 'Nc=3', 'Nc=10','Nc=5,Np=43', 'Nc=15', 'Np=40', 'Nc=5,Np=35',
-    'Nc=5,Np=30', 'Nc=5,Np=25', 'Nc=5,Np=20', 'Nc=5,Np=15', 'Nc=5,Np=10'
+    'Nc=1', 
+    'Nc=3', 
+    'Nc=5',
+    'Nc=10', 
+    'Nc=15', 
+    'Np=43', 
+    'Nc=5,Np=40',
+    'Nc=5,Np=35', 
+    'Nc=5,Np=30', 
+    'Nc=5,Np=25', 
+    'Np=20', 
+    'Nc=5,Np=10',
+    'Q=0.1',
+    'Q=1',
+    'Q=10',
+    'Q=1000'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
@@ -84,6 +103,7 @@ def plot_actual_paths():
     ax.set_ylabel('Y [m]')
     ax.legend(loc='best', fontsize='small')
     ax.grid(True)
+    ax.set_aspect('equal', adjustable='box')
     plt.tight_layout()
     plt.show()
 
@@ -119,7 +139,7 @@ def plot_single_with_predictions(folder_index):
         for traj_id, traj in df_pred.groupby('trajectory_id'):
             ax.plot(
                 traj['x'], traj['y'],
-                color='red', linestyle='--', linewidth=1, alpha=0.7,
+                color='green', linestyle='--', linewidth=1, alpha=0.7,
                 label="Prediction" if traj_id == 0 else None
             )
     else:
@@ -129,7 +149,7 @@ def plot_single_with_predictions(folder_index):
     ox = obstacle['obsXrl']
     oy = 0.0
     ow = obstacle['obslength']
-    oh = 2*obstacle['obsYrl']
+    oh = obstacle['obsYrl']
     ax.add_patch(Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5))
     ax.add_patch(Rectangle(
         (ox - safezone, oy - safezone),
@@ -143,6 +163,8 @@ def plot_single_with_predictions(folder_index):
     ax.set_ylabel('Y [m]')
     ax.legend(loc='best', fontsize='small')
     ax.grid(True)
+    ax.set_aspect('equal', adjustable='box')
+
     plt.tight_layout()
     plt.show()
 
@@ -276,6 +298,35 @@ def plot_solve_times_summary():
     plt.tight_layout()
     plt.show()
 
+def plot_control_inputs(folder_index):
+    """
+    Plottet die Steuergrößen (u1-u4) für eine einzelne Konfiguration.
+    :param folder_index: Index in der `folders`-Liste.
+    """
+    if not 0 <= folder_index < len(folders):
+        raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
+    folder = folders[folder_index]
+    ci_path = os.path.join(folder, control_inputs_file)
+    if not os.path.isfile(ci_path):
+        print(f"Control-Inputs-Datei nicht gefunden: {ci_path}")
+        return
+
+    df_ci = pd.read_csv(ci_path)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    t = df_ci.index.values
+
+    for col in ['u1','u2','u3','u4']: 
+        if col in df_ci.columns:
+            ax.plot(t, df_ci[col], label=col)
+    
+    ax.set_title(f'Steuergrößen (u) für {labels[folder_index]}')
+    ax.set_xlabel('Zeit (Schritte)')
+    ax.set_ylabel('u-Wert')
+    ax.legend()
+    ax.grid(True)
+    plt.tight_layout()
+    plt.show()
+
 
 if __name__ == '__main__':
     # Beispielaufrufe:
@@ -285,4 +336,5 @@ if __name__ == '__main__':
     plot_single_theta_with_predictions(3)
     plot_solve_times_single(3)
     plot_solve_times_summary()
+    plot_control_inputs(3)
     pass
