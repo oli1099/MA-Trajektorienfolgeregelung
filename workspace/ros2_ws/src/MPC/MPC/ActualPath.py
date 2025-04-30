@@ -7,31 +7,31 @@ from matplotlib.patches import Rectangle
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_N=15_T=21_Q=100',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1_Lidar',
 ]
 
 # Dateinamen
-actual_path_file        = 'mpc_trajectory_actual_path.csv'
-predictions_file        = 'mpc_trajectory_predictions.csv'
-actual_theta_file       = 'mpc_trajectory_actual_theta.csv'
+actual_path_file        = 'MPC_CL_dynObs_actual_path.csv'
+predictions_file        = 'MPC_CL_dynObs_predictions.csv'
+actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
-solve_times_file        = 'mpc_trajectory_solve_times.csv'
-control_inputs_file     = 'mpc_trajectory_control_inputs.csv'
+solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
+control_inputs_file     = 'MPC_CL_dynObs_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -43,22 +43,22 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-    'Nc=1', 
-    'Nc=3', 
-    'Nc=5',
-    'Nc=10', 
+   # 'Nc=1', 
+    #'Nc=3', 
+    #'Nc=5',
+    #'Nc=10', 
     'Nc=15', 
-    'Np=43', 
-    'Nc=5,Np=40',
-    'Nc=5,Np=35', 
-    'Nc=5,Np=30', 
-    'Nc=5,Np=25', 
-    'Np=20', 
-    'Nc=5,Np=10',
-    'Q=0.1',
-    'Q=1',
-    'Q=10',
-    'Q=1000'
+    #'Np=43', 
+    #'Nc=5,Np=40',
+    #'Nc=5,Np=35', 
+    #'Nc=5,Np=30', 
+    #'Nc=5,Np=25', 
+    #'Np=20', 
+    #'Nc=5,Np=10',
+    #'Q=0.1',
+    #'Q=1',
+    #'Q=10',
+    'Q=1000_Lidar'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
