@@ -65,6 +65,7 @@ class TrajectoryPController(Node):
         self.lookahead = 0.15     # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
         self.k_lat = 3.0          # Querfehler-Gain
         self.k_psi = 2.0          # Heading-Gain
+        self.k_s = 1           # Längsfehler-Gain
 
         #Zeitliste erstellen
         self.total_time = 20
