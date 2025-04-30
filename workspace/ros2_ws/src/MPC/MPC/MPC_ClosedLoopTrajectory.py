@@ -35,7 +35,7 @@ class MPCClosedLoopTrajectory(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Disretisierungszeit
-        self.N = 25   #Prediktionshorizont
+        self.N = 15   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -44,6 +44,10 @@ class MPCClosedLoopTrajectory(Node):
         self.actual_path = []
         self.predictions_list = []
         self.actual_u = []
+        self.actual_theta = []
+        self.predicted_theta_list = [] 
+        self.solve_times = []  
+
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
@@ -64,10 +68,53 @@ class MPCClosedLoopTrajectory(Node):
         
         #Anfangszustand festlegen
 
-        self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
+        
+        #self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
+        self.trajectory = [
+    (0.00, 0.00, 0),
+    (0.06, 0.00, 0),
+    (0.14, 0.00, 0),
+    (0.26, 0.00, 0),
+    (0.34, 0.00, 0),
+    (0.42, 0.00, 0),
+    (0.51, 0.06, 0),
+    (0.56, 0.12, 0),
+    (0.63, 0.18, 0),
+    (0.69, 0.23, 0),
+    (0.76, 0.29, 0),
+    (0.85, 0.34, 0),
+    (0.93, 0.36, 0),
+    (1.05, 0.38, 0),
+    (1.13, 0.38, 0),
+    (1.23, 0.39, 0),
+    (1.33, 0.40, 0),
+    (1.43, 0.40, 0),
+    (1.53, 0.40, 0),
+    (1.63, 0.40, 0),
+    (1.73, 0.40, 0),
+    (1.83, 0.40, 0),
+    (1.93, 0.39, 0),
+    (2.07, 0.37, 0),
+    (2.16, 0.32, 0),
+    (2.21, 0.28, 0),
+    (2.28, 0.22, 0),
+    (2.34, 0.16, 0),
+    (2.40, 0.09, 0),
+    (2.46, 0.04, 0),    
+    (2.52, 0.00, 0),
+    (2.58, 0.00, 0),
+    (2.64, 0.00, 0),
+    (2.70, 0.00, 0),
+    (2.76, 0.00, 0),
+    (2.82, 0.00, 0),
+    (2.88, 0.00, 0),
+    (2.94, 0.00, 0),
+    (3.00, 0.00, 0)
+]
+
         self.num_waypoints = len(self.trajectory)
         
-        self.total_time = 30
+        self.total_time = 20
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
@@ -154,13 +201,19 @@ class MPCClosedLoopTrajectory(Node):
             self.stop_robot()
             return
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        self.actual_theta.append(self.xmeasure[2])
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
+        t0 = time.perf_counter()
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, Xref,self.z0)
+        t1 = time.perf_counter()
+        dt = t1-t0
+        self.solve_times.append(dt)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
+        self.predicted_theta_list.append(x_opt[2, :].copy())
         self.actual_u.append(u_cl.copy())
         
 
@@ -253,7 +306,7 @@ class MPCClosedLoopTrajectory(Node):
         self.fig.savefig("MPCtrajectorytime_plot1.png")
         self.fig_u.savefig("MPCtrajectorytime_u_plot1.png")
 
-        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list, self.solve_times)
         self.saveData.save_all("mpc_trajectory")
         self.timer.cancel()
     
