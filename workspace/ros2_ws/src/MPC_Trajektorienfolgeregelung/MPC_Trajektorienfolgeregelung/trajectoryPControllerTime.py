@@ -62,7 +62,7 @@ class TrajectoryPController(Node):
 
 
         #Zeitliste erstellen
-        self.total_time = 17.5
+        self.total_time = 20
         self.num_waypoints = len(self.trajectory)
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
 
@@ -76,7 +76,7 @@ class TrajectoryPController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0
+        self.v_ff= 0.1
 
         # Liste für aktuelle path
         self.mpc_model = DynamicModel()
