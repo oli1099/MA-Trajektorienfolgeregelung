@@ -236,7 +236,7 @@ class TrajectoryPController(Node):
         self.fig.savefig("trajectorytime_plot1.png")
         self.fig_u.savefig("u_plot2.png")
         
-        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_uself.actual_theta, self.predicted_theta_list, self.solve_times)
+        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u,self.actual_theta, self.predicted_theta_list, self.solve_times)
         self.saveData.save_all("TrajectoryPController")
         self.timer.cancel()
 
