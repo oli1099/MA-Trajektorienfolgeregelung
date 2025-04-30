@@ -35,7 +35,7 @@ class MPCClosedLoop(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 25   #Prediktionshorizont
+        self.N = 15   #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis()
@@ -45,6 +45,9 @@ class MPCClosedLoop(Node):
         self.actual_u = []
         self.predictions_list = []
         self.predictions_u =[]
+        self.actual_theta = []
+        self.predicted_theta_list = [] 
+        self.solve_times = [] 
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
@@ -67,7 +70,7 @@ class MPCClosedLoop(Node):
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
         self.set_initial_position = None
-        self.x_ref = [2,1.5,0,0,0,0]
+        self.x_ref = [1,0.35,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
@@ -150,7 +153,7 @@ class MPCClosedLoop(Node):
             self.fig.savefig("MPC_CL_plot")
             self.fig_u.savefig("MPC_CL_u_plot")
 
-            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u)
+            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list, self.solve_times)
             current_dir = os.getcwd()
             self.get_logger().info(f"Working directory: {current_dir}")
             self.saveData.save_all("mpc_cl")
@@ -158,7 +161,12 @@ class MPCClosedLoop(Node):
             return
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
+        
+        t0 = time.perf_counter()        
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
+        t1 = time.perf_counter()
+        dt = t1-t0
+        self.solve_times.append(dt)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
