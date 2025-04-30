@@ -22,7 +22,8 @@ setup(
         'console_scripts': [
             
             'trajectoryPControllerTime = MPC_Trajektorienfolgeregelung.trajectoryPControllerTime:main',
-            'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main'
+            'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
+            'Trajectorytracking = MPC_Trajektorienfolgeregelung.Trajectorytracking:main'
         ],
     },
 )
