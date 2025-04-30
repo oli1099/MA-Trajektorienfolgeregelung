@@ -22,12 +22,12 @@ folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1000_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/TrajectoryPController_30sec_30pt',
 ]
 
 # Dateinamen
-actual_path_file        = 'MPC_CL_dynObs_actual_path.csv'
-predictions_file        = 'MPC_CL_dynObs_predictions.csv'
+actual_path_file        = 'TrajectoryPController_actual_path.csv'
+predictions_file        = 'TrajectoryPController_predictions.csv'
 actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
@@ -331,10 +331,10 @@ def plot_control_inputs(folder_index):
 if __name__ == '__main__':
     # Beispielaufrufe:
     plot_actual_paths()
-    plot_single_with_predictions(3)    
+    plot_single_with_predictions(15)    
     plot_all_actual_theta()
-    plot_single_theta_with_predictions(3)
-    plot_solve_times_single(3)
+    plot_single_theta_with_predictions(15)
+    plot_solve_times_single(15)
     plot_solve_times_summary()
-    plot_control_inputs(3)
+    plot_control_inputs(15)
     pass
