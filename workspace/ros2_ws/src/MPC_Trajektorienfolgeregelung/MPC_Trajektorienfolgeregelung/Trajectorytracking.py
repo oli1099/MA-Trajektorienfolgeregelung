@@ -179,7 +179,7 @@ class TrajectoryPController(Node):
             return
         
         
-
+        self.actual_path.append(self.current_position)
         # ---- Referenz & Fehler ----
         ref_pos, ref_heading, e_y = self.compute_reference()
         e_psi = math.atan2(math.sin(ref_heading - self.current_orientation),
@@ -203,6 +203,7 @@ class TrajectoryPController(Node):
         theta =  self.k_lat * e_y + self.k_psi * e_psi
 
         omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
+        self.actual_u.append(omega_vec)
 
         if self.waypoints_index >= len(self.trajectory)-1 and abs(e_y) < self.tolerence:
             self.stop_robot()
