@@ -21,17 +21,17 @@ folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/TrajectoryPController_30sec_30pt',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/TrajectoryPController_20sec_K=1_mitLidar',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/TrajectoryPController_20sec_K=1_ohneLidar',
 ]
 
 # Dateinamen
-actual_path_file        = 'MPC_CL_dynObs_actual_path.csv'
+actual_path_file        = 'TrajectoryPController_actual_path.csv'
 predictions_file        = 'MPC_CL_dynObs_predictions.csv'
 actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
-control_inputs_file     = 'MPC_CL_dynObs_control_inputs.csv'
+control_inputs_file     = 'TrajectoryPController_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
