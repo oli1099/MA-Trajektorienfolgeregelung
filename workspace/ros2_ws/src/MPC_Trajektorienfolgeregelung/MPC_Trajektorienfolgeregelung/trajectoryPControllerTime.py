@@ -76,7 +76,7 @@ class TrajectoryPController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0.1
+        self.v_ff= 0
 
         # Liste für aktuelle path
         self.mpc_model = DynamicModel()
@@ -96,7 +96,7 @@ class TrajectoryPController(Node):
 
         #Regelparameter
 
-        self.k = 1
+        self.k = 2
         self.k_ang = 1
 
         #Mecanum-Chassis Objekt erstellen
