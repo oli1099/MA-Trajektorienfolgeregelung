@@ -26,8 +26,8 @@ folders = [
 ]
 
 # Dateinamen
-actual_path_file        = 'TrajectoryPController_actual_path.csv'
-predictions_file        = 'TrajectoryPController_predictions.csv'
+actual_path_file        = 'MPC_CL_dynObs_actual_path.csv'
+predictions_file        = 'MPC_CL_dynObs_predictions.csv'
 actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
