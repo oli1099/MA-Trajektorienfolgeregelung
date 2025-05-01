@@ -67,10 +67,8 @@ class TrajectoryPController(Node):
         self.k_psi = 2.0          # Heading-Gain
         self.k_s = 1           # Längsfehler-Gain
 
-        #Zeitliste erstellen
-        self.total_time = 20
-        self.num_waypoints = len(self.trajectory)
-        self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
+        self.Ua_max    = 0.2    # maximaler Approach-Speed
+        self.Lp        = 0.15   # fester Look-ahead-Abstand
 
         self.start_timer = None
 
@@ -141,36 +139,26 @@ class TrajectoryPController(Node):
         
     
     def compute_reference(self):
-        # Aktueller und nächster WP
-        i = self.waypoints_index
-        p0 = np.array(self.trajectory[i][0:2])
-        if i >= len(self.trajectory)-1:
-            return p0, 0.0, 0.0   # Ende
-        p1 = np.array(self.trajectory[i+1][0:2])
-
-        # Richtungseinheitsvektor
-        d = p1 - p0
-        L = np.linalg.norm(d)
-        if L == 0:
-            return p1, 0.0, 0.0
-        t_hat = d / L
-
-        # Orthogonaler Abstand & Projektionslänge
+        # 1) nächster Pfad-Index
         p = np.array(self.current_position)
-        proj_len = np.dot((p - p0), t_hat)
-        e_y = np.cross(np.append(t_hat,0), np.append(p - p0,0))[2]  # signed distance
-
-        # Fortschritt: wenn genug nähergekommen, nächster WP
-        if proj_len > L:
-            self.waypoints_index += 1
-            return self.compute_reference()
-
-        # Look-ahead-Punkt s = proj_len + lookahead
-        s_la = min(proj_len + self.lookahead, L)
-        ref_pos = p0 + s_la * t_hat
-        ref_heading = math.atan2(d[1], d[0])
-
-        return ref_pos, ref_heading, e_y
+        dists = [np.linalg.norm(p - np.array(pt[:2])) for pt in self.trajectory]
+        i_min = int(np.argmin(dists))
+        self.waypoints_index = i_min
+        # 2) segmentweises Fortzählen bis Lp erreicht
+        dist_acc = 0.0
+        idx   = i_min
+        while idx < len(self.trajectory)-1 and dist_acc < self.Lp:
+            p0 = np.array(self.trajectory[idx][:2])
+            p1 = np.array(self.trajectory[idx+1][:2])
+            dist_acc += np.linalg.norm(p1-p0)
+            idx += 1
+        # 3) Zielpunkt
+        x_LA, y_LA, _ = self.trajectory[idx]
+        # 4) LOS-Vektor
+        ex = self.current_position[0] - x_LA
+        ey = self.current_position[1] - y_LA
+        return ex, ey
+        
 
     
     
@@ -180,34 +168,27 @@ class TrajectoryPController(Node):
         
         
         self.actual_path.append(self.current_position)
-        # ---- Referenz & Fehler ----
-        ref_pos, ref_heading, e_y = self.compute_reference()
-        e_psi = math.atan2(math.sin(ref_heading - self.current_orientation),
-                        math.cos(ref_heading - self.current_orientation))
+        ex, ey = self.compute_reference()
 
-        # ---- Regler ----
-        # nach compute_reference() …
+        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        v_x = -self.Ua_max * ex/denom
+        v_y = -self.Ua_max * ey/denom
 
-
-        # Längsfehler
-        delta = np.array(ref_pos) - np.array(self.current_position)
-        e_s = np.linalg.norm(delta)
-
-        # P-Anteil auf v
-        v = self.k_s * e_s
-        v_x = v* math.cos(ref_heading)
-        v_y = v * math.sin(ref_heading)
-
-    
-
-        theta =  self.k_lat * e_y + self.k_psi * e_psi
+       
+        
+        phi_d = math.atan2(ey, ex)
+        # 4) Gierrate aus Heading-Fehler
+        err_phi = math.atan2(math.sin(phi_d - self.current_orientation),
+                             math.cos(phi_d - self.current_orientation))
+        theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
 
         omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
         self.actual_u.append(omega_vec)
 
-        if self.waypoints_index >= len(self.trajectory)-1 and abs(e_y) < self.tolerence:
+        last_idx = len(self.trajectory)-1
+        if self.waypoints_index == last_idx and math.hypot(ex, ey) < self.tolerence:
             self.stop_robot()
-       
+            return
 
         #Geschwindigkeit Begrenzung
         #v_x = max(min(v_x, 0.2298), -0.22989)
@@ -231,8 +212,7 @@ class TrajectoryPController(Node):
 
         self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
                               f"Current: {self.current_position}, "
-                              f"Ref: {ref_pos}, "
-                              f"Heading: {ref_heading:.2f}, "
+                                f"v: {v_robot}, "
                               )
         
                       
