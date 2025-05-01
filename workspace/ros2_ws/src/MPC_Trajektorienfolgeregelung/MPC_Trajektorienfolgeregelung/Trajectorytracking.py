@@ -63,8 +63,8 @@ class TrajectoryPController(Node):
         
         self.v_des = 0.2          # gewünschte Vorwärts­geschwindigkeit [m/s]
         self.lookahead = 0.15     # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
-        self.k_lat = 3.0          # Querfehler-Gain
-        self.k_psi = 2.0          # Heading-Gain
+        self.k_lat = 1.0          # Querfehler-Gain
+        self.k_psi = 1.0          # Heading-Gain
         self.k_s = 1           # Längsfehler-Gain
 
         self.Ua_max    = 0.2    # maximaler Approach-Speed
@@ -170,12 +170,12 @@ class TrajectoryPController(Node):
         self.actual_path.append(self.current_position)
         ex, ey = self.compute_reference()
 
-        #denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        #v_x = -self.Ua_max * ex/denom
-        #v_y = -self.Ua_max * ey/denom
+        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        v_x = -self.Ua_max * ex/denom
+        v_y = -self.Ua_max * ey/denom
 
-        v_x = -self.k_lat * ex
-        v_y = -self.k_lat * ey
+        #v_x = -self.k_lat * ex
+        #v_y = -self.k_lat * ey
        
         
         phi_d = math.atan2(ey, ex)
