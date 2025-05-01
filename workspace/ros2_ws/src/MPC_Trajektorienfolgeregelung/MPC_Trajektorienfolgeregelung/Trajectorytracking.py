@@ -170,10 +170,12 @@ class TrajectoryPController(Node):
         self.actual_path.append(self.current_position)
         ex, ey = self.compute_reference()
 
-        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        v_x = -self.Ua_max * ex/denom
-        v_y = -self.Ua_max * ey/denom
+        #denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        #v_x = -self.Ua_max * ex/denom
+        #v_y = -self.Ua_max * ey/denom
 
+        v_x = self.k_lat * ex
+        v_y = self.k_lat * ey
        
         
         phi_d = math.atan2(ey, ex)
