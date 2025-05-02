@@ -11,7 +11,7 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
@@ -22,16 +22,20 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1_Lidar',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1_Lidar',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.15',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.3',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/Trajektorie'
 ]
 
 # Dateinamen
-actual_path_file        = 'MPC_CL_dynObs_actual_path.csv'
+actual_path_file        = 'TrajectoryPController_actual_path.csv'
 predictions_file        = 'MPC_CL_dynObs_predictions.csv'
 actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
-control_inputs_file     = 'MPC_CL_dynObs_control_inputs.csv'
+control_inputs_file     = 'TrajectoryPController_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -47,7 +51,7 @@ labels = [
     #'Nc=3', 
     #'Nc=5',
     #'Nc=10', 
-    'Nc=15', 
+    #'Nc=15', 
     #'Np=43', 
     #'Nc=5,Np=40',
     #'Nc=5,Np=35', 
@@ -58,7 +62,11 @@ labels = [
     #'Q=0.1',
     #'Q=1',
     #'Q=10',
-    'Q=1000_Lidar'
+    #'Q=1000_Lidar'
+    'LA=0.15',
+    'LA=0.3',
+    'LA=0.1',
+    'Trajektorie'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
@@ -69,6 +77,7 @@ def plot_actual_paths():
     Plottet alle actual paths für alle Konfigurationen.
     """
     fig, ax = plt.subplots(figsize=(10, 6))
+
     for idx, folder in enumerate(folders):
         path = os.path.join(folder, actual_path_file)
         if os.path.isfile(path):
@@ -80,6 +89,28 @@ def plot_actual_paths():
             )
         else:
             print(f"Datei nicht gefunden: {path}")
+    
+        # --- Straße von y=0 bis y=0.5 mit zwei Spuren skizzieren ---
+    # Dynamisch X-Grenzen ermitteln, damit sich der Untergrund anpasst
+    x_min, x_max = ax.get_xlim()
+    # Graues Straßenband (Höhe 0.5 m, ab y=0)
+    road = Rectangle(
+        (x_min, 0.0),         # linke untere Ecke bei y=0
+        x_max - x_min,        # Breite
+        0.5,                  # Höhe
+        facecolor='gray',
+        alpha=0.3,
+        zorder=0
+    )
+    ax.add_patch(road)
+    # Fahrbahnrand oben und unten (weiße durchgezogene Linien)
+    ax.plot([x_min, x_max], [0.0, 0.0], color='white', linewidth=1.5, zorder=1)
+    ax.plot([x_min, x_max], [0.5, 0.5], color='white', linewidth=1.5, zorder=1)
+    # Mittellinie (gestrichelt) bei y=0.25
+    ax.plot([x_min, x_max], [0.25, 0.25],
+            color='white', linestyle='--', linewidth=1.5, zorder=1)
+    # -------------------------------------------------------------------
+
 
     # Hindernis
     ox = obstacle['obsXrl']
@@ -98,7 +129,7 @@ def plot_actual_paths():
     ax.add_patch(obs_patch)
     ax.add_patch(sz_patch)
 
-    ax.set_title('Actual Paths Vergleich mit Hindernis')
+    #ax.set_title('Actual Paths Vergleich mit Hindernis')
     ax.set_xlabel('X [m]')
     ax.set_ylabel('Y [m]')
     ax.legend(loc='best', fontsize='small')
