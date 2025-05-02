@@ -80,7 +80,7 @@ class TrajectoryPController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0.1
+        self.v_ff= 0.2
 
         # Liste für aktuelle path
         self.mpc_model = DynamicModel()
@@ -174,8 +174,18 @@ class TrajectoryPController(Node):
         #v_x = -self.Ua_max * ex/denom
         #v_y = -self.Ua_max * ey/denom
 
-        v_x = -self.v_ff-self.k_lat * ex
-        v_y = -self.v_ff -self.k_lat * ey
+        #v_x = -self.v_ff-self.k_lat * ex
+        #v_y = -self.v_ff -self.k_lat * ey
+
+        # Basis als konstant schnelle LOS-Normierung
+        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        v_x_norm = -self.Ua_max * ex/denom
+        v_y_norm = -self.Ua_max * ey/denom
+
+        # Zusatz-P-Term nur auf Querkomponente
+        v_x = v_x_norm + (-self.k_lat * ex)
+        v_y = v_y_norm + (-self.k_lat * ey)
+
        
         
         phi_d = math.atan2(-ey, -ex)
