@@ -62,8 +62,8 @@ class TrajectoryPController(Node):
 
         
         self.v_des = 0.2          # gewünschte Vorwärts­geschwindigkeit [m/s]
-        self.lookahead = 0.15     # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
-        self.k_lat = 1.0          # Querfehler-Gain
+        self.lookahead = 0.1     # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
+        self.k_lat = 2.0          # Querfehler-Gain
         self.k_psi = 1.0          # Heading-Gain
         self.k_s = 1           # Längsfehler-Gain
 
@@ -184,7 +184,7 @@ class TrajectoryPController(Node):
                              math.cos(phi_d - self.current_orientation))
         theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
 
-        omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
+        omega_vec = self.mpc_model.get_omega(v_x, v_y, 0)
        
 
         last_idx = len(self.trajectory)-1
