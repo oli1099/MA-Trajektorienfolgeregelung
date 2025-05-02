@@ -178,13 +178,13 @@ class TrajectoryPController(Node):
         v_y = -self.k_lat * ey
        
         
-        phi_d = math.atan2(ey, ex)
+        phi_d = math.atan2(-ey, -ex)
         # 4) Gierrate aus Heading-Fehler
         err_phi = math.atan2(math.sin(phi_d - self.current_orientation),
                              math.cos(phi_d - self.current_orientation))
         theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
 
-        omega_vec = self.mpc_model.get_omega(v_x, v_y, 0)
+        omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
        
 
         last_idx = len(self.trajectory)-1
