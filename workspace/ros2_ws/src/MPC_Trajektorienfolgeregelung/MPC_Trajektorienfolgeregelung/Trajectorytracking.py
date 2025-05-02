@@ -62,8 +62,8 @@ class TrajectoryPController(Node):
 
         
         self.v_des = 0.2          # gewünschte Vorwärts­geschwindigkeit [m/s]
-        self.lookahead = 0.1     # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
-        self.k_lat = 2.0          # Querfehler-Gain
+        self.lookahead = 0.2    # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
+        self.k_lat = 1.0          # Querfehler-Gain
         self.k_psi = 1.0          # Heading-Gain
         self.k_s = 1           # Längsfehler-Gain
 
@@ -80,7 +80,7 @@ class TrajectoryPController(Node):
 
         #Feedforward konstante geschwindigkeit
 
-        self.v_ff= 0
+        self.v_ff= 0.1
 
         # Liste für aktuelle path
         self.mpc_model = DynamicModel()
@@ -174,8 +174,8 @@ class TrajectoryPController(Node):
         #v_x = -self.Ua_max * ex/denom
         #v_y = -self.Ua_max * ey/denom
 
-        v_x = -self.k_lat * ex
-        v_y = -self.k_lat * ey
+        v_x = -self.v_ff-self.k_lat * ex
+        v_y = -self.v_ff -self.k_lat * ey
        
         
         phi_d = math.atan2(-ey, -ex)
