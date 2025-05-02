@@ -63,12 +63,12 @@ class TrajectoryPController(Node):
         
         self.v_des = 0.2          # gewünschte Vorwärts­geschwindigkeit [m/s]
         #self.lookahead = 0.12   # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
-        self.k_lat = 2.0          # Querfehler-Gain
+        self.k_lat = 0.5          # Querfehler-Gain
         self.k_psi = 1.0          # Heading-Gain
         self.k_s = 1           # Längsfehler-Gain
 
         self.Ua_max    = 0.2    # maximaler Approach-Speed
-        self.Lp        = 0.15  # fester Look-ahead-Abstand
+        self.Lp        = 0.1 # fester Look-ahead-Abstand
 
         self.start_timer = None
 
