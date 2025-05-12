@@ -158,7 +158,7 @@ class MPCClosedLoop(Node):
                     m = 0
                     b = self.road_width
         else:
-            if carX >= obsXrl + obslength + 2*self.Safezone +0.1: #and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
+            if carX >= obsXrl + obslength + 2*self.Safezone -0.01: #and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
                 m = np.tan(np.arctan2(( - carY), (self.return_distance)))
                 b = obsYrl + m * (obsXrl + obslength + 2*self.Safezone)
                 xmax = obsXrl + obslength + 2*self.Safezone + self.return_distance
