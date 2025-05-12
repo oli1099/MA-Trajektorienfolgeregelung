@@ -93,7 +93,7 @@ class QP:
 
         #Für die Equality Constrains g == 0 und für die Inequality Constraints g <= 0
         n_dynamics = (Np+1)*self.nx
-        n_mixed = Np*7
+        n_mixed = Np*6
 
         lbg_dyn = np.zeros(n_dynamics)
         ubg_dyn = np.zeros(n_dynamics)
