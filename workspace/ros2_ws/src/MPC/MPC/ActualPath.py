@@ -23,19 +23,23 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1_Lidar',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.15',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.3',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/Trajektorie'
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.15',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/Trajektorie',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_Q=100_T=30_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_Q=100_T=30_Ts=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_N=15_T=21_Q=100'
+
 ]
 
 # Dateinamen
-actual_path_file        = 'TrajectoryPController_actual_path.csv'
-predictions_file        = 'MPC_CL_dynObs_predictions.csv'
+actual_path_file        = 'mpc_trajectory_actual_path.csv'
+predictions_file        = 'mpc_trajectory__predictions.csv'
 actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
 predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
 solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
-control_inputs_file     = 'TrajectoryPController_control_inputs.csv'
+control_inputs_file     = 'mpc_trajectory__control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -63,10 +67,13 @@ labels = [
     #'Q=1',
     #'Q=10',
     #'Q=1000_Lidar'
-    'LA=0.15',
-    'LA=0.3',
-    'LA=0.1',
-    'Trajektorie'
+    #'LA=0.15',
+    #'LA=0.3',
+    #'LA=0.1',
+    'Ref',
+    #'MPCTrajectory_Q=100_T=30_Ts=0.2',
+    #'MPCTrajectory_Q=100_T=30_Ts=0.1',
+    'N=15'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
