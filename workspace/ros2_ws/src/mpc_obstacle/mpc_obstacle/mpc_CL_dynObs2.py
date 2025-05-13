@@ -135,6 +135,8 @@ class MPCClosedLoop(Node):
         # Schwellenwert wann das Auto in der linken spur ist 
         threshold = 0.2
         epsilon = 0.01
+        obs_end = obsXrl + obslength + 2*self.Safezone
+        return_end = obs_end + self.return_distance
 
         if obsXrl - carX > 0.5: # Erst ab 1 meter zum Hinderniss soll reagiert werden
             return 0, -self.road_width/2, xmin, xmax, 0, self.road_width
@@ -158,7 +160,28 @@ class MPCClosedLoop(Node):
                     m = 0
                     b = self.road_width
         else:
-            if carX >= obsXrl + obslength + 2*self.Safezone and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
+            if carX >= obs_end and carX <= return_end:
+                cS = 0
+                cI = -self.road_width/2
+                m = (0-carY)/(self.return_distance)
+                b = obsYrl -m * obs_end
+                xmax = obs_end + self.return_distance
+            elif carX >= return_end:
+                cS = 0
+                cI = -self.road_width/2
+                m = 0
+                b = self.road_width/4
+                xmax = 1e6
+            else:
+                cS = 0
+                cI = obsYrl -0.1
+                m = 0
+                b = self.road_width/4
+                xmax = 1e6
+
+
+
+            '''if carX >= obsXrl + obslength + 2*self.Safezone -0.01 and carX <= obsXrl + obslength + 2*self.Safezone + self.return_distance:
                 m = np.tan(np.arctan2(( - carY), (self.return_distance)))
                 b = obsYrl + m * (obsXrl + obslength + 2*self.Safezone)
                 xmax = obsXrl + obslength + 2*self.Safezone + self.return_distance
@@ -168,18 +191,14 @@ class MPCClosedLoop(Node):
                 cS = 0
                 cI = -self.road_width/2
                 m = 0
-                b = self.road_width/2
+                b = self.road_width/2'''
             
             
             
-                '''if carX >= obsXrl + obslength + 2*self.Safezone:
+            '''if carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = 0
                 cI = 0#-self.road_width/2'''
-            else:
-                cS = 0
-                cI = obsYrl 
-                m = 0
-                b = self.road_width 
+           
                
 
 
