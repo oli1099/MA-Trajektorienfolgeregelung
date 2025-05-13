@@ -48,7 +48,7 @@ class MPCClosedLoop(Node):
             'obslength': 0.75 # Breite des Hindernisses
         }
         self.road_width = 1.0  # Breite der Straße (Beispielwert)
-        self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
+        self.return_distance = 0.5 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
 
 
         #Mecanum-Chassis Objekt erstellen
