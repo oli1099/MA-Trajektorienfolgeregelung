@@ -158,9 +158,9 @@ class MPCClosedLoop(Node):
                     cS = np.tan(np.arctan2((obsYrl - carY), (obsXrl - carX)))
                     cI = obsYrl - cS * obsXrl
                     m = 0
-                    b = np.inf #/self.road_width
+                    b = self.road_width
         else:
-            if carX >= obs_end and carX <= return_end:
+            if carX >= obs_end - 1e-2 and carX <= return_end: # Toleranz eingefügt
                 cS = 0
                 cI = -self.road_width/2
                 m = (0-carY)/(self.return_distance)
