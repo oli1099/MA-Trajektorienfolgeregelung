@@ -47,7 +47,7 @@ class MPCClosedLoop(Node):
             'obsYrl': 0.25,   # y-Koordinate
             'obslength': 0.75 # Breite des Hindernisses
         }
-        self.road_width = 2.0  # Breite der Straße (Beispielwert)
+        self.road_width = 1.0  # Breite der Straße (Beispielwert)
         self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
 
 
@@ -84,7 +84,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [2.5,0,0,0,0,0]
+        self.x_ref = [3,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -132,14 +132,14 @@ class MPCClosedLoop(Node):
         xmin = carX
         xmax = 1e6
 
-        adjence_lanecenter = self.road_width/2
+        adjence_lanecenter = self.road_width/2 
 
         # Schwellenwert wann das Auto in der linken spur ist 
         threshold = 0.2
         epsilon = 0.01
 
         if obsXrl - carX > 0.5: # Erst ab 1 meter zum Hinderniss soll reagiert werden
-            return 0, -self.road_width/2, xmin, xmax
+            return 0, -self.road_width/2, xmin, xmax #unterer Straßenrand 
 
         if carX <= obsXrl :
             if  abs(carY - adjence_lanecenter) <= threshold:
@@ -156,11 +156,13 @@ class MPCClosedLoop(Node):
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = 0
-                cI = -self.road_width/2
+                cI = self.road_width/2 # da muss evtl ein - hin
             else:
                 cS = 0
                 cI = obsYrl -0.1 
                
+               # Hier den Code anpassen, dass nachdem der Roboter das hinderniss überholt hat, die Obere grenze für y der Obere Rand der Spur ist
+               # generell self.road_width/2 überprüfen
 
 
 
