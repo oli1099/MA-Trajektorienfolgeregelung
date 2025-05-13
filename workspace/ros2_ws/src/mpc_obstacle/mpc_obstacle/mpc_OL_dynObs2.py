@@ -99,7 +99,7 @@ class QP:
         ubg_dyn = np.zeros(n_dynamics)
 
         lbg_mixed = -np.inf*np.ones(n_mixed)
-        ubg_mixed = np.zeros(n_mixed) + 1e-3
+        ubg_mixed = np.zeros(n_mixed) 
 
         self.lbg = np.concatenate((lbg_dyn, lbg_mixed))
         self.ubg = np.concatenate((ubg_dyn, ubg_mixed))
