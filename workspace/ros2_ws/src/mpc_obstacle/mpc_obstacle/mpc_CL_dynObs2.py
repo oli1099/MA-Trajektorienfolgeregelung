@@ -33,12 +33,12 @@ class MPCClosedLoop(Node):
 
         # Gewichtsmatrizen festlegen
         self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.01*np.eye(self.nu)
+        self.R = 0.1*np.eye(self.nu)
         self.QN = self.Q
-        self.Safezone = 0.2
+        self.Safezone = 0.1
 
         self.Ts = 0.1 #Diskretisierungszeit
-        self.Np = 20 #Prediction Horizon
+        self.Np = 15 #Prediction Horizon
         self.Nc = 5  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
