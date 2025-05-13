@@ -47,7 +47,7 @@ class MPCClosedLoop(Node):
             'obsYrl': 0.25,   # y-Koordinate
             'obslength': 0.75 # Breite des Hindernisses
         }
-        self.road_width = 2.0  # Breite der Straße (Beispielwert)
+        self.road_width = 1.0  # Breite der Straße (Beispielwert)
         self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
 
 
@@ -84,7 +84,7 @@ class MPCClosedLoop(Node):
 
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-        self.x_ref = [2.5,0,0,0,0,0]
+        self.x_ref = [3,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.5,0.5,0.5,0.5]
 
@@ -156,7 +156,7 @@ class MPCClosedLoop(Node):
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = 0
-                cI = -self.road_width/2 # da muss evtl ein - hin
+                cI = self.road_width/2 # da muss evtl ein - hin
             else:
                 cS = 0
                 cI = obsYrl -0.1 
