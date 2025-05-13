@@ -176,7 +176,7 @@ class MPCClosedLoop(Node):
                 cS = 0
                 cI = obsYrl -0.1
                 m = 0
-                b = self.road_width/4
+                b = self.road_width
                 xmax = 1e6
 
 
