@@ -33,7 +33,7 @@ class MPCClosedLoop(Node):
 
         # Gewichtsmatrizen festlegen
         self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.1*np.eye(self.nu)
+        self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
         self.Safezone = 0.1
 
@@ -156,7 +156,7 @@ class MPCClosedLoop(Node):
         else:
             if carX >= obsXrl + obslength + 2*self.Safezone:
                 cS = 0
-                cI = self.road_width/2 # da muss evtl ein - hin
+                cI = -self.road_width/2 # da muss evtl ein - hin
             else:
                 cS = 0
                 cI = obsYrl -0.1 
