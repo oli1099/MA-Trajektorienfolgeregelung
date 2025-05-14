@@ -207,8 +207,8 @@ class TrajectoryPController(Node):
         v_y_norm = -self.Ua_max * ey/denom
 
         # Zusatz-P-Term nur auf Querkomponente
-        v_x = v_x_norm + (-self.k_lat * ex)
-        v_y = v_y_norm + (-self.k_lat * ey)
+        #v_x = v_x_norm + (-self.k_lat * ex)
+        #v_y = v_y_norm + (-self.k_lat * ey)
 
        
         
