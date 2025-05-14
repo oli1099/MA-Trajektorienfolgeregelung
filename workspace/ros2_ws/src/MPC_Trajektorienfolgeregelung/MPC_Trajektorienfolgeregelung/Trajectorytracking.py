@@ -294,7 +294,7 @@ class TrajectoryPController(Node):
     def plot_callback(self):
         if not self.actual_path:
             return
-        
+          
         self.ax.cla()
 
         # Solltrajektorie extrahieren
