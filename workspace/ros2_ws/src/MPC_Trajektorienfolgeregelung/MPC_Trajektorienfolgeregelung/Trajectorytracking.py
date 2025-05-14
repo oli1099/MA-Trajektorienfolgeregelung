@@ -61,7 +61,8 @@ class TrajectoryPController(Node):
     (3.00, 0.00, 0)
 ]
         # CSV laden
-        csv_file = Path(__file__).parent / 'traj.csv'
+        csv_file = Path('/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/MPC_Trajektorienfolgeregelung/MPC_Trajektorienfolgeregelung/traj.csv')
+
         data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
         # Spalten: [t, x, y, yaw]
         xs   = data[:,1]
