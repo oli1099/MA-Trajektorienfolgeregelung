@@ -60,7 +60,8 @@ class TrajectoryPController(Node):
     (3.00, 0.00, 0)
 ]
         # CSV laden
-        data = np.loadtxt('traj.csv', delimiter=',', skiprows=1)
+        csv_file = Path(__file__).parent / 'traj.csv'
+        data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
         # Spalten: [t, x, y, yaw]
         xs   = data[:,1]
         ys   = data[:,2]
