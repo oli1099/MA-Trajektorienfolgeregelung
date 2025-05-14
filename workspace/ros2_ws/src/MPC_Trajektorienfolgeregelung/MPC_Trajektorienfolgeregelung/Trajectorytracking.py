@@ -139,7 +139,29 @@ class TrajectoryPController(Node):
         
     
     def compute_reference(self):
-        # 1) nächster Pfad-Index
+        for i, (xr, yr, _) in enumerate(self.trajectory):
+            dx = xr - self.current_position[0] 
+            dy = yr - self.current_position[1] 
+            D = math.hypot(dx, dy)
+
+            if D < self.Lp:
+                continue
+            # Sättigung und Einheitsvektor
+            KV = max(0.0, min(D / self.Lp, 1.0))
+            if D > 0:
+                dir_x = dx / D
+                dir_y = dy / D
+            else:
+                dir_x = dir_y = 0.0
+
+            Vref_x = self.V_ref * KV * dir_x
+            Vref_y = self.V_ref * KV * dir_y
+            break
+        return Vref_x, Vref_y
+
+        
+        
+        '''# 1) nächster Pfad-Index
         p = np.array(self.current_position)
         dists = [np.linalg.norm(p - np.array(pt[:2])) for pt in self.trajectory]
         i_min = int(np.argmin(dists))
@@ -157,7 +179,7 @@ class TrajectoryPController(Node):
         # 4) LOS-Vektor
         ex = self.current_position[0] - x_LA
         ey = self.current_position[1] - y_LA
-        return ex, ey
+        return ex, ey'''
         
 
     
@@ -168,7 +190,7 @@ class TrajectoryPController(Node):
         
         
         self.actual_path.append(self.current_position)
-        ex, ey = self.compute_reference()
+        Vref_x, Vref_y = self.compute_reference()
 
         #denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
         #v_x = -self.Ua_max * ex/denom
@@ -178,27 +200,27 @@ class TrajectoryPController(Node):
         #v_y = -self.v_ff -self.k_lat * ey
 
         # Basis als konstant schnelle LOS-Normierung
-        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        v_x_norm = -self.Ua_max * ex/denom
-        v_y_norm = -self.Ua_max * ey/denom
+        #denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        #v_x_norm = -self.Ua_max * ex/denom
+        #v_y_norm = -self.Ua_max * ey/denom
 
         # Zusatz-P-Term nur auf Querkomponente
-        v_x = v_x_norm + (-self.k_lat * ex)
-        v_y = v_y_norm + (-self.k_lat * ey)
+        #v_x = v_x_norm + (-self.k_lat * ex)
+        #v_y = v_y_norm + (-self.k_lat * ey)
 
        
         
-        phi_d = math.atan2(-ey, -ex)
+        phi_d = math.atan2(-Vref_x, -Vref_y)
         # 4) Gierrate aus Heading-Fehler
         err_phi = math.atan2(math.sin(phi_d - self.current_orientation),
                              math.cos(phi_d - self.current_orientation))
         theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
 
-        omega_vec = self.mpc_model.get_omega(v_x, v_y, 0)
+        omega_vec = self.mpc_model.get_omega(Vref_x, Vref_y, 0)
        
 
         last_idx = len(self.trajectory)-1
-        if self.waypoints_index == last_idx and math.hypot(ex, ey) < self.tolerence:
+        if self.waypoints_index == last_idx :#and math.hypot(ex, ey) < self.tolerence:
             self.stop_robot()
             return
 
