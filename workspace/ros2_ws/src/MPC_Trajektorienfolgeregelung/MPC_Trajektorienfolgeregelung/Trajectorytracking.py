@@ -143,7 +143,7 @@ class TrajectoryPController(Node):
 
         if self.start_timer is None:
             self.start_timer = self.get_clock().now()
-            self.start_time = self.time.perf_counter()
+            self.start_time = time.perf_counter()
 
         #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
