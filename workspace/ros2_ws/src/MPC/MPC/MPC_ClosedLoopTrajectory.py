@@ -88,13 +88,15 @@ class MPCClosedLoopTrajectory(Node):
 
         data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
         # Spalten: [t, x, y, yaw]
+        ts = data[:,0]
         xs   = data[:,1]
         ys   = data[:,2]
         yaws = data[:,3]
         # Liste von Tripeln (x,y,yaw)
+        self.times = ts
         self.trajectory = list(zip(xs, ys, yaws))
 
-        self.num_waypoints = len(self.trajectory)
+        self.num_waypoints = len(self.times)
         
         self.total_time = 21
         self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
@@ -239,7 +241,7 @@ class MPCClosedLoopTrajectory(Node):
         self.control_pub.publish(twist)
 
         
-    def get_reference_trajectory(self, current_time):
+    '''def get_reference_trajectory(self, current_time):
     # returns shape (nx, N+1)
     # z.B. lineare Interpolation für x,y,theta, v_x=0, v_y=0, w=0
         Xref = np.zeros((self.nx, self.N+1))
@@ -271,7 +273,32 @@ class MPCClosedLoopTrajectory(Node):
             Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
         
         
-        return Xref
+        return Xref'''
+    
+    def get_reference_trajectory(self, current_time):
+            """
+            Liefert ein Array Xref der Form (nx, N+1),
+            indem an jedem Horizont‐Schritt einfach
+            der nächstliegende Zeitindex aus self.times verwendet wird.
+            """
+            Xref = np.zeros((self.nx, self.N+1))
+            # finde aktuellen Index
+            # searchsorted liefert das erste i, bei dem self.times[i] >= current_time
+            i0 = np.searchsorted(self.times, current_time, side='right') - 1
+            i0 = np.clip(i0, 0, self.num_waypoints-1)
+
+            for k in range(self.N+1):
+                idx = i0 + k
+                # Wenn wir über das Ende hinausgehen, bleib auf dem letzten Punkt
+                if idx >= self.num_waypoints:
+                    idx = self.num_waypoints - 1
+
+                x_des, y_des, theta_des = self.trajectory[idx]
+                # v_x, v_y, omega setzen wir hier auf 0 (oder je nach Bedarf anders)
+                Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
+
+            return Xref
+
 
 
     def quaternion_to_yaw(self,q):
