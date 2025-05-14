@@ -316,7 +316,7 @@ class MPCClosedLoopTrajectory(Node):
         self.fig_u.savefig("MPCtrajectorytime_u_plot1.png")
 
         self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list, self.solve_times)
-        self.saveData.save_all("mpc_trajectory")
+        self.saveData.save_all("mpc_data")
         self.timer.cancel()
     
     def plot_callback(self):
