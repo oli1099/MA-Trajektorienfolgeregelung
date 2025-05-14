@@ -83,6 +83,8 @@ class TrajectoryPController(Node):
      
 
         self.start_timer = None
+        self.start_time =None
+        self.log_data   = []
 
 
         #Startposition und aktuelle Position initzialisieren
@@ -141,6 +143,7 @@ class TrajectoryPController(Node):
 
         if self.start_timer is None:
             self.start_timer = self.get_clock().now()
+            self.start_time = self.time.perf_counter()
 
         #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
@@ -200,8 +203,8 @@ class TrajectoryPController(Node):
         if self.current_position is None:
             return
         
-        
-        self.actual_path.append(self.current_position)
+        t_rel = time.perf_counter - self.start_timer
+        self.actual_path.append(self.current_position,t_rel)
         ex, ey = self.compute_reference()
 
         denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
