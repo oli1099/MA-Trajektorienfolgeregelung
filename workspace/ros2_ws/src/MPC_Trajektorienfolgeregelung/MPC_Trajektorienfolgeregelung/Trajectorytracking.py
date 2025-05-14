@@ -141,7 +141,7 @@ class TrajectoryPController(Node):
         
     
     def compute_reference(self):
-        for i, (xr, yr, _) in enumerate(self.trajectory):
+        '''for i, (xr, yr, _) in enumerate(self.trajectory):
             dx = xr - self.current_position[0] 
             dy = yr - self.current_position[1] 
             D = math.hypot(dx, dy)
@@ -159,11 +159,11 @@ class TrajectoryPController(Node):
             Vref_x = self.Vref * KV* np.cos(np.arctan2(dir_y, dir_x))
             Vref_y = self.Vref * KV *np.sin(np.arctan2(dir_y, dir_x))
             break
-        return Vref_x, Vref_y 
+        return Vref_x, Vref_y '''
 
         #f
         
-        '''# 1) nächster Pfad-Index
+        # 1) nächster Pfad-Index
         p = np.array(self.current_position)
         dists = [np.linalg.norm(p - np.array(pt[:2])) for pt in self.trajectory]
         i_min = int(np.argmin(dists))
@@ -181,7 +181,7 @@ class TrajectoryPController(Node):
         # 4) LOS-Vektor
         ex = self.current_position[0] - x_LA
         ey = self.current_position[1] - y_LA
-        return ex, ey'''
+        return ex, ey
         
 
     
@@ -192,33 +192,33 @@ class TrajectoryPController(Node):
         
         
         self.actual_path.append(self.current_position)
-        Vref_x, Vref_y = self.compute_reference()
+        ex, ey = self.compute_reference()
 
-        #denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        #v_x = -self.Ua_max * ex/denom
-        #v_y = -self.Ua_max * ey/denom
+        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        v_x = -self.Ua_max * ex/denom
+        v_y = -self.Ua_max * ey/denom
 
         #v_x = -self.v_ff-self.k_lat * ex
         #v_y = -self.v_ff -self.k_lat * ey
 
         # Basis als konstant schnelle LOS-Normierung
-        #denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        #v_x_norm = -self.Ua_max * ex/denom
-        #v_y_norm = -self.Ua_max * ey/denom
+        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
+        v_x_norm = -self.Ua_max * ex/denom
+        v_y_norm = -self.Ua_max * ey/denom
 
         # Zusatz-P-Term nur auf Querkomponente
-        #v_x = v_x_norm + (-self.k_lat * ex)
-        #v_y = v_y_norm + (-self.k_lat * ey)
+        v_x = v_x_norm + (-self.k_lat * ex)
+        v_y = v_y_norm + (-self.k_lat * ey)
 
        
         
-        phi_d = math.atan2(-Vref_x, -Vref_y)
+        phi_d = math.atan2(-ex, -ey)
         # 4) Gierrate aus Heading-Fehler
         err_phi = math.atan2(math.sin(phi_d - self.current_orientation),
                              math.cos(phi_d - self.current_orientation))
         theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
 
-        omega_vec = self.mpc_model.get_omega(Vref_x, Vref_y, 0)
+        omega_vec = self.mpc_model.get_omega(v_x, v_y, 0)
        
 
         last_idx = len(self.trajectory)-1
@@ -236,7 +236,7 @@ class TrajectoryPController(Node):
         self.actual_u.append(omega_vec)
         v_robot =self.mpc_model.get_velocity(omega_vec)
         #Geschwindigkeit an Motor übergeben
-        motor_v=self.mecanum_chassis.set_velocity(Vref_x,Vref_y,theta)
+        motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
         self.motor_pub.publish(motor_v)
         self.actual_u.append(omega_vec)
 
