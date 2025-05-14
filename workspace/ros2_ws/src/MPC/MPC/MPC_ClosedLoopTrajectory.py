@@ -9,6 +9,7 @@ import numpy as np
 import math
 import time
 import matplotlib.pyplot as plt
+from pathlib import Path 
 import matplotlib.patches as patches
 from controller.mecanum import MecanumChassis
 from .MPC_OpenLoopTrajectory import QP
@@ -82,6 +83,16 @@ class MPCClosedLoopTrajectory(Node):
     (2.76, 0.00, 0),   # Index 34
     (3.00, 0.00, 0)    # Index 38
 ]
+        # CSV laden
+        csv_file = Path('/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/MPC_Trajektorienfolgeregelung/MPC_Trajektorienfolgeregelung/traj.csv')
+
+        data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
+        # Spalten: [t, x, y, yaw]
+        xs   = data[:,1]
+        ys   = data[:,2]
+        yaws = data[:,3]
+        # Liste von Tripeln (x,y,yaw)
+        self.trajectory = list(zip(xs, ys, yaws))
 
         self.num_waypoints = len(self.trajectory)
         
