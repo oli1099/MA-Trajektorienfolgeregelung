@@ -228,7 +228,7 @@ class TrajectoryPController(Node):
                              math.cos(phi_d - self.current_orientation))
         theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
 
-        omega_vec = self.mpc_model.get_omega(v_x, v_y, theta)
+        omega_vec = self.mpc_model.get_omega(v_x, v_y, 0)
        
 
         last_idx = len(self.trajectory)-1
