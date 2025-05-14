@@ -159,7 +159,7 @@ class TrajectoryPController(Node):
             break
         return Vref_x, Vref_y
 
-        
+        #f
         
         '''# 1) nächster Pfad-Index
         p = np.array(self.current_position)
