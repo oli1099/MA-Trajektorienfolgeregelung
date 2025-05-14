@@ -59,7 +59,14 @@ class TrajectoryPController(Node):
     (2.94, 0.00, 0),
     (3.00, 0.00, 0)
 ]
-
+        # CSV laden
+        data = np.loadtxt('traj.csv', delimiter=',', skiprows=1)
+        # Spalten: [t, x, y, yaw]
+        xs   = data[:,1]
+        ys   = data[:,2]
+        yaws = data[:,3]
+        # Liste von Tripeln (x,y,yaw)
+        self.trajectory = list(zip(xs, ys, yaws))
         
         self.v_des = 0.2          # gewünschte Vorwärts­geschwindigkeit [m/s]
         #self.lookahead = 0.12   # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
