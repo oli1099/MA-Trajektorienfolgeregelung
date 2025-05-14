@@ -160,7 +160,7 @@ class MPCClosedLoop(Node):
                     m = 0
                     b = self.road_width
         else:
-            if carX >= obs_end - 1e-2 and carX <= return_end: # Toleranz eingefügt
+            if carX >= obs_end and carX <= return_end: # Toleranz eingefügt
                 cS = 0
                 cI = -self.road_width/2
                 m = (0-carY)/(self.return_distance)
