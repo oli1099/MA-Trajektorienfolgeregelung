@@ -132,7 +132,7 @@ class MPCClosedLoop(Node):
         xmin = carX
         xmax = 1e6
 
-        adjence_lanecenter = self.road_width/2 
+        adjence_lanecenter = self.road_width/4 
 
         # Schwellenwert wann das Auto in der linken spur ist 
         threshold = 0.2
