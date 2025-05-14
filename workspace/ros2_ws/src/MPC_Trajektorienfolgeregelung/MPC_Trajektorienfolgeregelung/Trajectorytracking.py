@@ -69,8 +69,8 @@ class TrajectoryPController(Node):
 
         self.Ua_max    = 0.2    # maximaler Approach-Speed
         self.Lp        = 0.1 # fester Look-ahead-Abstand
-        self.Vref_x = 0
-        self.Vref_y = 0
+        self.Vref= 0.1
+     
 
         self.start_timer = None
 
@@ -156,10 +156,10 @@ class TrajectoryPController(Node):
             else:
                 dir_x = dir_y = 0.0
 
-            self.Vref_x = self.Vref_x * KV* np.cos(np.arctan2(dir_y, dir_x))
-            self.Vref_y = self.Vref_y * KV *np.sin(np.arctan2(dir_y, dir_x))
+            Vref_x = self.Vref * KV* np.cos(np.arctan2(dir_y, dir_x))
+            Vref_y = self.Vref * KV *np.sin(np.arctan2(dir_y, dir_x))
             break
-        return self.Vref_x, self.Vref_y 
+        return Vref_x, Vref_y 
 
         #f
         
