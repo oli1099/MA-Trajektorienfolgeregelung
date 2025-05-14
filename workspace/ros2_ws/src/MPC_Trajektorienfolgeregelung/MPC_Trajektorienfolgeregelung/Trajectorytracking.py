@@ -205,7 +205,7 @@ class TrajectoryPController(Node):
         now = self.get_clock().now()
         delta = now - self.start_timer
         t_rel = delta.nanoseconds * 1e-9
-        self.actual_path.append(self.current_position,t_rel)
+        self.actual_path.append((self.current_position,t_rel))
         ex, ey = self.compute_reference()
 
         denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
