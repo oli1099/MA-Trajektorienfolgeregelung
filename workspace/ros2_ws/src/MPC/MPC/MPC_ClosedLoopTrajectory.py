@@ -295,7 +295,7 @@ class MPCClosedLoopTrajectory(Node):
 
                 x_des, y_des, theta_des = self.trajectory[idx]
                 # v_x, v_y, omega setzen wir hier auf 0 (oder je nach Bedarf anders)
-                Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
+                Xref[:, k] = [x_des, y_des, 0, 0.0, 0.0, 0.0]
 
             return Xref
 
