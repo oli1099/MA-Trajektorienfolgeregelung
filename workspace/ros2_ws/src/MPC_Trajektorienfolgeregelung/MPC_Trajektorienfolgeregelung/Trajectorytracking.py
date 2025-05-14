@@ -154,8 +154,8 @@ class TrajectoryPController(Node):
             else:
                 dir_x = dir_y = 0.0
 
-            Vref_x = self.V_ref * KV * dir_x
-            Vref_y = self.V_ref * KV * dir_y
+            Vref_x = Vref_x * KV* np.cos(np.arctan2(dir_y, dir_x))
+            Vref_y = Vref_y * KV *np.sin(np.arctan2(dir_y, dir_x))
             break
         return Vref_x, Vref_y
 
