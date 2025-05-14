@@ -83,7 +83,7 @@ class TrajectoryPController(Node):
      
 
         self.start_timer = None
-        self.start_time =None
+        #self.start_time =None
         self.log_data   = []
 
 
@@ -143,7 +143,7 @@ class TrajectoryPController(Node):
 
         if self.start_timer is None:
             self.start_timer = self.get_clock().now()
-            self.start_time = time.perf_counter()
+            #self.start_time = time.perf_counter()
 
         #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
 
@@ -202,8 +202,9 @@ class TrajectoryPController(Node):
     def control_loop(self):
         if self.current_position is None:
             return
-        
-        t_rel = time.perf_counter - self.start_timer
+        now = self.get_clock().now()
+        delta = now - self.start_timer
+        t_rel = delta.nanoseconds * 1e-9
         self.actual_path.append(self.current_position,t_rel)
         ex, ey = self.compute_reference()
 
