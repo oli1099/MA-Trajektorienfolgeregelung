@@ -236,7 +236,7 @@ class TrajectoryPController(Node):
         self.actual_u.append(omega_vec)
         v_robot =self.mpc_model.get_velocity(omega_vec)
         #Geschwindigkeit an Motor übergeben
-        motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
+        motor_v=self.mecanum_chassis.set_velocity(Vref_x,Vref_x,theta)
         self.motor_pub.publish(motor_v)
         self.actual_u.append(omega_vec)
 
