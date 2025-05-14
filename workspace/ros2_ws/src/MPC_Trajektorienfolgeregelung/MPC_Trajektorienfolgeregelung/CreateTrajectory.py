@@ -133,6 +133,7 @@ def main():
     s_grid, x, y, yaw = sample_path(s[-1], sx, sy, RESOLUTION)
     # alle negativen y auf 0 setzen
     y = np.maximum(y, 0.0)
+    yaw = np.maximum(yaw, 0.0)
 
 
     # 3  Zeitgesetz
