@@ -25,7 +25,16 @@ from scipy.interpolate import CubicSpline
 # -------------------------- Parameter -------------------------------------
 
 # ► Way-Points im Welt-Koordinatensystem [m]
-DEFAULT_WPS = np.asarray([(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)], dtype=float)
+DEFAULT_WPS = np.asarray( [(0.00, 0.00, 0),   # Index 0
+    (0.34, 0.00, 0),   # Index 4
+    (0.63, 0.18, 0),   # Index 8
+    (1.05, 0.38, 0),   # Index 13
+    (1.43, 0.40, 0),   # Index 17
+    (1.83, 0.40, 0),   # Index 21
+    (2.21, 0.28, 0),   # Index 25
+    (2.52, 0.00, 0),   # Index 30
+    (2.76, 0.00, 0),   # Index 34
+    (3.00, 0.00, 0) ], dtype=float)
 
 RESOLUTION      = 0.02     # [m] Abtastabstand entlang des Pfades
 V_MAX           = 0.40     # [m/s] Soll-Geschwindigkeit fürs einfache Zeitgesetz
