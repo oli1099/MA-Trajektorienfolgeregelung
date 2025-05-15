@@ -77,7 +77,7 @@ class TrajectoryPController(Node):
         #self.k_s = 1           # Längsfehler-Gain
 
         self.Ua_max    = 0.3   # maximaler Approach-Speed
-        self.Lp        = 0.2 # fester Look-ahead-Abstand
+        self.Lp        = 0.1 # fester Look-ahead-Abstand
         self.Vref= 0.1
      
 
