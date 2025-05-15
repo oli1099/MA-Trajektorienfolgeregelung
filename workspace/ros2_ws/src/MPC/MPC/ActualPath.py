@@ -7,39 +7,44 @@ from matplotlib.patches import Rectangle
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1_Lidar',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.15',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.3',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/PP_LA=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/Trajektorie',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_Q=100_T=30_Ts=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_Q=100_T=30_Ts=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPCTrajectory_N=15_T=21_Q=100'
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=20_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=10_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=0.1_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=1_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=10_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1_Lidar',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/PP_LA=0.15',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/PP_LA=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/PP_LA=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/Trajectory',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2'
 
 ]
 
 # Dateinamen
-actual_path_file        = 'mpc_trajectory_actual_path.csv'
-predictions_file        = 'mpc_trajectory__predictions.csv'
-actual_theta_file       = 'MPC_CL_dynObs_actual_theta.csv'
-predicted_theta_file    = 'MPC_CL_dynObs_predicted_theta.csv'
-solve_times_file        = 'MPC_CL_dynObs_solve_times.csv'
-control_inputs_file     = 'mpc_trajectory__control_inputs.csv'
+actual_path_file        = 'mpc_data_actual_path.csv'
+predictions_file        = 'mpc_data__predictions.csv'
+actual_theta_file       = 'mpc_data_actual_theta.csv'
+predicted_theta_file    = 'mpc_data_predicted_theta.csv'
+solve_times_file        = 'mpc_data_solve_times.csv'
+control_inputs_file     = 'mpc_data_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -73,7 +78,12 @@ labels = [
     'Ref',
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
-    'N=15'
+    #'N=15',
+    #'L=0.1_V_ref=0.1',
+    #'L=0.1_V_ref=0.2',
+    #'L=0.1_V_ref=0.3',
+    #'L=0.2_V_ref=0.2',
+    #'L=0.05_V_ref=0.2',
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
