@@ -41,7 +41,7 @@ DEFAULT_WPS = np.asarray( [(0.00, 0.00, 0),   # Index 0
       (3,0,0) ], dtype=float)
 
 RESOLUTION      = 0.02     # [m] Abtastabstand entlang des Pfades
-V_MAX           = 0.40     # [m/s] Soll-Geschwindigkeit fürs einfache Zeitgesetz
+V_MAX           = 0.23     # [m/s] Soll-Geschwindigkeit fürs einfache Zeitgesetz
 BC_TYPE         = 'clamped'  # Rand­bedingungen: 'natural'| 'clamped'
 
 ROS_TOPIC       = '/ref_path'
