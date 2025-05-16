@@ -60,7 +60,7 @@ def build_splines(waypoints: np.ndarray, bc: str = 'clamped'):
 
 
 def sample_path(s_end: float, sx: CubicSpline, sy: CubicSpline,
-                ds: float = 0.02):
+                ds: float = 0.01):
     """Gleichmäßig abtasten, Orientierung als Yaw berechnen."""
     s_grid = np.arange(0, s_end + ds, ds)
     x  = sx(s_grid)

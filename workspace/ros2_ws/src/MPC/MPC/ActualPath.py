@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+import numpy as np
+from scipy.interpolate import interp1d
 
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
@@ -29,12 +31,13 @@ folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/Trajectory',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2'
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2'
 
 ]
 
@@ -78,12 +81,13 @@ labels = [
     'Ref',
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
-    #'N=15',
-    #'L=0.1_V_ref=0.1',
-    #'L=0.1_V_ref=0.2',
-    #'L=0.1_V_ref=0.3',
-    #'L=0.2_V_ref=0.2',
-    #'L=0.05_V_ref=0.2',
+    'N=15',
+    'N=15_T=18',
+    'L=0.1_V_ref=0.1',
+    'L=0.1_V_ref=0.2',
+    'L=0.1_V_ref=0.3',
+    'L=0.2_V_ref=0.2',
+    'L=0.05_V_ref=0.2',
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
@@ -375,14 +379,64 @@ def plot_control_inputs(folder_index):
     plt.tight_layout()
     plt.show()
 
+def compute_errors(ref_folder, act_folder, N=1000):
+    """
+    Vergleicht Soll- vs. Ist-Trajektorie über einen
+    normalisierten Parameter s in [0,1].
+    N = Anzahl Auswertungspunkte.
+    Liefert: max_error, rmse.
+    """
+    # 1) Dateien einlesen
+    f_ref = os.path.join(ref_folder, 'mpc_data_actual_path.csv')
+    f_act = os.path.join(act_folder, 'mpc_data_actual_path.csv')
+    df_ref = pd.read_csv(f_ref).sort_values('t').reset_index(drop=True)
+    df_act = pd.read_csv(f_act).sort_values('t').reset_index(drop=True)
 
+    # 2) Normalisiertes s für jede Trajektorie
+    t_ref = df_ref['t'].values
+    t_act = df_act['t'].values
+    s_ref = (t_ref - t_ref[0]) / (t_ref[-1] - t_ref[0])
+    s_act = (t_act - t_act[0]) / (t_act[-1] - t_act[0])
+
+    # 3) Interpolationsfunktionen für x,y
+    fx_ref = interp1d(s_ref, df_ref['x'].values, kind='linear')
+    fy_ref = interp1d(s_ref, df_ref['y'].values, kind='linear')
+    fx_act = interp1d(s_act, df_act['x'].values, kind='linear')
+    fy_act = interp1d(s_act, df_act['y'].values, kind='linear')
+
+    # 4) Gemeinsamer s-Vektor
+    s_common = np.linspace(0, 1, N)
+
+    # 5) Abtasten
+    x_ref_c = fx_ref(s_common)
+    y_ref_c = fy_ref(s_common)
+    x_act_c = fx_act(s_common)
+    y_act_c = fy_act(s_common)
+
+    # 6) Fehler
+    dx = x_act_c - x_ref_c
+    dy = y_act_c - y_ref_c
+    err = np.hypot(dx, dy)
+
+    # 7) Metriken
+    max_error = err.max()
+    rmse      = np.sqrt(np.mean(err**2))
+    return max_error, rmse
 if __name__ == '__main__':
     # Beispielaufrufe:
+    ref = folders[0]
+    print("Vergleich über normalisiertes s∈[0,1]:")
+    for idx, fol in enumerate(folders[1:], start=1):
+        me, r = compute_errors(ref, fol)
+        print(f"{labels[idx]:20s} → MaxErr = {me:.4f} m,  RMSE = {r:.4f} m")
+
     plot_actual_paths()
-    plot_single_with_predictions(15)    
+    plot_control_inputs(4)
+    plot_single_with_predictions(5)    
     plot_all_actual_theta()
-    plot_single_theta_with_predictions(15)
-    plot_solve_times_single(15)
+    plot_single_theta_with_predictions(5)
+    plot_solve_times_single(5)
     plot_solve_times_summary()
-    plot_control_inputs(15)
+
+    
     pass
