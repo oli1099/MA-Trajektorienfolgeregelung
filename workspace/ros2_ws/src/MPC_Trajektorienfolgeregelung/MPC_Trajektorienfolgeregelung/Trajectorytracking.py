@@ -76,12 +76,12 @@ class TrajectoryPController(Node):
         self.k_psi = 1.0          # Heading-Gain
         #self.k_s = 1           # Längsfehler-Gain
 
-        self.Ua_max    = 0.1   # maximaler Approach-Speed
-        self.Lp        = 0.1 # fester Look-ahead-Abstand
+        self.Ua_max    = 0.3   # maximaler Approach-Speed
+        self.Lp        = 0.05 # fester Look-ahead-Abstand
         self.Vref= 0.1
      
 
-        self.start_timer = None
+        self.start_timer = Nones
         #self.start_time =None
         self.log_data   = []
 
