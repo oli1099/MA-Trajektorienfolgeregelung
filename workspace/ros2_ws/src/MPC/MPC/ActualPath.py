@@ -38,7 +38,8 @@ folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3'
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
 
 ]
 
@@ -89,7 +90,8 @@ labels = [
     'L=0.1_V_ref=0.3',
     'L=0.2_V_ref=0.2',
     'L=0.05_V_ref=0.2',
-    'L=0.05_V_ref=0.3'
+    'L=0.05_V_ref=0.3',
+    'L=0.01_V_ref=0.3',
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
