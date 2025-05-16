@@ -33,13 +33,14 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
 
 ]
 
@@ -85,13 +86,14 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'N=15',
     #'N=15_T=18',
-    'L=0.1_V_ref=0.1',
-    'L=0.1_V_ref=0.2',
+    #'L=0.1_V_ref=0.1',
+    #'L=0.1_V_ref=0.2',
     'L=0.1_V_ref=0.3',
     'L=0.2_V_ref=0.2',
-    'L=0.05_V_ref=0.2',
+    #'L=0.05_V_ref=0.2',
     'L=0.05_V_ref=0.3',
     'L=0.01_V_ref=0.3',
+    #'L=0.01_V_ref=0.2'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
