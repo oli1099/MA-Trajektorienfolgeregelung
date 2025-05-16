@@ -81,7 +81,7 @@ class TrajectoryPController(Node):
         self.Vref= 0.1
      
 
-        self.start_timer = Nones
+        self.start_timer = None
         #self.start_time =None
         self.log_data   = []
 
