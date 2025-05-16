@@ -31,13 +31,14 @@ folders = [
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/Trajectory',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2'
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3'
 
 ]
 
@@ -81,13 +82,14 @@ labels = [
     'Ref',
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
-    'N=15',
-    'N=15_T=18',
+    #'N=15',
+    #'N=15_T=18',
     'L=0.1_V_ref=0.1',
     'L=0.1_V_ref=0.2',
     'L=0.1_V_ref=0.3',
     'L=0.2_V_ref=0.2',
     'L=0.05_V_ref=0.2',
+    'L=0.05_V_ref=0.3'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
@@ -431,7 +433,7 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxErr = {me:.4f} m,  RMSE = {r:.4f} m")
 
     plot_actual_paths()
-    plot_control_inputs(4)
+    plot_control_inputs(6)
     plot_single_with_predictions(5)    
     plot_all_actual_theta()
     plot_single_theta_with_predictions(5)
