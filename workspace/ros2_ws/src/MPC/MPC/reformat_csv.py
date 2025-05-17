@@ -52,5 +52,5 @@ if __name__ == "__main__":
 
     print(f"Reading from {args.input}, writing to {args.output}, separator={args.sep or 'auto'}")
 
-    reformat_csv('/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1/mpc_data_actual_path.csv',
+    reformat_csv('/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.25/mpc_data_actual_path.csv',
                   '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1/mpc_data_actual_path2.csv', '')
