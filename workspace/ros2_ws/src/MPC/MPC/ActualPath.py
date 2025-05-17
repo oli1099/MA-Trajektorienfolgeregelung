@@ -126,8 +126,7 @@ def plot_actual_paths():
     """
     Plottet alle actual paths für alle Konfigurationen.
     """
-    fig, ax = plt.subplots(figsize=(10, 6))
-
+    fig, ax = plt.subplots(figsize=(8, 4))
     for idx, folder in enumerate(folders):
         path = os.path.join(folder, actual_path_file)
         if os.path.isfile(path):
@@ -582,7 +581,7 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     plot_actual_paths()
     plot_all_lateral_errors(ref_index=0)
-    plot_control_inputs(4)
+    plot_control_inputs(3)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
