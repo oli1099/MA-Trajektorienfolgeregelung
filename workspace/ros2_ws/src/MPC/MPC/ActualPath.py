@@ -5,10 +5,13 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
 from scipy.interpolate import interp1d
+#import matplotlib as mpl
+
 
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/Trajectory',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
@@ -28,21 +31,35 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/PP_LA=0.15',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/PP_LA=0.3',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/PP_LA=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/Trajectory',
+
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.3',
 
 ]
+
+#mpl.use('agg')
+
+# 2) rcParams für LaTeX‐Integration
+#'''mpl.rcParams.update({
+ #   "font.family":   "serif",
+  #  "text.usetex":   True,
+   # "pgf.texsystem": "pdflatex",
+    #"pgf.rcfonts":   False,
+    # Preamble als einzelner String mit \n
+    #"pgf.preamble": r"\usepackage[T1]{fontenc}" + "\n" + r"\usepackage{lmodern}"
+#})'''
+
 
 # Dateinamen
 actual_path_file        = 'mpc_data_actual_path.csv'
@@ -62,6 +79,7 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
+   'Ref',
    # 'Nc=1', 
     #'Nc=3', 
     #'Nc=5',
@@ -81,19 +99,20 @@ labels = [
     #'LA=0.15',
     #'LA=0.3',
     #'LA=0.1',
-    'Ref',
+    
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'N=15',
     #'N=15_T=18',
-    #'L=0.1_V_ref=0.1',
-    #'L=0.1_V_ref=0.2',
+    'L=0.1_V_ref=0.1',
+    'L=0.1_V_ref=0.2',
     'L=0.1_V_ref=0.3',
-    'L=0.2_V_ref=0.2',
-    #'L=0.05_V_ref=0.2',
+    #'L=0.2_V_ref=0.2',
+    'L=0.05_V_ref=0.2',
     'L=0.05_V_ref=0.3',
     'L=0.01_V_ref=0.3',
-    #'L=0.01_V_ref=0.2'
+    'L=0.01_V_ref=0.2',
+    'L=0.2_V_ref=0.3'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
@@ -164,6 +183,8 @@ def plot_actual_paths():
     ax.set_aspect('equal', adjustable='box')
     plt.tight_layout()
     plt.show()
+    #plt.tight_layout()
+    #plt.savefig("actualPath.pgf")
 
 
 def plot_single_with_predictions(folder_index):
@@ -384,6 +405,8 @@ def plot_control_inputs(folder_index):
     ax.grid(True)
     plt.tight_layout()
     plt.show()
+    #plt.tight_layout()
+    #plt.savefig("control_inputs.pgf")
 
 def compute_errors(ref_folder, act_folder, N=1000):
     """
@@ -422,27 +445,147 @@ def compute_errors(ref_folder, act_folder, N=1000):
     # 6) Fehler
     dx = x_act_c - x_ref_c
     dy = y_act_c - y_ref_c
-    err = np.hypot(dx, dy)
+    err = np.abs(dy)
 
     # 7) Metriken
     max_error = err.max()
     rmse      = np.sqrt(np.mean(err**2))
     return max_error, rmse
+
+def compute_lateral_errors(ref_folder, act_folder, N=1000):
+    """
+    Vergleicht Soll- vs. Ist-Trajektorie über den gemeinsamen x-Bereich
+    und liefert: max_lat_error, rmse_lat.
+    """
+    # 1) Dateien einlesen
+    f_ref = os.path.join(ref_folder, actual_path_file)
+    f_act = os.path.join(act_folder, actual_path_file)
+    df_ref = pd.read_csv(f_ref).sort_values('x').drop_duplicates('x')
+    df_act = pd.read_csv(f_act).sort_values('x').drop_duplicates('x')
+
+    # 2) Interpolationsfunktionen y = f(x)
+    f_ref_y = interp1d(df_ref['x'], df_ref['y'],
+                       kind='linear',
+                       bounds_error=False,
+                       fill_value='extrapolate')
+    f_act_y = interp1d(df_act['x'], df_act['y'],
+                       kind='linear',
+                       bounds_error=False,
+                       fill_value='extrapolate')
+
+    # 3) Gemeinsamen x-Bereich bestimmen
+    x_min = max(df_ref['x'].min(), df_act['x'].min())
+    x_max = min(df_ref['x'].max(), df_act['x'].max())
+    x_common = np.linspace(x_min, x_max, N)
+
+    # 4) y-Werte auslesen und Querfehler berechnen
+    y_ref_c = f_ref_y(x_common)
+    y_act_c = f_act_y(x_common)
+    err_lat = np.abs(y_act_c - y_ref_c)
+
+    # 5) Metriken
+    max_lat_error = err_lat.max()
+    rmse_lat      = np.sqrt(np.mean(err_lat**2))
+    return max_lat_error, rmse_lat
+
+
+def plot_error_vs_x(ref_index, act_index, N=1000):
+    ref_folder = folders[ref_index]
+    act_folder = folders[act_index]
+    df_ref = pd.read_csv(os.path.join(ref_folder, actual_path_file)).sort_values('x').drop_duplicates('x')
+    df_act = pd.read_csv(os.path.join(act_folder, actual_path_file)).sort_values('x').drop_duplicates('x')
+
+    f_ref_y = interp1d(df_ref['x'], df_ref['y'], kind='linear', bounds_error=False, fill_value='extrapolate')
+    f_act_y = interp1d(df_act['x'], df_act['y'], kind='linear', bounds_error=False, fill_value='extrapolate')
+
+    x_min = max(df_ref['x'].min(), df_act['x'].min())
+    x_max = min(df_ref['x'].max(), df_act['x'].max())
+    x_common = np.linspace(x_min, x_max, N)
+
+    err_lat = np.abs(f_act_y(x_common) - f_ref_y(x_common))
+
+    plt.figure(figsize=(8, 4))
+    plt.plot(x_common, err_lat, linestyle='-', linewidth=1.5)
+    plt.xlabel('X-Position [m]')
+    plt.ylabel('Querfehler [m]')
+    plt.title(f'Querfehler vs. X: {labels[act_index]} vs. {labels[ref_index]}')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+def plot_all_lateral_errors(ref_index=0, act_indices=None, N=1000):
+        """
+        Plottet Querfehler vs. x für die Referenz (ref_index) und alle in act_indices.
+        Wenn act_indices=None, nimmt es alle außer der Referenz.
+        """
+        if act_indices is None:
+            act_indices = [i for i in range(len(folders)) if i != ref_index]
+
+        # Referenz-Daten einlesen und auf x sortieren
+        df_ref = pd.read_csv(os.path.join(folders[ref_index], actual_path_file))
+        df_ref = df_ref.sort_values('x').drop_duplicates('x')
+        f_ref_y = interp1d(df_ref['x'], df_ref['y'],
+                        kind='linear', bounds_error=False, fill_value='extrapolate')
+
+        # Gemeinsamen x-Bereich über alle auswählen:
+        x_min = df_ref['x'].min()
+        x_max = df_ref['x'].max()
+        for i in act_indices:
+            df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
+            x_min = max(x_min, df_act['x'].min())
+            x_max = min(x_max, df_act['x'].max())
+        x_common = np.linspace(x_min, x_max, N)
+
+        # Plot-Setup
+        plt.figure(figsize=(10, 4))
+        for i in act_indices:
+            # Ist-Daten interpolieren
+            df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
+            df_act = df_act.sort_values('x').drop_duplicates('x')
+            f_act_y = interp1d(df_act['x'], df_act['y'],
+                            kind='linear', bounds_error=False, fill_value='extrapolate')
+
+            # Querfehler berechnen
+            err_lat = np.abs(f_act_y(x_common) - f_ref_y(x_common))
+
+            # Plotten
+            plt.plot(x_common, err_lat,
+                    linestyle=linestyles[i % len(linestyles)],
+                    color=colors[i % len(colors)],
+                    linewidth=1.5,
+                    label=labels[i])
+
+        plt.xlabel('X [m]')
+        plt.ylabel('Querfehler [m]')
+        plt.title(f'Querfehler vs. X: alle gegen {labels[ref_index]}')
+        plt.legend(loc='best', fontsize='small', ncol=2)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+        #plt.tight_layout()
+        #plt.savefig("all_laterals_errors.pgf")
+
+
+
+
+
 if __name__ == '__main__':
     # Beispielaufrufe:
     ref = folders[0]
     print("Vergleich über normalisiertes s∈[0,1]:")
     for idx, fol in enumerate(folders[1:], start=1):
-        me, r = compute_errors(ref, fol)
-        print(f"{labels[idx]:20s} → MaxErr = {me:.4f} m,  RMSE = {r:.4f} m")
-
+        me_lat, r_lat = compute_lateral_errors(ref, fol)
+        print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     plot_actual_paths()
-    plot_control_inputs(6)
-    plot_single_with_predictions(5)    
-    plot_all_actual_theta()
-    plot_single_theta_with_predictions(5)
-    plot_solve_times_single(5)
-    plot_solve_times_summary()
+    plot_all_lateral_errors(ref_index=0)
+    plot_control_inputs(5)
+    #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
+    #plot_single_with_predictions(2)    
+    #plot_all_actual_theta()
+    #plot_single_theta_with_predictions(2)
+    #plot_solve_times_single(2)
+    #plot_solve_times_summary()
+    
 
     
     pass
