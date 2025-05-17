@@ -37,14 +37,16 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.25',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.3',
 
 ]
 
@@ -105,14 +107,16 @@ labels = [
     #'N=15',
     #'N=15_T=18',
     'L=0.1_V_ref=0.1',
+    'L=0.1_V_ref=0.15',
     'L=0.1_V_ref=0.2',
+    'L=0.1_V_ref=0.25',
     'L=0.1_V_ref=0.3',
     #'L=0.2_V_ref=0.2',
-    'L=0.05_V_ref=0.2',
-    'L=0.05_V_ref=0.3',
-    'L=0.01_V_ref=0.3',
-    'L=0.01_V_ref=0.2',
-    'L=0.2_V_ref=0.3'
+    #'L=0.05_V_ref=0.2',
+    #'L=0.05_V_ref=0.3',
+    #'L=0.01_V_ref=0.3',
+    #'L=0.01_V_ref=0.2',
+    #'L=0.2_V_ref=0.3'
 ]
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
@@ -578,7 +582,7 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     plot_actual_paths()
     plot_all_lateral_errors(ref_index=0)
-    plot_control_inputs(5)
+    plot_control_inputs(4)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
