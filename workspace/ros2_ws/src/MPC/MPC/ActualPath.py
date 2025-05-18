@@ -12,7 +12,7 @@ from cycler import cycler
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
@@ -35,10 +35,11 @@ folders = [
 
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
@@ -88,7 +89,7 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-   #'Ref',
+   'Ref',
    # 'Nc=1', 
     #'Nc=3', 
     #'Nc=5',
@@ -111,10 +112,11 @@ labels = [
     
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
-    'N=5',
+    #'N=5',
     'N=15',
     'N=25',
-    'N=35',
+    #'N=35',
+    'N=15_Ts=0.2',
     'N=25_Ts=0.2',
     #'N=50',
     #'L=0.1_V_ref=0.1',
@@ -752,7 +754,7 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     
     
-    #plot_all_lateral_errors(ref_index=0)
+    plot_all_lateral_errors(ref_index=0)
     plot_multiple_with_predictions([ 0,1,2,3])
     plot_multiple_control_inputs_vs_x([0, 1, 2, 3])
     plot_actual_paths()
