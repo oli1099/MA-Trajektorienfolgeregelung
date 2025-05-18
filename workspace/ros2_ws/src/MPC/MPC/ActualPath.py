@@ -12,7 +12,7 @@ from cycler import cycler
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
@@ -36,10 +36,10 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=12_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=12_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=20_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
@@ -87,7 +87,7 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-   'Ref',
+   #'Ref',
    # 'Nc=1', 
     #'Nc=3', 
     #'Nc=5',
@@ -111,10 +111,10 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     'N=5',
-    'N=12',
+    #'N=12',
     'N=15',
     'N=35',
-    'N=50',
+    #'N=50',
     #'L=0.1_V_ref=0.1',
     #'L=0.1_V_ref=0.15',
     #'L=0.01_V_ref=0.2',
@@ -388,7 +388,7 @@ def plot_solve_times_summary():
     width = 0.2
 
     plt.figure(figsize=(12, 6))
-    plt.bar([i - 1.5*width for i in x], totals, width, label='Totalzeit')
+    #plt.bar([i - 1.5*width for i in x], totals, width, label='Totalzeit')
     plt.bar([i - 0.5*width for i in x], means, width, label='Mittelzeit/Schritt')
     plt.bar([i + 0.5*width for i in x], mins, width, label='Schnellste Zeit')
     plt.bar([i + 1.5*width for i in x], maxs, width, label='Langsamste Zeit')
@@ -401,6 +401,8 @@ def plot_solve_times_summary():
     plt.grid(axis='y')
     plt.tight_layout()
     plt.show()
+
+    return totals, means, mins, maxs
 
 def plot_control_inputs(folder_index):
     """
@@ -654,7 +656,7 @@ if __name__ == '__main__':
     for idx, fol in enumerate(folders[1:], start=1):
         me_lat, r_lat = compute_lateral_errors(ref, fol)
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
-    plot_multiple_with_predictions([1,  3, 4,5])
+    #plot_multiple_with_predictions([1,  3, 4])
     plot_actual_paths()
     plot_all_lateral_errors(ref_index=0)
     plot_control_inputs(2)
@@ -665,6 +667,18 @@ if __name__ == '__main__':
     plot_solve_times_single(2)
     plot_solve_times_summary()
     
+    totals, means, mins, maxs = plot_solve_times_summary()
+
+    # Option A: Einfaches Listen-Print
+    print("Gesamtzeiten pro Konfiguration:    ", [float(t) for t in totals])
+    print("Durchschnittszeiten pro Schritt:  ", [float(m) for m in means])
+    print("Minimale Solve-Times:             ", [float(mn) for mn in mins])
+    print("Maximale Solve-Times:             ", [float(mx) for mx in maxs])
+    
+    # Option B: Pro Konfiguration schön formatieren
+    for label, tot, avg, lo, hi in zip(labels, totals, means, mins, maxs):
+        print(f"{label:>5s} → total: {tot:.4f}s, mean: {avg:.4f}s, "
+              f"min: {lo:.4f}s, max: {hi:.4f}s")
 
     
     pass
