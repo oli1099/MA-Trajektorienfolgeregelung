@@ -39,7 +39,7 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=12_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=20_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
@@ -114,7 +114,7 @@ labels = [
     #'N=12',
     'N=15',
     'N=35',
-    #'N=50',
+    'N=50',
     #'L=0.1_V_ref=0.1',
     #'L=0.1_V_ref=0.15',
     #'L=0.01_V_ref=0.2',
@@ -644,6 +644,49 @@ def plot_multiple_with_predictions(folder_indices):
     plt.tight_layout()
     plt.show()
 
+def plot_multiple_control_inputs(folder_indices):
+    """
+    Erzeugt für jede Index in folder_indices einen eigenen Subplot
+    untereinander mit den Steuergrößen u1–u4.
+    """
+    n = len(folder_indices)
+    fig, axes = plt.subplots(
+        nrows=n, ncols=1,
+        figsize=(12, 2.5*n),
+        sharex=True
+    )
+
+    # Falls nur ein Subplot zurückkommt:
+    if n == 1:
+        axes = [axes]
+
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+        ci_path = os.path.join(folder, control_inputs_file)
+
+        if not os.path.isfile(ci_path):
+            ax.text(0.5, 0.5, f"Nicht gefunden:\n{ci_path}",
+                     ha='center', va='center', color='red')
+            ax.set_ylabel(label)
+            continue
+
+        df_ci = pd.read_csv(ci_path)
+        t = df_ci.index.values
+
+        # Alle u-Spalten plotten, falls vorhanden
+        for col in ['u1','u2','u3','u4']:
+            if col in df_ci.columns:
+                ax.plot(t, df_ci[col], label=col, linewidth=1)
+
+        ax.set_ylabel(label)
+        ax.grid(True)
+        ax.legend(fontsize='x-small')
+
+    axes[-1].set_xlabel('Zeit (Schritte)')
+    plt.tight_layout()
+    plt.show()
+
 
 
 
@@ -666,6 +709,7 @@ if __name__ == '__main__':
     #plot_single_theta_with_predictions(2)
     plot_solve_times_single(2)
     plot_solve_times_summary()
+    plot_multiple_control_inputs([ 0,1])
     
     totals, means, mins, maxs = plot_solve_times_summary()
 
