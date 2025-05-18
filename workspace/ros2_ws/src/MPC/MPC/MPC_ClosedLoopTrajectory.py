@@ -181,7 +181,7 @@ class MPCClosedLoopTrajectory(Node):
         current_time = (self.get_clock().now() - self.start_timer).nanoseconds*1e-9
         Xref = self.get_reference_trajectory(current_time)
 
-        error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(Xref[0:2]))
+        error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(Xref[0:2, 0]))
         if current_time >= self.total_time or error < 0.05:
             self.stop_robot()
             return
