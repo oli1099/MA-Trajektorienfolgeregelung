@@ -134,14 +134,27 @@ def main():
     s, sx, sy = build_splines(DEFAULT_WPS, BC_TYPE)
 
     # 2  Abtasten
-    s_grid, x, y, yaw = sample_path(s[-1], sx, sy, RESOLUTION)
+    #s_grid, x, y, yaw = sample_path(s[-1], sx, sy, RESOLUTION)
     # alle negativen y auf 0 setzen
-    y = np.maximum(y, 0.0)
-    yaw = np.maximum(yaw, 0.0)
+    #y = np.maximum(y, 0.0)
+    #yaw = np.maximum(yaw, 0.0)
 
 
     # 3  Zeitgesetz
-    t = time_parameter(s_grid, args.speed)
+    #t = time_parameter(s_grid, args.speed)
+
+    # 2+3  Gleichmäßiges Zeit-Sampling dt = 0.1 s
+    s_end = s[-1]
+    t_end = s_end / args.speed
+    dt = 0.1
+    t = np.arange(0.0, t_end + dt, dt)
+    s_grid = args.speed * t
+    x = sx(s_grid)
+    y = np.maximum(sy(s_grid), 0.0)
+    dx = sx(s_grid, 1)
+    dy = sy(s_grid, 1)
+    yaw = np.unwrap(np.arctan2(dy, dx))
+    yaw = np.maximum(yaw, 0.0)
 
     # 4  CSV?
     if args.csv:
