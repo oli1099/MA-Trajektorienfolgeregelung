@@ -12,7 +12,7 @@ from cycler import cycler
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
@@ -36,10 +36,10 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=20_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
@@ -87,7 +87,7 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-   #'Ref',
+   'Ref',
    # 'Nc=1', 
     #'Nc=3', 
     #'Nc=5',
@@ -114,7 +114,7 @@ labels = [
     'N=15',
     'N=25',
     'N=35',
-    'N=50',
+    #'N=50',
     #'L=0.1_V_ref=0.1',
     #'L=0.1_V_ref=0.15',
     #'L=0.01_V_ref=0.2',
@@ -132,7 +132,7 @@ labels = [
 
 
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
-linestyles = ['-', '--', '-.', ':']
+linestyles = [':', '-.', '--', '-']
 
 my_palette = [
     "#009D81",  # Base
@@ -578,7 +578,7 @@ def plot_all_lateral_errors(ref_index=0, act_indices=None, N=1000):
             # Plotten
             plt.plot(x_common, err_lat,
                     linestyle=linestyles[i % len(linestyles)],
-                    color=colors[i % len(colors)],
+                    #color=colors[i % len(colors)],
                     linewidth=1.5,
                     label=labels[i])
 
@@ -687,6 +687,55 @@ def plot_multiple_control_inputs(folder_indices):
     plt.tight_layout()
     plt.show()
 
+def plot_multiple_control_inputs_vs_x(folder_indices):
+        """
+        Erzeugt für jede Index in folder_indices einen eigenen Subplot
+        untereinander mit den Steuergrößen u1–u4 gegen die X-Position.
+        Variante 1: Annahme gleiche Länge von actual_path und control_inputs.
+        """
+        n = len(folder_indices)
+        fig, axes = plt.subplots(
+            nrows=n, ncols=1,
+            figsize=(12, 1.8*n),
+            sharex=False
+        )
+
+        # Falls nur ein Subplot erzeugt wurde, packen wir ihn in eine Liste
+        if n == 1:
+            axes = [axes]
+
+        for ax, idx in zip(axes, folder_indices):
+            folder = folders[idx]
+            label  = labels[idx]
+
+            # CSVs einlesen
+            ci_path = os.path.join(folder, control_inputs_file)
+            ap_path = os.path.join(folder, actual_path_file)
+            if not os.path.isfile(ci_path) or not os.path.isfile(ap_path):
+                ax.text(0.5, 0.5, f"Datei fehlt:\n{ci_path}\n{ap_path}",
+                        ha='center', va='center', color='red')
+                ax.set_ylabel(label)
+                continue
+
+            df_ci = pd.read_csv(ci_path)
+            df_ap = pd.read_csv(ap_path)
+            # X-Positionen 1:1 zum Index
+            x = df_ap['x'].values
+
+            # Alle u-Spalten plotten
+            for col in ['u1','u2','u3','u4']:
+                if col in df_ci.columns:
+                    ax.plot(x, df_ci[col].values, label=col, linewidth=1)
+
+            ax.set_ylabel(label)
+            ax.grid(True)
+            ax.legend(fontsize='x-small')
+
+        axes[-1].set_xlabel('X [m]')
+        plt.tight_layout()
+        plt.show()
+
+
 
 
 
@@ -700,17 +749,20 @@ if __name__ == '__main__':
         me_lat, r_lat = compute_lateral_errors(ref, fol)
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     
-    plot_multiple_with_predictions([ 0,1,2,3])
-    plot_actual_paths()
+    
     plot_all_lateral_errors(ref_index=0)
-    plot_control_inputs(2)
+    plot_multiple_with_predictions([ 0,1,2,3])
+    plot_multiple_control_inputs_vs_x([0, 1, 2, 3])
+    #plot_actual_paths()
+    
+    #plot_control_inputs(2)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
-    plot_single_with_predictions(2)    
+    #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    plot_solve_times_single(2)
-    plot_solve_times_summary()
-    plot_multiple_control_inputs([ 0,1,2])
+    #plot_solve_times_single(2)
+    #plot_solve_times_summary()
+    #plot_multiple_control_inputs([ 0,1,2,3])
     
     totals, means, mins, maxs = plot_solve_times_summary()
 
