@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
 from scipy.interpolate import interp1d
+from cycler import cycler
 #import matplotlib as mpl
 
 
@@ -126,8 +127,19 @@ labels = [
     #'L=0.01_V_ref=0.1',
     #'L=0.2_V_ref=0.3'
 ]
+
+
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = ['-', '--', '-.', ':']
+
+my_palette = [
+    "#009D81",  # Base
+    "#33B19A",  # 20% Tint
+    "#66C4B3",  # 40% Tint
+    "#99D8CD",  # 60% Tint
+    "#CCEBE6",  # 80% Tint
+]
+plt.rcParams['axes.prop_cycle'] = cycler(color=my_palette)
 
 
 def plot_actual_paths():
@@ -141,7 +153,7 @@ def plot_actual_paths():
             df = pd.read_csv(path)
             ax.plot(
                 df['x'], df['y'],
-                color=colors[idx % len(colors)], linestyle=linestyles[idx % len(linestyles)],
+                #color=colors[idx % len(colors)], linestyle=linestyles[idx % len(linestyles)],
                 linewidth=1.5, label=labels[idx]
             )
         else:
@@ -589,12 +601,12 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     plot_actual_paths()
     plot_all_lateral_errors(ref_index=0)
-    plot_control_inputs(2)
+    plot_control_inputs(1)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
-    plot_single_with_predictions(3)    
+    plot_single_with_predictions(1)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    plot_solve_times_single(4)
+    plot_solve_times_single(1)
     plot_solve_times_summary()
     
 
