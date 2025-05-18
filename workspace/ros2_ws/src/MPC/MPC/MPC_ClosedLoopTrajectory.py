@@ -172,6 +172,7 @@ class MPCClosedLoopTrajectory(Node):
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
+        
         if self.xmeasure_received is None:# and self.set_initial_position is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
@@ -180,7 +181,7 @@ class MPCClosedLoopTrajectory(Node):
         current_time = (self.get_clock().now() - self.start_timer).nanoseconds*1e-9
         Xref = self.get_reference_trajectory(current_time)
 
-        error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
+        error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(Xref[0:2]))
         if current_time >= self.total_time or error < 0.05:
             self.stop_robot()
             return
