@@ -36,8 +36,8 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=12_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=20_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
@@ -111,8 +111,8 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     'N=5',
-    #'N=12',
     'N=15',
+    'N=25',
     'N=35',
     'N=50',
     #'L=0.1_V_ref=0.1',
@@ -599,7 +599,7 @@ def plot_multiple_with_predictions(folder_indices):
     n = len(folder_indices)
     # Lege n Zeilen, 1 Spalte an; sharex/y sorgt für gemeinsame Achsen
     fig, axes = plt.subplots(nrows=n, ncols=1, 
-                             figsize=(12, 2.5*n), 
+                             figsize=(12, 2.2*n), 
                              sharex=True, sharey=True)
     
     # Falls nur ein Subplot: axes ist kein Array, sondern ein Einzel-Axis
@@ -699,7 +699,8 @@ if __name__ == '__main__':
     for idx, fol in enumerate(folders[1:], start=1):
         me_lat, r_lat = compute_lateral_errors(ref, fol)
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
-    #plot_multiple_with_predictions([1,  3, 4])
+    
+    plot_multiple_with_predictions([ 0,1,2,3])
     plot_actual_paths()
     plot_all_lateral_errors(ref_index=0)
     plot_control_inputs(2)
@@ -709,7 +710,7 @@ if __name__ == '__main__':
     #plot_single_theta_with_predictions(2)
     plot_solve_times_single(2)
     plot_solve_times_summary()
-    plot_multiple_control_inputs([ 0,1])
+    plot_multiple_control_inputs([ 0,1,2])
     
     totals, means, mins, maxs = plot_solve_times_summary()
 
