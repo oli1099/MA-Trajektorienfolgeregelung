@@ -98,7 +98,7 @@ class MPCClosedLoopTrajectory(Node):
 
         self.num_waypoints = len(self.times)
         
-        self.total_time = 15
+        self.total_time = 21
         #self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
         self.start_timer = None
 
@@ -180,8 +180,8 @@ class MPCClosedLoopTrajectory(Node):
         current_time = (self.get_clock().now() - self.start_timer).nanoseconds*1e-9
         Xref = self.get_reference_trajectory(current_time)
 
-        #error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if current_time >= self.total_time:
+        error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
+        if current_time >= self.total_time or error < 0.05:
             self.stop_robot()
             return
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
