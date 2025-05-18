@@ -36,7 +36,7 @@ class MPCClosedLoopTrajectory(Node):
         self.QN = self.Q
 
         self.Ts = 0.1 #Disretisierungszeit
-        self.N = 15  #Prediktionshorizont
+        self.N = 50  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis() 
@@ -182,7 +182,7 @@ class MPCClosedLoopTrajectory(Node):
         Xref = self.get_reference_trajectory(current_time)
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-        if  error < 0.05: #current_time >= self.total_time or
+        if  error < 0.01: #current_time >= self.total_time or
             self.stop_robot()
             return
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
