@@ -36,7 +36,7 @@ class MPCClosedLoopTrajectory(Node):
         self.QN = self.Q
 
         self.Ts = 0.05 #Disretisierungszeit
-        self.N = 15  #Prediktionshorizont
+        self.N = 25  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
         self.mecanum_chassis = MecanumChassis() 
