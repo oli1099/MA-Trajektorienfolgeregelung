@@ -75,7 +75,7 @@ class QP:
             # X und Ywird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
             ubz[k*self.nx + 0] = 4       
-            lbz[k*self.nx + 1] = 0
+            lbz[k*self.nx + 1] = -0.05
             ubz[k*self.nx + 1] = 0.5
 
         #Eingangsbegrenzung
