@@ -74,9 +74,9 @@ class QP:
         for k in range(N +1):
             # X und Ywird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
-            ubz[k*self.nx + 0] = 5       
-            lbz[k*self.nx + 1] = -0.1
-            ubz[k*self.nx + 1] = 2
+            ubz[k*self.nx + 0] = 4       
+            lbz[k*self.nx + 1] = 0
+            ubz[k*self.nx + 1] = 0.5
 
         #Eingangsbegrenzung
         for k in range(N):

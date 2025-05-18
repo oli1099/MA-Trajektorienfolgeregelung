@@ -36,6 +36,7 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=12_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=20_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
@@ -110,6 +111,7 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     'N=5',
+    'N=12',
     'N=15',
     'N=35',
     'N=50',
@@ -587,6 +589,59 @@ def plot_all_lateral_errors(ref_index=0, act_indices=None, N=1000):
         plt.show()
         #plt.tight_layout()
         #plt.savefig("all_laterals_errors.pgf")
+def plot_multiple_with_predictions(folder_indices):
+    """
+    Erzeugt für jeden Index in folder_indices einen eigenen Subplot
+    mit Actual Path und Predictions, untereinander angeordnet.
+    """
+    n = len(folder_indices)
+    # Lege n Zeilen, 1 Spalte an; sharex/y sorgt für gemeinsame Achsen
+    fig, axes = plt.subplots(nrows=n, ncols=1, 
+                             figsize=(12, 2.5*n), 
+                             sharex=True, sharey=True)
+    
+    # Falls nur ein Subplot: axes ist kein Array, sondern ein Einzel-Axis
+    if n == 1:
+        axes = [axes]
+    
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+        
+        # 1) Actual Path
+        df_act = pd.read_csv(os.path.join(folder, actual_path_file))
+        ax.plot(df_act['x'], df_act['y'],
+                linestyle='-', linewidth=2, 
+                label=f"Actual {label}")
+        
+        # 2) Predictions
+        df_pred = pd.read_csv(os.path.join(folder, predictions_file))
+        for traj_id, traj in df_pred.groupby('trajectory_id'):
+            ax.plot(traj['x'], traj['y'],
+                    linestyle='--', linewidth=1, alpha=0.7,
+                    label=("Prediction" if traj_id == 0 else None))
+        
+        # 3) Hindernis
+        ox, oy = obstacle['obsXrl'], 0.0
+        ow, oh = obstacle['obslength'], obstacle['obsYrl']
+        ax.add_patch(Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5))
+        ax.add_patch(Rectangle(
+            (ox - safezone, oy - safezone),
+            ow + 2*safezone, oh + 2*safezone,
+            fill=False, linestyle='--', edgecolor='red'
+        ))
+        
+        ax.set_ylabel('y [m]')
+        #ax.set_title(f'{label}')
+        ax.legend(fontsize='small')
+        ax.grid(True)
+    
+    # Gemeinsame X‐Beschriftung
+    axes[-1].set_xlabel('x [m]')
+    
+    plt.tight_layout()
+    plt.show()
+
 
 
 
@@ -599,14 +654,15 @@ if __name__ == '__main__':
     for idx, fol in enumerate(folders[1:], start=1):
         me_lat, r_lat = compute_lateral_errors(ref, fol)
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
+    plot_multiple_with_predictions([1,  3, 4,5])
     plot_actual_paths()
     plot_all_lateral_errors(ref_index=0)
-    plot_control_inputs(1)
+    plot_control_inputs(2)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
-    plot_single_with_predictions(1)    
+    plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    plot_solve_times_single(1)
+    plot_solve_times_single(2)
     plot_solve_times_summary()
     
 
