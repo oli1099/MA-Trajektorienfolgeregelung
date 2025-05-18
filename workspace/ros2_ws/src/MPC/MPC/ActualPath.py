@@ -11,7 +11,7 @@ from scipy.interpolate import interp1d
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/Trajectory',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
@@ -34,10 +34,10 @@ folders = [
 
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=18',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=10_Q=100_T=0.1_T=18',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=18',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_TracetoryTime',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=20_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
@@ -69,7 +69,7 @@ folders = [
 
 # Dateinamen
 actual_path_file        = 'mpc_data_actual_path.csv'
-predictions_file        = 'mpc_data__predictions.csv'
+predictions_file        = 'mpc_data_predictions.csv'
 actual_theta_file       = 'mpc_data_actual_theta.csv'
 predicted_theta_file    = 'mpc_data_predicted_theta.csv'
 solve_times_file        = 'mpc_data_solve_times.csv'
@@ -109,9 +109,9 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     'N=5',
-    'N=10',
     'N=15',
-    'N=15 TracetoryTime',
+    'N=35',
+    'N=50',
     #'L=0.1_V_ref=0.1',
     #'L=0.1_V_ref=0.15',
     #'L=0.01_V_ref=0.2',
@@ -591,11 +591,11 @@ if __name__ == '__main__':
     plot_all_lateral_errors(ref_index=0)
     plot_control_inputs(2)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
-    #plot_single_with_predictions(2)    
+    plot_single_with_predictions(3)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    #plot_solve_times_single(2)
-    #plot_solve_times_summary()
+    plot_solve_times_single(4)
+    plot_solve_times_summary()
     
 
     
