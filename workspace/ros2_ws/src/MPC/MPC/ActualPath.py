@@ -20,7 +20,7 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
@@ -100,7 +100,7 @@ labels = [
     #'Nc=10', 
     #'Nc=15', 
     #'Np=43', 
-    #'Nc=5,Np=40',
+    'Nc=5,Np=35',
     #'Nc=5,Np=35', 
     #'Nc=5,Np=30', 
     #'Nc=5,Np=25', 
@@ -761,8 +761,8 @@ if __name__ == '__main__':
     
     
     #plot_all_lateral_errors(ref_index=0)
-    plot_multiple_with_predictions([ 0,1])
-    plot_multiple_control_inputs_vs_x([0, 1])
+    plot_multiple_with_predictions([ 0,1,2])
+    plot_multiple_control_inputs_vs_x([0, 1,2])
     plot_actual_paths()
     
     #plot_control_inputs(2)
