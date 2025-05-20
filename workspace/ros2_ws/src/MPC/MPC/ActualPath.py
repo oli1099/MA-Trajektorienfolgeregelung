@@ -15,11 +15,12 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
@@ -74,12 +75,12 @@ folders = [
 
 
 # Dateinamen
-actual_path_file        = 'mpc_actual_path.csv'
-predictions_file        = 'mpc_predictions.csv'
+actual_path_file        = 'mpc_data_actual_path.csv'
+predictions_file        = 'mpc_data_predictions.csv'
 actual_theta_file       = 'mpc_data_actual_theta.csv'
 predicted_theta_file    = 'mpc_data_predicted_theta.csv'
-solve_times_file        = 'mpc_solve_times.csv'
-control_inputs_file     = 'mpc_control_inputs.csv'
+solve_times_file        = 'mpc_data_solve_times.csv'
+control_inputs_file     = 'mpc_data_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -94,11 +95,12 @@ labels = [
   #'Ref',
    # 'Nc=1', 
     #'Nc=3', 
-    'Nc=5',
+    'Nc=5, Np=15',
+    'Nc=5,Np=25',
     #'Nc=10', 
-    'Nc=15', 
+    #'Nc=15', 
     #'Np=43', 
-    'Nc=5,Np=40',
+    #'Nc=5,Np=40',
     #'Nc=5,Np=35', 
     #'Nc=5,Np=30', 
     #'Nc=5,Np=25', 
@@ -768,8 +770,8 @@ if __name__ == '__main__':
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    #plot_solve_times_single(2)
-    #plot_solve_times_summary()
+    plot_solve_times_single(1)
+    plot_solve_times_summary()
     #plot_multiple_control_inputs([ 0,1,2,3])
     
     totals, means, mins, maxs = plot_solve_times_summary()
