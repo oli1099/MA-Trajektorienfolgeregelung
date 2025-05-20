@@ -103,38 +103,7 @@ class QP:
         print(f"Prädizierter x-Wert: {x_pred}")
         print(f"Prädizierter y-Wert: {y_pred}")
 
-        '''# 1) Kopien der globalen Bounds anlegen
-        lbz_mod = self.lbz.copy()
-        ubz_mod = self.ubz.copy() 
-        # 2) Region per if-Abfrage bestimmen
-        # Beispiel: Zwei Teilbereiche
-        if x_current[0] <=2:
-            x_min, x_max = 0.0, 2.0
-            y_min, y_max = 0.0, 5.0
-        elif x_current[0]  > 2: 
-            x_min, x_max = 0.0, 5.0
-            y_min, y_max = 2, 5.0
-        
-
-        # 3) Für alle Zeitschritte k=0..N diese Bounds anwenden
-        #    Annahme: x = Z[k*nx+0], y = Z[k*nx+1]
-        for k in range(self.N+1):
-            lbz_mod[k*self.nx + 0] = x_min
-            ubz_mod[k*self.nx + 0] = x_max
-
-            lbz_mod[k*self.nx + 1] = y_min
-            ubz_mod[k*self.nx + 1] = y_max
-
-        # 4) MPC mit den aktualisierten Bounds lösen
-        P_val = np.concatenate([x_current, x_ref])
-        sol = self.solver(
-            x0 = z0,
-            p = P_val,
-            lbx = lbz_mod,
-            ubx = ubz_mod,
-            lbg = self.lbg,
-            ubg = self.ubg
-        )'''
+    
         sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 

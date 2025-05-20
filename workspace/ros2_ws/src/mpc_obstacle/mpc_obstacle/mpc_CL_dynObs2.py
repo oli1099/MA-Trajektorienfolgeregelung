@@ -164,7 +164,7 @@ class MPCClosedLoop(Node):
                 cS = 0
                 cI = -self.road_width/2
                 m = np.tan(np.arctan2((0 - carY), (self.return_distance)))
-                b = obsYrl-1e-2 -(m * (obs_end-1e-2))
+                b = self.road_width  -(m * (obs_end + 0.05))
                 xmax = obs_end + self.return_distance
             elif carX >= return_end:
                 cS = 0

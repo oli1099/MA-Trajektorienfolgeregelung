@@ -12,14 +12,14 @@ from cycler import cycler
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=1_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=3_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=15_Q=100_T=0.1',
+    #'/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=10_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=15_Np=15_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=43_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
+    '/home/oli/Desktop/Oliver/Uni/MA/Data/MPC_dynObs_Nc=5_Np=40_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=35_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=30_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPC_dynObs_Nc=5_Np=25_Q=100_T=0.1',
@@ -36,11 +36,13 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=5_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.05',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.05',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
@@ -72,12 +74,12 @@ folders = [
 
 
 # Dateinamen
-actual_path_file        = 'mpc_data_actual_path.csv'
-predictions_file        = 'mpc_data_predictions.csv'
+actual_path_file        = 'mpc_actual_path.csv'
+predictions_file        = 'mpc_predictions.csv'
 actual_theta_file       = 'mpc_data_actual_theta.csv'
 predicted_theta_file    = 'mpc_data_predicted_theta.csv'
-solve_times_file        = 'mpc_data_solve_times.csv'
-control_inputs_file     = 'mpc_data_control_inputs.csv'
+solve_times_file        = 'mpc_solve_times.csv'
+control_inputs_file     = 'mpc_control_inputs.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -89,14 +91,14 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-   'Ref',
+  #'Ref',
    # 'Nc=1', 
     #'Nc=3', 
-    #'Nc=5',
+    'Nc=5',
     #'Nc=10', 
-    #'Nc=15', 
+    'Nc=15', 
     #'Np=43', 
-    #'Nc=5,Np=40',
+    'Nc=5,Np=40',
     #'Nc=5,Np=35', 
     #'Nc=5,Np=30', 
     #'Nc=5,Np=25', 
@@ -113,11 +115,13 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'N=5',
-    'N=15',
-    'N=25',
+    #'N=15,T=0.1',
+    #'N=25,T=0.1',
     #'N=35',
-    'N=15_Ts=0.2',
-    'N=25_Ts=0.2',
+    #'N=15, Ts=0.2',
+    #'N=25, Ts=0.2',
+    #'N=15_Ts=0.05',
+    #'N=25_Ts=0.05',
     #'N=50',
     #'L=0.1_V_ref=0.1',
     #'L=0.1_V_ref=0.15',
@@ -754,9 +758,9 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     
     
-    plot_all_lateral_errors(ref_index=0)
-    plot_multiple_with_predictions([ 0,1,2,3])
-    plot_multiple_control_inputs_vs_x([0, 1, 2, 3])
+    #plot_all_lateral_errors(ref_index=0)
+    plot_multiple_with_predictions([ 0,1])
+    plot_multiple_control_inputs_vs_x([0, 1])
     plot_actual_paths()
     
     #plot_control_inputs(2)
