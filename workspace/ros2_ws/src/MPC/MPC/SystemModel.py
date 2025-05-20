@@ -12,7 +12,7 @@ class DynamicModel:
                  ly=0.0855,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  r=0.0325,         # Radius der Räder
                  k=10.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
-                 Ts=0.2):          # Abtastzeit
+                 Ts=0.1):          # Abtastzeit
                 
             
             self.m = m
