@@ -12,7 +12,7 @@ class DynamicModel:
                  ly=0.0855,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  r=0.0325,         # Radius der Räder
                  k=10.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
-                 Ts=0.1):          # Abtastzeit
+                 Ts=0.2):          # Abtastzeit
                 
             
             self.m = m
@@ -108,7 +108,7 @@ if __name__ == "__main__":
        omega = mpc_model.get_omega(0.2, 0.0, 0)
        print("omega:\n", omega)
        print("V:\n", v)
-       print("Ac:\n", mpc_model.Ac)
-       print("Bc:\n", mpc_model.Bc)
+       print("Ac:\n", mpc_model.A_d)
+       print("Bc:\n", mpc_model.B_d)
        print("A_d:\n", mpc_model.A_d)
        print("B_d:\n", mpc_model.B_d)

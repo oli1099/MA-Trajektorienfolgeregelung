@@ -37,9 +37,9 @@ class MPCClosedLoop(Node):
         self.QN = self.Q
         self.Safezone = 0.1
 
-        self.Ts = 0.1 #Diskretisierungszeit
+        self.Ts = 0.2 #Diskretisierungszeit
         self.Np = 25 #Prediction Horizon
-        self.Nc = 15  #Control Horizon
+        self.Nc = 5  #Control Horizon
 
      # Beispiel-Hindernisdaten (Rear-Right Safe Point des Hindernisses)
         self.obstacle = {
@@ -77,7 +77,7 @@ class MPCClosedLoop(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
-        self.timer = self.create_timer(0.1, self.mpc_closedloop)
+        self.timer = self.create_timer(0.2, self.mpc_closedloop)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+import os, math
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -15,14 +15,16 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=1_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=15_Q=100_T=0.1_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=5_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=25_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=5_Q=100_T=0.1_k=10',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10_u=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.2_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10_u=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.2_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=10_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=15_Q=100_T=0.1_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=25_Np=25_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=25_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=25_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=43_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1',
@@ -99,14 +101,16 @@ labels = [
   #'Ref',
    # 'Nc=1',
     #'Nc=3, Np=15',
-    #'Nc=5, Np=5', 
+    'Nc=5, Np=5',
+    #'Nc=3, Np=25', 
     'Nc=5, Np=15',
-    'Nc=5, Np=15 u=10',
-    'Nc=5, Np=15, Ts=0.2',
-    #'Nc=5,Np=25',
+    #'Nc=5, Np=15 u=10',
+    #'Nc=5, Np=15, Ts=0.2',
+    'Nc=5,Np=25',
+    #'Nc=15, Np=25',
     #'Nc=10, Np=15', 
     #'Nc=15, Np=15',
-    #'Nc=25, Np=25', 
+    'Nc=25, Np=25', 
     #'Np=43', 
     #'Nc=5,Np=35',
     #'Nc=5,Np=35', 
@@ -155,8 +159,8 @@ linestyles = [':', '-.', '--', '-']
 my_palette = [
     "#009D81", # Base
     "#9E9A00",  
-    "#33B19A",  # 20% Tint
-    "#66C4B3",  # 40% Tint
+    "#709c5b",  # 20% Tint
+    "#ff627e",  # 40% Tint
     "#99D8CD",  # 60% Tint
     "#CCEBE6",  # 80% Tint
 ]
@@ -369,7 +373,7 @@ def plot_solve_times_single(folder_index):
     df = pd.read_csv(path)
     df.index.name = 'iteration'
     plt.figure(figsize=(8, 5))
-    plt.plot(df['solve_time'], linestyle='-', marker='o', label=f"Solve Time {label}")
+    plt.plot(df['solve_time'], linestyle='-', label=f"Solve Time {label}")
     plt.title(f'Laufzeit pro Zeitschritt: {label}')
     plt.xlabel('Iteration')
     plt.ylabel('Zeit (s)')
@@ -377,6 +381,37 @@ def plot_solve_times_single(folder_index):
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
+def plot_solve_times_single2(folder_index):
+    """
+    Plottet die Laufzeit pro Zeitschritt für eine einzelne Konfiguration,
+    verwendet dabei die Spalte 'X' auf der x-Achse.
+    :param folder_index: Index in der `folders`-Liste.
+    """
+    if not 0 <= folder_index < len(folders):
+        raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
+    folder = folders[folder_index]
+    label = labels[folder_index]
+    path = os.path.join(folder, solve_times_file)
+    if not os.path.isfile(path):
+        print(f"Solve times-Datei nicht gefunden: {path}")
+        return
+
+    df = pd.read_csv(path)
+    if 'x' not in df.columns:
+        raise KeyError("Spalte 'X' nicht gefunden. Bitte überprüfe deine CSV.")
+    
+    plt.figure(figsize=(7.29, 2.4))
+    # hier die X-Spalte als x-Werte übergeben
+    plt.plot(df['x'], df['solve_time'], linestyle='-', marker='o', label=f"Solve Time {label}")
+    #plt.title(f'Laufzeit pro Zeitschritt: {label}')
+    plt.xlabel('X')                # Beschriftung der x-Achse
+    plt.ylabel('Zeit (s)')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
 
 
 def plot_solve_times_summary():
@@ -672,13 +707,15 @@ def plot_multiple_theta(folder_indices):
     mit der actual-theta-Kurve gegen die X-Position, untereinander angeordnet.
     """
     n = len(folder_indices)
+    ncols = 2
+    nrows = math.ceil(n / ncols)
+    
     fig, axes = plt.subplots(
-        nrows=n, ncols=1,
-        figsize=(7.29, 1.8 * n),
+        nrows=nrows, ncols=ncols,
+        figsize=(3.65 * ncols, 1.8 * nrows),
         sharex=True, sharey=True
     )
-    if n == 1:
-        axes = [axes]
+    axes = axes.flatten()
 
     for ax, idx in zip(axes, folder_indices):
         folder = folders[idx]
@@ -686,35 +723,35 @@ def plot_multiple_theta(folder_indices):
         theta_path = os.path.join(folder, actual_theta_file)
         path_path  = os.path.join(folder, actual_path_file)
 
-        # CSVs einlesen
         if os.path.isfile(theta_path) and os.path.isfile(path_path):
             df_theta = pd.read_csv(theta_path)
             df_path  = pd.read_csv(path_path)
-            # Plot: theta vs. x
             ax.plot(
                 df_path['x'], df_theta['theta'],
                 linestyle='-', linewidth=1.5,
-                label=f"Actual θ {label}"
+                label=f"{label}"
             )
         else:
             missing = theta_path if not os.path.isfile(theta_path) else path_path
-            ax.text(
-                0.5, 0.5,
-                f"Datei nicht gefunden:\n{missing}",
-                ha='center', va='center', color='red'
-            )
+            ax.text(0.5, 0.5,
+                    f"Datei nicht gefunden:\n{missing}",
+                    ha='center', va='center', color='red')
 
-        # Achsenbeschriftungen und Style
         ax.set_ylabel('θ [rad]', fontsize=12)
         ax.tick_params(axis='both', labelsize=10)
         ax.legend(fontsize='small')
         ax.grid(True)
 
-    # Nur im untersten Subplot die X-Achse beschriften
-    axes[-1].set_xlabel('X [m]', fontsize=12)
+    # Entferne überzählige leere Subplots
+    for ax in axes[n:]:
+        ax.remove()
+
+    # X-Beschriftung nur in der untersten Zeile
+    for ax in axes[-ncols:]:
+        ax.set_xlabel('X [m]', fontsize=12)
+
     plt.tight_layout()
     plt.show()
-
 
 
 def plot_multiple_control_inputs(folder_indices):
@@ -824,9 +861,9 @@ if __name__ == '__main__':
     
     
     #plot_all_lateral_errors(ref_index=0)
-    plot_multiple_with_predictions([ 0,1,2])
-    plot_multiple_control_inputs_vs_x([0, 1,2])
-    plot_multiple_theta([0, 1,2])
+    plot_multiple_with_predictions([ 0,1,2,3])
+    plot_multiple_control_inputs_vs_x([0, 1,2,3])
+    plot_multiple_theta([0, 1,2,3])
     plot_actual_paths()
     
     #plot_control_inputs(2)
@@ -834,7 +871,8 @@ if __name__ == '__main__':
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    #plot_solve_times_single(1)
+    plot_solve_times_single(3)
+    plot_solve_times_single2(3)
     #plot_solve_times_summary()
     #plot_multiple_control_inputs([ 0,1,2,3])
     
