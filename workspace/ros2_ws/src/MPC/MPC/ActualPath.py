@@ -16,14 +16,14 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=1_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=15_Q=100_T=0.1_k=10',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10_u=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.2_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10_u=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.2_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=10_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=25_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=43_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=30_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1',
@@ -97,13 +97,13 @@ safezone = 0.1
 labels = [
   #'Ref',
    # 'Nc=1', 
-    #'Nc=3. Np=15', 
+    'Nc=3, Np=15', 
     'Nc=5, Np=15',
-    'Nc=5, Np=15 u=10',
-    'Nc=5, Np=15, Ts=0.2',
+    #'Nc=5, Np=15 u=10',
+    #'Nc=5, Np=15, Ts=0.2',
     #'Nc=5,Np=25',
-    #'Nc=10, Np=15', 
-    #'Nc=15, Np=15',
+    'Nc=10, Np=15', 
+    'Nc=15, Np=15',
     #'Nc=25, Np=25', 
     #'Np=43', 
     #'Nc=5,Np=35',
@@ -151,7 +151,8 @@ colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = [':', '-.', '--', '-']
 
 my_palette = [
-    "#009D81",  # Base
+    "#009D81", # Base
+    "#9E9A00",  
     "#33B19A",  # 20% Tint
     "#66C4B3",  # 40% Tint
     "#99D8CD",  # 60% Tint
@@ -633,9 +634,10 @@ def plot_multiple_with_predictions(folder_indices):
                 label=f"Actual {label}")
         
         # 2) Predictions
+        pred_color = my_palette[1]
         df_pred = pd.read_csv(os.path.join(folder, predictions_file))
         for traj_id, traj in df_pred.groupby('trajectory_id'):
-            ax.plot(traj['x'], traj['y'],
+            ax.plot(traj['x'], traj['y'],color=pred_color,
                     linestyle='--', linewidth=1, alpha=0.7,
                     label=("Prediction" if traj_id == 0 else None))
         
@@ -767,8 +769,8 @@ if __name__ == '__main__':
     
     
     #plot_all_lateral_errors(ref_index=0)
-    plot_multiple_with_predictions([ 0,1,2])
-    plot_multiple_control_inputs_vs_x([0, 1,2])
+    plot_multiple_with_predictions([ 0,1,2,3])
+    plot_multiple_control_inputs_vs_x([0, 1,2,3])
     plot_actual_paths()
     
     #plot_control_inputs(2)
