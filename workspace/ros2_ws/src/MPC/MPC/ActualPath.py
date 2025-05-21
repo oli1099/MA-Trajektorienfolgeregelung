@@ -634,8 +634,8 @@ def plot_multiple_with_predictions(folder_indices):
         ax.plot(df_act['x'], df_act['y'],
                 linestyle='-', linewidth=2, 
                 label=f"Actual {label}")
-        ax.set_xlabel('x [m]', fontsize=14)
-        ax.set_ylabel('y [m]', fontsize=14)
+        ax.set_xlabel('x [m]', fontsize=12)
+        ax.set_ylabel('y [m]', fontsize=12)
         
         # 2) Predictions
         pred_color = my_palette[1]
