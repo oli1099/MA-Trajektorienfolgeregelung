@@ -37,7 +37,7 @@ class MPCClosedLoop(Node):
         self.QN = self.Q
         self.Safezone = 0.1
 
-        self.Ts = 0.05 #Diskretisierungszeit
+        self.Ts = 0.1 #Diskretisierungszeit
         self.Np = 25 #Prediction Horizon
         self.Nc = 5  #Control Horizon
 
