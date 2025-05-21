@@ -15,15 +15,16 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=1_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=15_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=5_Q=100_T=0.1_k=10',
     '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10_u=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.2_k=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10_u=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.2_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=10_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=25_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=43_Q=100_T=0.1',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=30_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1',
@@ -96,14 +97,15 @@ safezone = 0.1
 # Labels und Plot-Stile
 labels = [
   #'Ref',
-   # 'Nc=1', 
-    'Nc=3, Np=15', 
+   # 'Nc=1',
+    #'Nc=3, Np=15',
+    #'Nc=5, Np=5', 
     'Nc=5, Np=15',
-    #'Nc=5, Np=15 u=10',
-    #'Nc=5, Np=15, Ts=0.2',
+    'Nc=5, Np=15 u=10',
+    'Nc=5, Np=15, Ts=0.2',
     #'Nc=5,Np=25',
-    'Nc=10, Np=15', 
-    'Nc=15, Np=15',
+    #'Nc=10, Np=15', 
+    #'Nc=15, Np=15',
     #'Nc=25, Np=25', 
     #'Np=43', 
     #'Nc=5,Np=35',
@@ -616,7 +618,7 @@ def plot_multiple_with_predictions(folder_indices):
     n = len(folder_indices)
     # Lege n Zeilen, 1 Spalte an; sharex/y sorgt für gemeinsame Achsen
     fig, axes = plt.subplots(nrows=n, ncols=1, 
-                             figsize=(12, 2.2*n), 
+                             figsize=(7.29, 2.5*n), 
                              sharex=True, sharey=True)
     
     # Falls nur ein Subplot: axes ist kein Array, sondern ein Einzel-Axis
@@ -632,6 +634,8 @@ def plot_multiple_with_predictions(folder_indices):
         ax.plot(df_act['x'], df_act['y'],
                 linestyle='-', linewidth=2, 
                 label=f"Actual {label}")
+        ax.set_xlabel('x [m]', fontsize=14)
+        ax.set_ylabel('y [m]', fontsize=14)
         
         # 2) Predictions
         pred_color = my_palette[1]
@@ -661,6 +665,57 @@ def plot_multiple_with_predictions(folder_indices):
     
     plt.tight_layout()
     plt.show()
+
+def plot_multiple_theta(folder_indices):
+    """
+    Zeichnet für jeden Index in folder_indices einen eigenen Subplot
+    mit der actual-theta-Kurve gegen die X-Position, untereinander angeordnet.
+    """
+    n = len(folder_indices)
+    fig, axes = plt.subplots(
+        nrows=n, ncols=1,
+        figsize=(7.29, 1.8 * n),
+        sharex=True, sharey=True
+    )
+    if n == 1:
+        axes = [axes]
+
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+        theta_path = os.path.join(folder, actual_theta_file)
+        path_path  = os.path.join(folder, actual_path_file)
+
+        # CSVs einlesen
+        if os.path.isfile(theta_path) and os.path.isfile(path_path):
+            df_theta = pd.read_csv(theta_path)
+            df_path  = pd.read_csv(path_path)
+            # Plot: theta vs. x
+            ax.plot(
+                df_path['x'], df_theta['theta'],
+                linestyle='-', linewidth=1.5,
+                label=f"Actual θ {label}"
+            )
+        else:
+            missing = theta_path if not os.path.isfile(theta_path) else path_path
+            ax.text(
+                0.5, 0.5,
+                f"Datei nicht gefunden:\n{missing}",
+                ha='center', va='center', color='red'
+            )
+
+        # Achsenbeschriftungen und Style
+        ax.set_ylabel('θ [rad]', fontsize=12)
+        ax.tick_params(axis='both', labelsize=10)
+        ax.legend(fontsize='small')
+        ax.grid(True)
+
+    # Nur im untersten Subplot die X-Achse beschriften
+    axes[-1].set_xlabel('X [m]', fontsize=12)
+    plt.tight_layout()
+    plt.show()
+
+
 
 def plot_multiple_control_inputs(folder_indices):
     """
@@ -714,7 +769,7 @@ def plot_multiple_control_inputs_vs_x(folder_indices):
         n = len(folder_indices)
         fig, axes = plt.subplots(
             nrows=n, ncols=1,
-            figsize=(12, 1.8*n),
+            figsize=(7.29, 1.8*n),
             sharex=False
         )
 
@@ -769,8 +824,9 @@ if __name__ == '__main__':
     
     
     #plot_all_lateral_errors(ref_index=0)
-    plot_multiple_with_predictions([ 0,1,2,3])
-    plot_multiple_control_inputs_vs_x([0, 1,2,3])
+    plot_multiple_with_predictions([ 0,1,2])
+    plot_multiple_control_inputs_vs_x([0, 1,2])
+    plot_multiple_theta([0, 1,2])
     plot_actual_paths()
     
     #plot_control_inputs(2)
@@ -778,8 +834,8 @@ if __name__ == '__main__':
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    plot_solve_times_single(1)
-    plot_solve_times_summary()
+    #plot_solve_times_single(1)
+    #plot_solve_times_summary()
     #plot_multiple_control_inputs([ 0,1,2,3])
     
     totals, means, mins, maxs = plot_solve_times_summary()
