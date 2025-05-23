@@ -129,7 +129,7 @@ def main():
             sys.exit(f'ROS 2 Pakete fehlen: {e}')
     else:
         # Plot der Trajektorie und Waypoints
-        fig, ax = plt.subplots(figsize=(8, 4))
+        fig, ax = plt.subplots(figsize=(7.29, 2))
         ax.plot(x, y,
                 linestyle='-', linewidth=1,
                 color=my_palette[0], label='Trajektorie')

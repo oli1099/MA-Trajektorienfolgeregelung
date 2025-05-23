@@ -12,15 +12,15 @@ from cycler import cycler
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=1_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=5_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.2_k=10',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.2_k=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=10_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=25_Q=100_T=0.1_k=10',
@@ -57,11 +57,11 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.25',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.15_V_ref=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.15_V_ref=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.3',
 
@@ -87,6 +87,7 @@ actual_theta_file       = 'mpc_data_actual_theta.csv'
 predicted_theta_file    = 'mpc_data_predicted_theta.csv'
 solve_times_file        = 'mpc_data_solve_times.csv'
 control_inputs_file     = 'mpc_data_control_inputs.csv'
+reference_file        = 'mpc_data_reference.csv'
 
 # Obstacle-Parameter
 obstacle = {
@@ -98,15 +99,15 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-  #'Ref',
+  'Soll-Trajektorie',
    # 'Nc=1',
     #'Nc=3, Np=15',
     #'Nc=5, Np=5',
     #'Nc=3, Np=25', 
     #'Nc=5, Np=15',
-    'Nc=5, Np=25 u=10',
-    'Nc=5, Np=25, Ts=0.2',
-    'Nc=5,Np=25',
+    #'Nc=5, Np=25 u=10',
+    #'Nc=5, Np=25, Ts=0.2',
+    #'Nc=5,Np=25 Ts=0.1',
     #'Nc=15, Np=25',
     #'Nc=10, Np=15', 
     #'Nc=15, Np=15',
@@ -142,12 +143,12 @@ labels = [
     #'L=0.01_V_ref=0.2',
     #'L=0.1_V_ref=0.25',
     #'L=0.1_V_ref=0.3',
-    #'L=0.01_V_ref=0.2',
-    #'L=0.05_V_ref=0.2',
-    #'L=0.1_V_ref=0.2',
+    'L=0.01_V_ref=0.2',
+    'L=0.05_V_ref=0.2',
+    'L=0.1_V_ref=0.2',
     #L=0.05_V_ref=0.3',
     #'L=0.15_V_ref=0.2',
-    #'L=0.2_V_ref=0.2',
+    'L=0.2_V_ref=0.2',
     #'L=0.01_V_ref=0.1',
     #'L=0.2_V_ref=0.3'
 ]
@@ -157,10 +158,11 @@ colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = [':', '-.', '--', '-']
 
 my_palette = [
-    "#009D81", # Base
+    "#009D81",
+     "#ff627e", # Base
     "#9E9A00",  
     "#709c5b",  # 20% Tint
-    "#ff627e",  # 40% Tint
+    "",  # 40% Tint
     "#99D8CD",  # 60% Tint
     "#CCEBE6",  # 80% Tint
 ]
@@ -171,7 +173,7 @@ def plot_actual_paths():
     """
     Plottet alle actual paths für alle Konfigurationen.
     """
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots(figsize=(7.29,2))
     for idx, folder in enumerate(folders):
         path = os.path.join(folder, actual_path_file)
         if os.path.isfile(path):
@@ -194,9 +196,9 @@ def plot_actual_paths():
         0.5,                  # Höhe
         facecolor='gray',
         alpha=0.3,
-        zorder=0
-    )
-    ax.add_patch(road)
+        zorder=0)
+    
+    #ax.add_patch(road)
     # Fahrbahnrand oben und unten (weiße durchgezogene Linien)
     ax.plot([x_min, x_max], [0.0, 0.0], color='white', linewidth=1.5, zorder=1)
     ax.plot([x_min, x_max], [0.5, 0.5], color='white', linewidth=1.5, zorder=1)
@@ -701,6 +703,69 @@ def plot_multiple_with_predictions(folder_indices):
     plt.tight_layout()
     plt.show()
 
+def plot_multiple_with_reference(folder_indices):
+    """
+    Erzeugt für jeden Index in folder_indices einen eigenen Subplot
+    mit Actual Path und Referenztrajektorie, in 2 Spalten und beliebig
+    vielen Zeilen. Überschüssige Subplots werden ausgeblendet.
+    """
+    n = len(folder_indices)
+    ncols = 2
+    nrows = math.ceil(n / ncols)
+    
+    # RICHTIG: nrows=nrows statt nrows=n
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
+                             figsize=(3.65 * ncols, 1.8 * nrows),
+                             sharex=True, sharey=True)
+    
+    # flatten, damit wir eine 1D-Liste von Axes haben
+    axes = axes.flatten()
+    
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+    
+        # 1) Actual Path
+        df_act = pd.read_csv(os.path.join(folder, actual_path_file))
+        ax.plot(df_act['x'], df_act['y'],
+                linestyle='-', linewidth=2,
+                label=f"{label}")
+        
+        # 2) Referenztrajektorie (falls vorhanden)
+        path_ref = os.path.join(folder, reference_file)
+        if os.path.isfile(path_ref):
+            df_ref = pd.read_csv(path_ref)
+            ax.plot(df_ref['x'], df_ref['y'],
+                    linestyle='-.', linewidth=1.5,
+                    color=my_palette[2],
+                    label="Solltrajektorie")
+        else:
+            print(f"Keine Referenz in {folder}, übersprungen.")
+    
+        # 3) Hindernis
+        ox, oy = obstacle['obsXrl'], 0.0
+        ow, oh = obstacle['obslength'], obstacle['obsYrl']
+        ax.add_patch(Rectangle((ox, oy), ow, oh,
+                               color='gray', alpha=0.5))
+        ax.add_patch(Rectangle(
+            (ox - safezone, oy - safezone),
+            ow + 2*safezone, oh + 2*safezone,
+            fill=False, linestyle='--', edgecolor='red'
+        ))
+    
+        ax.set_xlabel('x [m]', fontsize=12)
+        ax.set_ylabel('y [m]', fontsize=12)
+        ax.legend(fontsize='small')
+        ax.grid(True)
+    
+    # überschüssige Achsen ausblenden
+    for ax in axes[len(folder_indices):]:
+        ax.axis('off')
+    
+    plt.tight_layout()
+    plt.show()
+
+
 def plot_multiple_theta(folder_indices):
     """
     Zeichnet für jeden Index in folder_indices einen eigenen Subplot
@@ -853,17 +918,18 @@ def plot_multiple_control_inputs_vs_x(folder_indices):
 
 if __name__ == '__main__':
     # Beispielaufrufe:
-    ref = folders[0]
-    print("Vergleich über normalisiertes s∈[0,1]:")
-    for idx, fol in enumerate(folders[1:], start=1):
-        me_lat, r_lat = compute_lateral_errors(ref, fol)
-        print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
+    #ref = folders[0]
+    #print("Vergleich über normalisiertes s∈[0,1]:")
+    #for idx, fol in enumerate(folders[1:], start=1):
+     #   me_lat, r_lat = compute_lateral_errors(ref, fol)
+      #  print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     
     
     #plot_all_lateral_errors(ref_index=0)
-    plot_multiple_with_predictions([ 0,1])
-    plot_multiple_control_inputs_vs_x([0, 1])
-    plot_multiple_theta([0, 1])
+    #plot_multiple_with_predictions([ 0,1,2,3])
+    plot_multiple_with_reference([ 1,2,3,4])
+    plot_multiple_control_inputs_vs_x([1,2,3,4])
+    #plot_multiple_theta([0, 1])
     plot_actual_paths()
     
     #plot_control_inputs(2)
@@ -871,7 +937,7 @@ if __name__ == '__main__':
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    plot_solve_times_single(1)
+    #plot_solve_times_single(0)
     #plot_solve_times_single2(1)
     #plot_solve_times_summary()
     #plot_multiple_control_inputs([ 0,1,2,3])
