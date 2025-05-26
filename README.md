@@ -84,6 +84,7 @@ SSH Verbidung herstellen:
 
     IP Adresse Zuhause: 192.168.2.215
     IP Adresse LAB: 192.168.1.32
+    IP Adresse Handy: 192.168.137.118
 
 Plots vom Roboter speichern
     

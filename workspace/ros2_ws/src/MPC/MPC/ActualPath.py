@@ -19,6 +19,8 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=5_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=10',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=20',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=30',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.2_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=10_Np=15_Q=100_T=0.1_k=10',
@@ -46,22 +48,22 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.05',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.05',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.15',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.2',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.25',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.3',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.3',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.1_V_ref=0.25',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.05_V_ref=0.3',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.15_V_ref=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.15_V_ref=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.01_V_ref=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryTracking_L=0.2_V_ref=0.3',
 
@@ -106,8 +108,10 @@ labels = [
     #'Nc=3, Np=25', 
     #'Nc=5, Np=15',
     #'Nc=5, Np=25 u=10',
+    #'Nc=5, Np=25 u=20',
+    #'Nc=5, Np=25 u=30',
     #'Nc=5, Np=25, Ts=0.2',
-    #'Nc=5,Np=25 Ts=0.1',
+    #'Nc=5,Np=25 u=5',
     #'Nc=15, Np=25',
     #'Nc=10, Np=15', 
     #'Nc=15, Np=15',
@@ -130,25 +134,26 @@ labels = [
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
     #'N=5',
-    #'N=15,T=0.1',
-    #'N=25,T=0.1',
+    #'N=15',
+    #'N=25',
     #'N=35',
-    #'N=15, Ts=0.2',
-    #'N=25, Ts=0.2',
+    'N=15, Ts=0.2',
+    'N=25, Ts=0.2',
     #'N=15_Ts=0.05',
     #'N=25_Ts=0.05',
     #'N=50',
-    #'L=0.1_V_ref=0.1',
-    #'L=0.1_V_ref=0.15',
+    #'V_ref=0.1',
+    #'V_ref=0.15',
     #'L=0.01_V_ref=0.2',
-    #'L=0.1_V_ref=0.25',
+    #'V_ref=0.2',
     #'L=0.1_V_ref=0.3',
-    'L=0.01_V_ref=0.2',
-    'L=0.05_V_ref=0.2',
-    'L=0.1_V_ref=0.2',
-    #L=0.05_V_ref=0.3',
+    #'L=0.01',
+    #'L=0.05',
+    #'L=0.1',
+    #'V_ref=0.25',
+    #'L=0.05_V_ref=0.3',
     #'L=0.15_V_ref=0.2',
-    'L=0.2_V_ref=0.2',
+    #'L=0.2',
     #'L=0.01_V_ref=0.1',
     #'L=0.2_V_ref=0.3'
 ]
@@ -158,8 +163,8 @@ colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = [':', '-.', '--', '-']
 
 my_palette = [
-    "#009D81",
-     "#ff627e", # Base
+    "#009D81", # Base
+     "#ff627e", 
     "#9E9A00",  
     "#709c5b",  # 20% Tint
     "",  # 40% Tint
@@ -620,7 +625,7 @@ def plot_all_lateral_errors(ref_index=0, act_indices=None, N=1000):
         x_common = np.linspace(x_min, x_max, N)
 
         # Plot-Setup
-        plt.figure(figsize=(10, 4))
+        plt.figure(figsize=(7.29, 4))
         for i in act_indices:
             # Ist-Daten interpolieren
             df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
@@ -640,7 +645,7 @@ def plot_all_lateral_errors(ref_index=0, act_indices=None, N=1000):
 
         plt.xlabel('X [m]')
         plt.ylabel('Querfehler [m]')
-        plt.title(f'Querfehler vs. X: alle gegen {labels[ref_index]}')
+        #plt.title(f'Querfehler vs. X: alle gegen {labels[ref_index]}')
         plt.legend(loc='best', fontsize='small', ncol=2)
         plt.grid(True)
         plt.tight_layout()
@@ -655,7 +660,7 @@ def plot_multiple_with_predictions(folder_indices):
     n = len(folder_indices)
     # Lege n Zeilen, 1 Spalte an; sharex/y sorgt für gemeinsame Achsen
     fig, axes = plt.subplots(nrows=n, ncols=1, 
-                             figsize=(7.29, 2.5*n), 
+                             figsize=(7.29, 2*n), 
                              sharex=True, sharey=True)
     
     # Falls nur ein Subplot: axes ist kein Array, sondern ein Einzel-Axis
@@ -710,12 +715,12 @@ def plot_multiple_with_reference(folder_indices):
     vielen Zeilen. Überschüssige Subplots werden ausgeblendet.
     """
     n = len(folder_indices)
-    ncols = 2
+    ncols = 1
     nrows = math.ceil(n / ncols)
     
     # RICHTIG: nrows=nrows statt nrows=n
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
-                             figsize=(3.65 * ncols, 1.8 * nrows),
+                             figsize=(7.29, 1.5 * nrows),
                              sharex=True, sharey=True)
     
     # flatten, damit wir eine 1D-Liste von Axes haben
@@ -741,7 +746,9 @@ def plot_multiple_with_reference(folder_indices):
                     label="Solltrajektorie")
         else:
             print(f"Keine Referenz in {folder}, übersprungen.")
-    
+        
+        # 2) Predictions
+       
         # 3) Hindernis
         ox, oy = obstacle['obsXrl'], 0.0
         ow, oh = obstacle['obslength'], obstacle['obsYrl']
@@ -750,7 +757,7 @@ def plot_multiple_with_reference(folder_indices):
         ax.add_patch(Rectangle(
             (ox - safezone, oy - safezone),
             ow + 2*safezone, oh + 2*safezone,
-            fill=False, linestyle='--', edgecolor='red'
+            fill=False, linestyle='--', edgecolor=my_palette[1]
         ))
     
         ax.set_xlabel('x [m]', fontsize=12)
@@ -868,12 +875,15 @@ def plot_multiple_control_inputs_vs_x(folder_indices):
         untereinander mit den Steuergrößen u1–u4 gegen die X-Position.
         Variante 1: Annahme gleiche Länge von actual_path und control_inputs.
         """
+        
         n = len(folder_indices)
-        fig, axes = plt.subplots(
-            nrows=n, ncols=1,
-            figsize=(7.29, 1.8*n),
-            sharex=False
-        )
+        ncols = 2
+        nrows = math.ceil(n / ncols)
+        fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
+                             figsize=(7.29 * ncols, 1.8 * nrows),
+                             sharex=False)
+    # axes flach machen für einfachen Zugriff
+        axes = axes.flatten()
 
         # Falls nur ein Subplot erzeugt wurde, packen wir ihn in eine Liste
         if n == 1:
@@ -910,6 +920,66 @@ def plot_multiple_control_inputs_vs_x(folder_indices):
         plt.tight_layout()
         plt.show()
 
+def plot_multiple_control_inputs_vs_x2(folder_indices,
+                                      control_inputs_file='mpc_data_control_inputs.csv',
+                                      actual_path_file='mpc_data_actual_path.csv'):
+    """
+    Für jede Index in folder_indices einen Subplot mit u1–u4 gegen x.
+    Interpoliert x an den Zeitpunkten der Steuergrößen.
+    """
+    n = len(folder_indices)
+    ncols = 2
+    nrows = math.ceil(n / ncols)
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
+                             figsize=(3.65 * ncols, 1.8 * nrows),
+                             sharex=False)
+    # axes flach machen für einfachen Zugriff
+    axes = axes.flatten()
+    # axes flach machen für einfachen Zugriff
+    
+    if n == 1:
+        axes = [axes]
+
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+
+        ci_path = os.path.join(folder, control_inputs_file)
+        ap_path = os.path.join(folder, actual_path_file)
+        if not os.path.isfile(ci_path) or not os.path.isfile(ap_path):
+            ax.text(0.5, 0.5, f"Datei fehlt:\n{ci_path}\n{ap_path}",
+                    ha='center', va='center', color='red')
+            ax.set_ylabel(label)
+            continue
+
+        df_ci = pd.read_csv(ci_path)
+        df_ap = pd.read_csv(ap_path)
+
+        # --- Interpolation: Voraussetzung ist eine gemeinsame Zeitspalte 't' in beiden DataFrames
+        if 't' in df_ci.columns and 't' in df_ap.columns:
+            # Stelle sicher, dass df_ap nach t sortiert ist
+            df_ap = df_ap.sort_values('t')
+            # Interpoliere x-Werte an den Zeitpunkten der Steuergrößen
+            x_ci = np.interp(df_ci['t'], df_ap['t'], df_ap['x'])
+        else:
+            # Fallback: einfach auf die minimale Länge trimmen
+            N = min(len(df_ci), len(df_ap))
+            x_ci = df_ap['x'].values[:N]
+            df_ci = df_ci.iloc[:N]
+
+        # Plot der Stellgrößen gegen das interpolierte x
+        for col in ['u1','u2','u3','u4']:
+            if col in df_ci.columns:
+                ax.plot(x_ci, df_ci[col].values,
+                        label=col, linewidth=1)
+
+        ax.set_ylabel(label)
+        ax.grid(True)
+        ax.legend(fontsize='x-small')
+
+    axes[-1].set_xlabel('X [m]')
+    plt.tight_layout()
+    plt.show()
 
 
 
@@ -918,26 +988,26 @@ def plot_multiple_control_inputs_vs_x(folder_indices):
 
 if __name__ == '__main__':
     # Beispielaufrufe:
-    #ref = folders[0]
-    #print("Vergleich über normalisiertes s∈[0,1]:")
-    #for idx, fol in enumerate(folders[1:], start=1):
-     #   me_lat, r_lat = compute_lateral_errors(ref, fol)
-      #  print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
+    ref = folders[0]
+    print("Vergleich über normalisiertes s∈[0,1]:")
+    for idx, fol in enumerate(folders[1:], start=1):
+        me_lat, r_lat = compute_lateral_errors(ref, fol)
+        print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     
     
-    #plot_all_lateral_errors(ref_index=0)
-    #plot_multiple_with_predictions([ 0,1,2,3])
-    plot_multiple_with_reference([ 1,2,3,4])
-    plot_multiple_control_inputs_vs_x([1,2,3,4])
+    plot_all_lateral_errors(ref_index=0)
+    plot_multiple_with_predictions([ 1,2])
+    #plot_multiple_with_reference([ 1,2,3,4])
+    plot_multiple_control_inputs_vs_x2([1,2])
     #plot_multiple_theta([0, 1])
-    plot_actual_paths()
+    #plot_actual_paths()
     
-    #plot_control_inputs(2)
+    plot_control_inputs(4)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    #plot_solve_times_single(0)
+    #plot_solve_times_single(1)
     #plot_solve_times_single2(1)
     #plot_solve_times_summary()
     #plot_multiple_control_inputs([ 0,1,2,3])

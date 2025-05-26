@@ -23,7 +23,8 @@ setup(
             
             'trajectoryPControllerTime = MPC_Trajektorienfolgeregelung.trajectoryPControllerTime:main',
             'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
-            'Trajectorytracking = MPC_Trajektorienfolgeregelung.Trajectorytracking:main'
+            'Trajectorytracking = MPC_Trajektorienfolgeregelung.Trajectorytracking:main',
+            'PurePursuit = MPC_Trajektorienfolgeregelung.PurePursuit:main'
         ],
     },
 )
