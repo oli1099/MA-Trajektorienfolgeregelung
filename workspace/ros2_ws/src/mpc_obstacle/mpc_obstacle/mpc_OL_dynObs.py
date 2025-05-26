@@ -109,12 +109,12 @@ class QP:
 
         #Zustandsbegrenzung
 
-        '''for k in range(Np +1):
+        for k in range(Np +1):
             # X wird begrenzt auf 0 bis 6
-            lbz[k*self.nx + 0] = -0.1
-            ubz[k*self.nx + 0] = 6          
-            lbz[k*self.nx + 1] = -0.1
-            ubz[k*self.nx + 1] = 4 '''
+            #lbz[k*self.nx + 0] = -
+            #ubz[k*self.nx + 0] = 6          
+            lbz[k*self.nx + 1] = 0
+            ubz[k*self.nx + 1] = 0.5 
        
         #Eingangsbegrenzung
         for k in range(Nc):
