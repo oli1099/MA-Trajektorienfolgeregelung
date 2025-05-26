@@ -88,7 +88,9 @@ class TrajectoryPController(Node):
         Vref_x = 0.0
         Vref_y = 0.0
 
-        for xr, yr, yaw in self.trajectory:
+        for idx, (xr, yr, yaw) in enumerate(self.trajectory):
+            if idx % 5 != 0:
+                continue
             dx = xr - x_hat
             dy = yr - y_hat
             D  = math.hypot(dx, dy)
