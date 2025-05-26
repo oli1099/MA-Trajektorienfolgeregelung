@@ -114,7 +114,7 @@ class QP:
             #lbz[k*self.nx + 0] = -
             #ubz[k*self.nx + 0] = 6          
             lbz[k*self.nx + 1] = 0
-            ubz[k*self.nx + 1] = 0.5 
+            ubz[k*self.nx + 1] = 1 
        
         #Eingangsbegrenzung
         for k in range(Nc):
