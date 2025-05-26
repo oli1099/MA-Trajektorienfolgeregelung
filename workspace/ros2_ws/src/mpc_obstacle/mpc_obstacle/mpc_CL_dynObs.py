@@ -47,7 +47,7 @@ class MPCClosedLoop(Node):
             'obsYrl': 0.25,   # y-Koordinate
             'obslength': 0.75 # Breite des Hindernisses
         }
-        self.road_width = 2.0  # Breite der Straße (Beispielwert)
+        self.road_width = 0.5  # Breite der Straße (Beispielwert)
         self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
 
 
