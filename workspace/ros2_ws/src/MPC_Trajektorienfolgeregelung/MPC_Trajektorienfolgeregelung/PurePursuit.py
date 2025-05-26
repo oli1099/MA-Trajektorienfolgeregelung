@@ -24,8 +24,8 @@ class TrajectoryPController(Node):
         self.trajectory = list(zip(xs, ys, yaws))
 
         # Regelparameter
-        self.Lp      = 0.01    # Look-ahead Abstand
-        self.Vref    = 0.1     # Sollgeschwindigkeit
+        self.Lp      = 0.1   # Look-ahead Abstand
+        self.Vref    = 0.2     # Sollgeschwindigkeit
         self.epsilon = 0.05    # Toleranz für via-Points
         self.Ua_max  = 0.1     # max. Approach-Speed (nicht genutzt hier)
         self.k_psi   = 1.0     # Heading-Gain
