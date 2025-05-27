@@ -15,7 +15,7 @@ class LidarClustering(Node):
             LaserScan,
             '/ldlidar_node/scan',
             self.scan_callback,
-            10
+            1
         )
         # Publisher für Visualisierungsmarker (z.B. in RViz)
         self.marker_pub = self.create_publisher(MarkerArray, 'lidar_clusters', 10)
@@ -36,7 +36,7 @@ class LidarClustering(Node):
         points = np.vstack((xs, ys)).T
         
         # Clusterbildung mittels DBSCAN
-        clustering = DBSCAN(eps=0.05, min_samples=5).fit(points)
+        clustering = DBSCAN(eps=0.75, min_samples=5).fit(points)
         labels = clustering.labels_
         
         marker_array = MarkerArray()
