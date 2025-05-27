@@ -24,7 +24,7 @@ class MapObstacleDetection(Node):
         )
         self.marker_pub = self.create_publisher(MarkerArray, 'map_obstacles', qos_profile)
 
-        self.obstacle_threshold = 50   # Schwellwert, um Hindernisse zu erkennen (kann angepasst werden)
+        self.obstacle_threshold = 90   # Schwellwert, um Hindernisse zu erkennen (kann angepasst werden)
         self.min_contour_area = 5      # Mindestfläche, um auch kleinere Hindernisse zu berücksichtigen
 
     
@@ -36,10 +36,16 @@ class MapObstacleDetection(Node):
         origin_x = msg.info.origin.position.x
         origin_y = msg.info.origin.position.y
 
+        cv2.imshow("Obstacle Image", obstacle_img)
+        cv2.waitKey(1)
+
+
         # Umwandeln der Kartendaten in ein 2D-Numpy-Array
         data = np.array(msg.data).reshape((height, width))
         # Schwellwert: Werte >50 (von 100) werden als Hindernis interpretiert, -1 = unbekannt werden ignoriert
-        obstacle_mask = (data > self.obstacle_threshold)
+        obstacle_mask = (data >= self.obstacle_threshold)
+        obstacle_mask[data == -1] = False
+
         # Erstellen eines binären Bildes: Hindernisse = 255, freier Raum = 0
         obstacle_img = np.zeros_like(data, dtype=np.uint8)
         obstacle_img[obstacle_mask] = 255
@@ -66,7 +72,7 @@ class MapObstacleDetection(Node):
             # (cX, cY) beziehen sich auf die Bildkoordinaten, wobei cX die Spalte und cY die Zeile ist.
             world_x = origin_x + (cX * resolution)
             # Da in der OccupancyGrid die erste Zeile oben liegt, muss die Zeile invertiert werden:
-            world_y = origin_y + ((height - cY) * resolution)
+            world_y = origin_y + cY * resolution
 
             # Logge die Hindernisposition
             self.get_logger().info(
@@ -97,7 +103,7 @@ class MapObstacleDetection(Node):
                 # Bei y muss häufig die Umkehrung der Reihenfolge berücksichtigt werden, da die Karte
                 # typischerweise von oben nach unten durchlaufen wird.
                 x = origin_x + (col * resolution)
-                y = origin_y + ((height - row) * resolution)
+                y = origin_y + (row * resolution)
                 marker.points.append(self.create_point(x, y))
             # Schließe den Marker (Rechteck/Polygonstruktur)
             if marker.points:
