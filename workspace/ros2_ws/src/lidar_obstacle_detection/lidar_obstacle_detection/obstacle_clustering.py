@@ -15,7 +15,7 @@ class LidarClustering(Node):
             LaserScan,
             '/ldlidar_node/scan',
             self.scan_callback,
-            1
+            10
         )
         # Publisher für Visualisierungsmarker (z.B. in RViz)
         self.marker_pub = self.create_publisher(MarkerArray, 'lidar_clusters', 10)
