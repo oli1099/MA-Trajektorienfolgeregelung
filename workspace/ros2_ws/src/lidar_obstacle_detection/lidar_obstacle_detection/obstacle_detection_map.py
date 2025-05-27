@@ -24,7 +24,7 @@ class MapObstacleDetection(Node):
         )
         self.marker_pub = self.create_publisher(MarkerArray, 'map_obstacles', qos_profile)
 
-        self.obstacle_threshold = 90   # Schwellwert, um Hindernisse zu erkennen (kann angepasst werden)
+        self.obstacle_threshold = 100   # Schwellwert, um Hindernisse zu erkennen (kann angepasst werden)
         self.min_contour_area = 5      # Mindestfläche, um auch kleinere Hindernisse zu berücksichtigen
 
     
