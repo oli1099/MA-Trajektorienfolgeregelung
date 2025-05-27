@@ -36,7 +36,7 @@ class LidarClustering(Node):
         points = np.vstack((xs, ys)).T
         
         # Clusterbildung mittels DBSCAN
-        clustering = DBSCAN(eps=0.1, min_samples=7).fit(points)
+        clustering = DBSCAN(eps=0.05, min_samples=10).fit(points)
         labels = clustering.labels_
         
         marker_array = MarkerArray()
