@@ -6,29 +6,32 @@ from matplotlib.patches import Rectangle
 import numpy as np
 from scipy.interpolate import interp1d
 from cycler import cycler
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
+# ab Matplotlib 3.7 gibt’s auch ax.indicate_inset_zoom(..) als Kurzbefehl
+from matplotlib.animation import FuncAnimation, PillowWriter
 #import matplotlib as mpl
 
 
 
 # Liste der Ordner, die jeweils actual_path, predictions und theta CSVs enthalten
 folders = [
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/TrajectoryMPC',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=1_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=3_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=5_Q=100_T=0.1_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=20',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10_u=30',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.2_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=10_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=15_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=15_Np=25_Q=100_T=0.1_k=10',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=25_Np=25_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=25_Np=25_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=43_Q=100_T=0.1',
-    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
+    '/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1_k=10',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=35_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=30_Q=100_T=0.1',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/DynObs_Nc=5_Np=25_Q=100_T=0.1',
@@ -48,8 +51,8 @@ folders = [
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=35_Q=100_T=0.1_T=23',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
-    '/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.2',
+    #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.2',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=15_Q=100_T=0.1_T=23_Ts=0.05',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=25_Q=100_T=0.1_T=23_Ts=0.05',
     #'/home/oli/Desktop/Oliver/Uni/MA/NewData/MPCTrajectory_N=50_Q=100_T=0.1_T=23',
@@ -101,23 +104,25 @@ safezone = 0.1
 
 # Labels und Plot-Stile
 labels = [
-  'Soll-Trajektorie',
+  #'Soll-Trajektorie',
    # 'Nc=1',
     #'Nc=3, Np=15',
-    #'Nc=5, Np=5',
+    r'$N_p=15$',
     #'Nc=3, Np=25', 
-    #'Nc=5, Np=15',
-    #'Nc=5, Np=25 u=10',
-    #'Nc=5, Np=25 u=20',
+    r'$N_c=5$',
+    #r'$\|\mathbf{u}\|\leq 10$',
+    #r'$\|\mathbf{u}\|\leq 20$',
     #'Nc=5, Np=25 u=30',
     #'Nc=5, Np=25, Ts=0.2',
-    #'Nc=5,Np=25 u=5',
+    r'$N_c=25$',
     #'Nc=15, Np=25',
     #'Nc=10, Np=15', 
     #'Nc=15, Np=15',
     #'Nc=25, Np=25', 
     #'Np=43', 
-    #'Nc=5,Np=35',
+    #r'$T_s=0,1$',
+    #r'$T_s=0,2$',
+    #r'$N_c=25$',
     #'Nc=5,Np=35', 
     #'Nc=5,Np=30', 
     #'Nc=5,Np=25', 
@@ -133,27 +138,27 @@ labels = [
     
     #'MPCTrajectory_Q=100_T=30_Ts=0.2',
     #'MPCTrajectory_Q=100_T=30_Ts=0.1',
-    #'N=5',
-    #'N=15',
-    #'N=25',
-    #'N=35',
-    'N=15, Ts=0.2',
-    'N=25, Ts=0.2',
+    #r'$N=5$',
+    #r'$N=15$',
+    r'$N_p=35$',
+    #r'$N=35$',
+    #'N=15, Ts=0.2',
+    #'N=25, Ts=0.2',
     #'N=15_Ts=0.05',
     #'N=25_Ts=0.05',
     #'N=50',
-    #'V_ref=0.1',
-    #'V_ref=0.15',
+    #r'$V_\mathrm{ref}=0.1$',
+    #r'$V_\mathrm{ref}=0.15$',
     #'L=0.01_V_ref=0.2',
-    #'V_ref=0.2',
+    #r'$V_\mathrm{ref}=0.2$',
     #'L=0.1_V_ref=0.3',
-    #'L=0.01',
-    #'L=0.05',
-    #'L=0.1',
-    #'V_ref=0.25',
+    #r'$L_\mathrm{ref}=0.01$',
+    #r'$L_\mathrm{ref}=0.05$',
+    #r'$L_\mathrm{ref}=0.1$',
+    #r'$V_\mathrm{ref}$=0.25',
     #'L=0.05_V_ref=0.3',
     #'L=0.15_V_ref=0.2',
-    #'L=0.2',
+    #r'$L_\mathrm{ref}=0.2$',
     #'L=0.01_V_ref=0.1',
     #'L=0.2_V_ref=0.3'
 ]
@@ -163,11 +168,18 @@ colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 linestyles = [':', '-.', '--', '-']
 
 my_palette = [
-    "#009D81", # Base
+    # Base
+   
+     "#009D81",
+     "#FFC857",
+     "#9E9A00", 
      "#ff627e", 
-    "#9E9A00",  
+      
+      
+     "#0057FF",
+     
     "#709c5b",  # 20% Tint
-    "",  # 40% Tint
+      # 40% Tint
     "#99D8CD",  # 60% Tint
     "#CCEBE6",  # 80% Tint
 ]
@@ -231,8 +243,8 @@ def plot_actual_paths():
     ax.add_patch(sz_patch)
 
     #ax.set_title('Actual Paths Vergleich mit Hindernis')
-    ax.set_xlabel('X [m]')
-    ax.set_ylabel('Y [m]')
+    ax.set_xlabel('x in m')
+    ax.set_ylabel('y in m')
     ax.legend(loc='best', fontsize='small')
     ax.grid(True)
     ax.set_aspect('equal', adjustable='box')
@@ -392,30 +404,49 @@ def plot_solve_times_single(folder_index):
 def plot_solve_times_single2(folder_index):
     """
     Plottet die Laufzeit pro Zeitschritt für eine einzelne Konfiguration,
-    verwendet dabei die Spalte 'X' auf der x-Achse.
-    :param folder_index: Index in der `folders`-Liste.
+    verwendet dabei die Spalte 'x' auf der x-Achse und zeigt zusätzlich:
+      • eine Linie für die Durchschnittszeit (in s und ms)
+      • eine Linie für den Schwellenwert von 100 ms
+      • Legende über dem Diagramm, keine Titel oder Labels oberhalb
     """
     if not 0 <= folder_index < len(folders):
         raise IndexError(f"Index außerhalb gültigen Bereichs: 0-{len(folders)-1}")
     folder = folders[folder_index]
-    label = labels[folder_index]
+    # config_label wird nicht mehr als Überschrift genutzt
     path = os.path.join(folder, solve_times_file)
     if not os.path.isfile(path):
         print(f"Solve times-Datei nicht gefunden: {path}")
         return
 
     df = pd.read_csv(path)
-    if 'x' not in df.columns:
-        raise KeyError("Spalte 'X' nicht gefunden. Bitte überprüfe deine CSV.")
-    
-    plt.figure(figsize=(7.29, 2.4))
-    # hier die X-Spalte als x-Werte übergeben
-    plt.plot(df['x'], df['solve_time'], linestyle='-', marker='o', label=f"Solve Time {label}")
-    #plt.title(f'Laufzeit pro Zeitschritt: {label}')
-    plt.xlabel('X')                # Beschriftung der x-Achse
-    plt.ylabel('Zeit (s)')
-    plt.legend()
-    plt.grid(True)
+    if 'x' not in df.columns or 'solve_time' not in df.columns:
+        raise KeyError("Spalte 'x' oder 'solve_time' nicht gefunden.")
+
+    # Durchschnittszeit berechnen
+    mean_time = df['solve_time'].mean()
+    mean_time_ms = mean_time * 1000
+
+    fig, ax = plt.subplots(figsize=(7.29, 4.2))
+
+    # Solve-Times
+    ax.plot(df['x'], df['solve_time'], linestyle='-', marker='o', label="Lösungszeit")
+
+    # Durchschnittslinie
+    ax.axhline(mean_time, color='orange', linestyle='--',
+               label=f'Durchschnitt: {mean_time_ms:.0f} ms')
+
+    # Schwellenwert-Linie (0.1 s = 100 ms)
+    ax.axhline(0.1, color='red', linestyle=':',
+               label='Schwellenwert: 100 ms')
+
+    ax.set_xlabel(r'$x$ [m]')
+    ax.set_ylabel(r'Laufzeit [s]')
+    ax.grid(True)
+
+    # Legende oberhalb des Plots
+    ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1.02),
+              ncol=3, frameon=True)
+
     plt.tight_layout()
     plt.show()
 
@@ -592,7 +623,7 @@ def plot_error_vs_x(ref_index, act_index, N=1000):
 
     err_lat = np.abs(f_act_y(x_common) - f_ref_y(x_common))
 
-    plt.figure(figsize=(8, 4))
+    plt.figure(figsize=(7.29, 4.2))
     plt.plot(x_common, err_lat, linestyle='-', linewidth=1.5)
     plt.xlabel('X-Position [m]')
     plt.ylabel('Querfehler [m]')
@@ -602,194 +633,373 @@ def plot_error_vs_x(ref_index, act_index, N=1000):
     plt.show()
 
 def plot_all_lateral_errors(ref_index=0, act_indices=None, N=1000):
-        """
-        Plottet Querfehler vs. x für die Referenz (ref_index) und alle in act_indices.
-        Wenn act_indices=None, nimmt es alle außer der Referenz.
-        """
-        if act_indices is None:
-            act_indices = [i for i in range(len(folders)) if i != ref_index]
+    """
+    Querfehler vs. x – Legende steht oberhalb der Figure.
+    """
+    if act_indices is None:
+        act_indices = [i for i in range(len(folders)) if i != ref_index]
 
-        # Referenz-Daten einlesen und auf x sortieren
-        df_ref = pd.read_csv(os.path.join(folders[ref_index], actual_path_file))
-        df_ref = df_ref.sort_values('x').drop_duplicates('x')
-        f_ref_y = interp1d(df_ref['x'], df_ref['y'],
-                        kind='linear', bounds_error=False, fill_value='extrapolate')
+    # ---------------- Referenz vorbereiten -----------------
+    df_ref = pd.read_csv(os.path.join(folders[ref_index], actual_path_file))
+    df_ref = df_ref.sort_values('x').drop_duplicates('x')
+    f_ref_y = interp1d(df_ref['x'], df_ref['y'],
+                       kind='linear', bounds_error=False, fill_value='extrapolate')
 
-        # Gemeinsamen x-Bereich über alle auswählen:
-        x_min = df_ref['x'].min()
-        x_max = df_ref['x'].max()
-        for i in act_indices:
-            df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
-            x_min = max(x_min, df_act['x'].min())
-            x_max = min(x_max, df_act['x'].max())
-        x_common = np.linspace(x_min, x_max, N)
+    # Gemeinsamen x-Bereich ermitteln
+    x_min, x_max = df_ref['x'].min(), df_ref['x'].max()
+    for i in act_indices:
+        df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
+        x_min = max(x_min, df_act['x'].min())
+        x_max = min(x_max, df_act['x'].max())
+    x_common = np.linspace(x_min, x_max, N)
 
-        # Plot-Setup
-        plt.figure(figsize=(7.29, 4))
-        for i in act_indices:
-            # Ist-Daten interpolieren
-            df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
-            df_act = df_act.sort_values('x').drop_duplicates('x')
-            f_act_y = interp1d(df_act['x'], df_act['y'],
-                            kind='linear', bounds_error=False, fill_value='extrapolate')
+    # ---------------- Plot -----------------
+    fig, ax = plt.subplots(figsize=(7.29, 4))
+    for i in act_indices:
+        df_act = pd.read_csv(os.path.join(folders[i], actual_path_file))
+        df_act = df_act.sort_values('x').drop_duplicates('x')
+        f_act_y = interp1d(df_act['x'], df_act['y'],
+                           kind='linear', bounds_error=False, fill_value='extrapolate')
 
-            # Querfehler berechnen
-            err_lat = np.abs(f_act_y(x_common) - f_ref_y(x_common))
+        err_lat = np.abs(f_act_y(x_common) - f_ref_y(x_common))
 
-            # Plotten
-            plt.plot(x_common, err_lat,
-                    linestyle=linestyles[i % len(linestyles)],
-                    #color=colors[i % len(colors)],
-                    linewidth=1.5,
-                    label=labels[i])
+        ax.plot(x_common, err_lat,
+                linestyle=linestyles[i % len(linestyles)],
+                linewidth=1.5,
+                label=labels[i])
 
-        plt.xlabel('X [m]')
-        plt.ylabel('Querfehler [m]')
-        #plt.title(f'Querfehler vs. X: alle gegen {labels[ref_index]}')
-        plt.legend(loc='best', fontsize='small', ncol=2)
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
-        #plt.tight_layout()
-        #plt.savefig("all_laterals_errors.pgf")
+    ax.set_xlabel(r'$x$ in $\mathrm{m}$', fontsize=11)
+    ax.set_ylabel(r'$e(x)$ in $\mathrm{m}$', fontsize=11)
+    ax.grid(True)
+
+    # -------- Legende OBERHALB der gesamten Figure ----------
+    handles, labls = ax.get_legend_handles_labels()
+    fig.legend(handles, labls,
+               loc='upper center',          # oberhalb
+               bbox_to_anchor=(0.5, 0.98),  # x-Mitte, y-Position
+               ncol=len(labls),             # alles in eine Zeile
+               frameon=True)
+
+    # Platz für die Legende lassen
+    plt.tight_layout(rect=[0, 0, 1, 0.91])
+    plt.show()
+
 def plot_multiple_with_predictions(folder_indices):
     """
-    Erzeugt für jeden Index in folder_indices einen eigenen Subplot
-    mit Actual Path und Predictions, untereinander angeordnet.
+    Subplots (untereinander) mit gemeinsamer Legende oberhalb.
     """
     n = len(folder_indices)
-    # Lege n Zeilen, 1 Spalte an; sharex/y sorgt für gemeinsame Achsen
-    fig, axes = plt.subplots(nrows=n, ncols=1, 
-                             figsize=(7.29, 2*n), 
-                             sharex=True, sharey=True)
-    
-    # Falls nur ein Subplot: axes ist kein Array, sondern ein Einzel-Axis
-    if n == 1:
+    fig, axes = plt.subplots(
+        nrows=n, ncols=1,
+        figsize=(7.29, 2.6*n),
+        sharex=True, sharey=True
+    )
+    if n == 1:                          # nur ein Subplot → Liste
         axes = [axes]
-    
+
+    # ---------- Zeichnen ----------
+    legend_handles, legend_labels = None, None
     for ax, idx in zip(axes, folder_indices):
         folder = folders[idx]
         label  = labels[idx]
-        
-        # 1) Actual Path
+
+        # Actual
         df_act = pd.read_csv(os.path.join(folder, actual_path_file))
-        ax.plot(df_act['x'], df_act['y'],
-                linestyle='-', linewidth=2, 
-                label=f"Actual {label}")
-        ax.set_xlabel('x [m]', fontsize=12)
-        ax.set_ylabel('y [m]', fontsize=12)
-        
-        # 2) Predictions
-        pred_color = my_palette[1]
+        ln_act, = ax.plot(df_act['x'], df_act['y'],
+                          linestyle='-', linewidth=2,
+                          label=f"Tatsächlicher Fahrtverlauf")
+
+        # Predictions
         df_pred = pd.read_csv(os.path.join(folder, predictions_file))
         for traj_id, traj in df_pred.groupby('trajectory_id'):
-            ax.plot(traj['x'], traj['y'],color=pred_color,
-                    linestyle='--', linewidth=1, alpha=0.7,
-                    label=("Prediction" if traj_id == 0 else None))
-        
-        # 3) Hindernis
+            ln_pred, = ax.plot(traj['x'], traj['y'],
+                               color=my_palette[1], linestyle='--',
+                               linewidth=1, alpha=0.7,
+                               label="Vorhergesagte Trajektorie" if traj_id == 0 else None)
+
+        # Hindernis
         ox, oy = obstacle['obsXrl'], 0.0
         ow, oh = obstacle['obslength'], obstacle['obsYrl']
         ax.add_patch(Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5))
-        ax.add_patch(Rectangle(
-            (ox - safezone, oy - safezone),
-            ow + 2*safezone, oh + 2*safezone,
-            fill=False, linestyle='--', edgecolor='red'
-        ))
-        
-        ax.set_ylabel('y [m]')
-        #ax.set_title(f'{label}')
-        ax.legend(fontsize='small')
+        ax.add_patch(Rectangle((ox-safezone, oy-safezone),
+                               ow+2*safezone, oh+2*safezone,
+                               fill=False, linestyle='--', edgecolor='red'))
+
+        ax.set_title(label, fontsize=11)
+        ax.set_ylabel(r'$y$ in $\mathrm{m}$', fontsize=11)
         ax.grid(True)
-    
-    # Gemeinsame X‐Beschriftung
-    axes[-1].set_xlabel('x [m]')
-    
-    plt.tight_layout()
+
+        # Handles/Labels nur einmal sammeln (vom ersten Ax)
+        if legend_handles is None:
+            legend_handles, legend_labels = ax.get_legend_handles_labels()
+
+    # ---------- gemeinsame Elemente ----------
+    axes[-1].set_xlabel(r'$x$ in $\mathrm{m}$')
+
+    # Figure-Legende OBEN
+    fig.legend(legend_handles, legend_labels,
+               loc='upper center',
+               bbox_to_anchor=(0.5, 0.98),    # x-Mitte, etwas oberhalb
+               ncol=len(legend_labels),        # alles in eine Zeile
+               frameon=True)
+
+    # Platz für die Legende lassen
+    plt.tight_layout(rect=[0, 0, 1, 0.91])      # oder plt.subplots_adjust(top=0.9)
     plt.show()
 
-def plot_multiple_with_reference(folder_indices):
+
+
+def plot_multiple_with_predictions_zoom(folder_indices):
     """
-    Erzeugt für jeden Index in folder_indices einen eigenen Subplot
-    mit Actual Path und Referenztrajektorie, in 2 Spalten und beliebig
-    vielen Zeilen. Überschüssige Subplots werden ausgeblendet.
+    Untereinander angeordnete Plots mit Zoom-Inset (x: 1.65–1.85 m, y: 0.35–0.45 m).
+    • Vorhersagen im Hauptplot gelb (#FFC857).
+    • Im Zoom-Fenster werden nur der tatsächliche Pfad und das Hindernis gezeigt.
     """
     n = len(folder_indices)
-    ncols = 1
-    nrows = math.ceil(n / ncols)
-    
-    # RICHTIG: nrows=nrows statt nrows=n
-    fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
-                             figsize=(7.29, 1.5 * nrows),
-                             sharex=True, sharey=True)
-    
-    # flatten, damit wir eine 1D-Liste von Axes haben
-    axes = axes.flatten()
-    
+    fig, axes = plt.subplots(
+        nrows=n, ncols=1, figsize=(7.29, 2.1*n),
+        sharex=True, sharey=True
+    )
+    if n == 1:
+        axes = [axes]
+
+    legend_handles, legend_labels = None, None
     for ax, idx in zip(axes, folder_indices):
         folder = folders[idx]
         label  = labels[idx]
-    
-        # 1) Actual Path
+
+        # -------- Hauptkurven ------------------------------------
         df_act = pd.read_csv(os.path.join(folder, actual_path_file))
         ax.plot(df_act['x'], df_act['y'],
-                linestyle='-', linewidth=2,
-                label=f"{label}")
-        
-        # 2) Referenztrajektorie (falls vorhanden)
-        path_ref = os.path.join(folder, reference_file)
-        if os.path.isfile(path_ref):
-            df_ref = pd.read_csv(path_ref)
-            ax.plot(df_ref['x'], df_ref['y'],
-                    linestyle='-.', linewidth=1.5,
-                    color=my_palette[2],
-                    label="Solltrajektorie")
-        else:
-            print(f"Keine Referenz in {folder}, übersprungen.")
-        
-        # 2) Predictions
-       
-        # 3) Hindernis
+                lw=2, label="Tatsächlicher Fahrtverlauf")
+
+        df_pred = pd.read_csv(os.path.join(folder, predictions_file))
+        for i, (_, traj) in enumerate(df_pred.groupby('trajectory_id')):
+            ax.plot(traj['x'], traj['y'],
+                    color='#FFC857', ls='--', lw=1, alpha=0.8,
+                    label="Vorhergesagte Trajektorie" if i == 0 else None)
+
+        # -------- Hindernis --------------------------------------
         ox, oy = obstacle['obsXrl'], 0.0
         ow, oh = obstacle['obslength'], obstacle['obsYrl']
         ax.add_patch(Rectangle((ox, oy), ow, oh,
                                color='gray', alpha=0.5))
-        ax.add_patch(Rectangle(
-            (ox - safezone, oy - safezone),
-            ow + 2*safezone, oh + 2*safezone,
-            fill=False, linestyle='--', edgecolor=my_palette[1]
-        ))
-    
-        ax.set_xlabel('x [m]', fontsize=12)
-        ax.set_ylabel('y [m]', fontsize=12)
-        ax.legend(fontsize='small')
+        ax.add_patch(Rectangle((ox-safezone, oy-safezone),
+                               ow+2*safezone, oh+2*safezone,
+                               fill=False, ls='--', ec='red'))
+
+        ax.set_title(label, fontsize=11)
+        ax.set_ylabel('y in m', fontsize=11)
         ax.grid(True)
+
+        # -------- Zoom-Inset (ohne Predictions) ------------------
+        axins = inset_axes(ax, width="15%", height="35%",
+                           loc='upper right', borderpad=1)
+
+        # nur tatsächliche Trajektorie zeichnen
+        axins.plot(df_act['x'], df_act['y'], lw=2, color=my_palette[0])
+
+        # Hindernis
+        axins.add_patch(Rectangle((ox, oy), ow, oh,
+                                  color='gray', alpha=0.5))
+        axins.add_patch(Rectangle((ox-safezone, oy-safezone),
+                                  ow+2*safezone, oh+2*safezone,
+                                  fill=False, ls='--', ec='red'))
+
+        # feste Zoom-Grenzen
+        axins.set_xlim(1.65, 1.9)
+        axins.set_ylim(0.28, 0.42)
+        axins.set_xticks([]); axins.set_yticks([])
+
+        mark_inset(ax, axins, loc1=2, loc2=4,
+                   fc="none", ec="black", lw=0.8)
+
+        # -------- Legende nur einmal sammeln ---------------------
+        if legend_handles is None:
+            legend_handles, legend_labels = ax.get_legend_handles_labels()
+
+    axes[-1].set_xlabel('x in m', fontsize=11)
+    fig.legend(legend_handles, legend_labels,
+               loc='upper center', bbox_to_anchor=(0.5, 0.98),
+               ncol=len(legend_labels), frameon=True)
     
-    # überschüssige Achsen ausblenden
-    for ax in axes[len(folder_indices):]:
-        ax.axis('off')
-    
-    plt.tight_layout()
+
+    plt.tight_layout(rect=[0, 0, 1, 0.91])
     plt.show()
 
 
+
+def plot_multiple_with_reference(folder_indices):
+    """
+    Untereinander angeordnete Sub-Plots mit
+    • Actual-Pfad (durchgezogen)
+    • Referenztrajektorie (strich-punktiert), falls vorhanden
+    • gemeinsamer Legende oberhalb der Figure
+    """
+    n = len(folder_indices)
+    fig, axes = plt.subplots(
+        nrows=n, ncols=1,
+        figsize=(7.29, 2.1 * n),      # gleicher Figure-Höhen-Faktor
+        sharex=True, sharey=True
+    )
+    if n == 1:
+        axes = [axes]                 # immer iterierbar
+
+    legend_handles, legend_labels = None, None
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+
+       
+        # ---------- 1) Actual Path -------------------------------
+        df_act = pd.read_csv(os.path.join(folder, actual_path_file))
+        ln_act, = ax.plot(df_act['x'], df_act['y'],
+                          lw=2, label="Tatsächlicher Fahrtverlauf")
+
+        # ---------- 2) Referenztrajektorie (optional) ------------
+        ref_file = os.path.join(folder, reference_file)
+        if os.path.isfile(ref_file):
+            df_ref = pd.read_csv(ref_file)
+            ax.plot(df_ref['x'], df_ref['y'],
+                    ls='-.', lw=1.5, color=my_palette[1],
+                    label="Referenztrajektorie")
+        else:
+            print(f"Keine Referenz in {folder}, übersprungen.")
+
+        # ---------- 3) Hindernis --------------------------------
+        ox, oy = obstacle['obsXrl'], 0.0
+        ow, oh = obstacle['obslength'], obstacle['obsYrl']
+        ax.add_patch(Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5))
+        ax.add_patch(Rectangle((ox - safezone, oy - safezone),
+                               ow + 2*safezone, oh + 2*safezone,
+                               fill=False, ls='--', ec='red'))
+
+        # ---------- Achsentitel, Gitter usw. --------------------
+        ax.set_title(label, fontsize=11)
+        ax.set_ylabel(r'$y$ in $\mathrm{m}$',fontsize=11)
+        ax.grid(True)
+
+        # ---------- Legenden-Handles einmalig sammeln -----------
+        if legend_handles is None:
+            legend_handles, legend_labels = ax.get_legend_handles_labels()
+
+    # nur unterste Achse bekommt x-Beschriftung
+    axes[-1].set_xlabel(r'$x$ in $\mathrm{m}$',fontsize=11)
+
+    # gemeinsame Legende OBEN (gleiche Optik wie predictions-Plot)
+    fig.legend(legend_handles, legend_labels,
+               loc='upper center', bbox_to_anchor=(0.5, 0.98),
+               ncol=len(legend_labels), frameon=True)
+
+    # Layout anpassen, damit Legende nicht abgeschnitten wird
+    plt.tight_layout(rect=[0, 0, 1, 0.91])
+    plt.show()
+
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+from matplotlib.lines import Line2D
+
+def plot_multiple_with_reference2(folder_indices):
+    """
+    Untereinander angeordnete Sub-Plots mit:
+    • Tatsächlicher Fahrtverlauf (durchgezogen)
+    • Vorhergesagte Trajektorie (gestrichelt)
+    • Referenztrajektorie (strich-punktiert), falls vorhanden
+    • Gemeinsamer Legende oberhalb der Figure (zentriert)
+    """
+    n = len(folder_indices)
+    fig, axes = plt.subplots(
+        nrows=n, ncols=1,
+        figsize=(7.29, 2.1 * n),
+        sharex=True, sharey=True
+    )
+    if n == 1:
+        axes = [axes]
+
+    for ax, idx in zip(axes, folder_indices):
+        folder = folders[idx]
+        label  = labels[idx]
+
+        # ---------- Vorhergesagte Trajektorie --------------------
+        df_pred = pd.read_csv(os.path.join(folder, predictions_file))
+        traj_ids = df_pred['trajectory_id'].unique()
+        for i, (traj_id, traj) in enumerate(df_pred.groupby('trajectory_id')):
+            ax.plot(traj['x'], traj['y'],
+                    color=my_palette[1], linestyle='--',
+                    linewidth=1, alpha=0.7,
+                    label="Vorhergesagte Trajektorie" if i == 0 else None)
+
+        # ---------- Tatsächlicher Fahrtverlauf ------------------
+        df_act = pd.read_csv(os.path.join(folder, actual_path_file))
+        ax.plot(df_act['x'], df_act['y'],
+                lw=2, color='C0',alpha=0.8, label="Tatsächlicher Fahrtverlauf")
+
+        # ---------- Referenztrajektorie (optional) --------------
+        ref_file = os.path.join(folder, reference_file)
+        if os.path.isfile(ref_file):
+            df_ref = pd.read_csv(ref_file)
+            ax.plot(df_ref['x'], df_ref['y'],
+                    ls='-.', lw=1.5, color=my_palette[3],alpha=0.6,
+                    label="Referenztrajektorie")
+        else:
+            print(f"Keine Referenz in {folder}, übersprungen.")
+
+        # ---------- Hindernis -----------------------------------
+        ox, oy = obstacle['obsXrl'], 0.0
+        ow, oh = obstacle['obslength'], obstacle['obsYrl']
+        ax.add_patch(Rectangle((ox, oy), ow, oh, color='gray', alpha=0.5))
+        ax.add_patch(Rectangle((ox - safezone, oy - safezone),
+                               ow + 2*safezone, oh + 2*safezone,
+                               fill=False, ls='--', ec='red'))
+
+        # ---------- Achsentitel, Gitter usw. --------------------
+        ax.set_title(label, fontsize=11)
+        ax.set_ylabel(r'$y$ in $\mathrm{m}$', fontsize=11)
+        ax.grid(True)
+
+    # Nur unterste Achse bekommt x-Beschriftung
+    axes[-1].set_xlabel(r'$x$ in $\mathrm{m}$', fontsize=11)
+
+    # ---------- Gemeinsame Legende oberhalb --------------------
+    legend_handles = [
+        Line2D([0], [0], color='C0',alpha=0.9, lw=2, label="Tatsächlicher Fahrtverlauf"),
+        Line2D([0], [0], color=my_palette[1], lw=1, linestyle='--', label="Vorhergesagte Trajektorie"),
+        Line2D([0], [0], color=my_palette[3],alpha=0.6, lw=1.5, linestyle='-.', label="Referenztrajektorie"),
+    ]
+
+    fig.legend(handles=legend_handles,
+               loc='upper center', bbox_to_anchor=(0.5, 0.98),
+               ncol=3, frameon=True)
+
+    # Platz für die Legende lassen
+    plt.tight_layout(rect=[0, 0, 1, 0.91])
+    plt.show()
+
 def plot_multiple_theta(folder_indices):
     """
-    Zeichnet für jeden Index in folder_indices einen eigenen Subplot
-    mit der actual-theta-Kurve gegen die X-Position, untereinander angeordnet.
+    Subplots im 2-Spalten-Raster mit:
+    • je Plot: theta über x
+    • Titel über jedem Plot
+    • y-Achsenticks und Label nur links
+    • x-Achsenticks und Label nur unten
+    • Gemeinsame Legende über der Figure
     """
     n = len(folder_indices)
     ncols = 2
     nrows = math.ceil(n / ncols)
-    
+
     fig, axes = plt.subplots(
         nrows=nrows, ncols=ncols,
-        figsize=(3.65 * ncols, 1.8 * nrows),
+        figsize=(3.65 * ncols, 2.1 * nrows),
         sharex=True, sharey=True
     )
     axes = axes.flatten()
 
-    for ax, idx in zip(axes, folder_indices):
+    legend_handles, legend_labels = None, None
+
+    for plot_no, (ax, idx) in enumerate(zip(axes, folder_indices)):
         folder = folders[idx]
         label  = labels[idx]
         theta_path = os.path.join(folder, actual_theta_file)
@@ -798,33 +1008,46 @@ def plot_multiple_theta(folder_indices):
         if os.path.isfile(theta_path) and os.path.isfile(path_path):
             df_theta = pd.read_csv(theta_path)
             df_path  = pd.read_csv(path_path)
-            ax.plot(
-                df_path['x'], df_theta['theta'],
-                linestyle='-', linewidth=1.5,
-                label=f"{label}"
-            )
+            ln, = ax.plot(df_path['x'], df_theta['theta'],
+                          linestyle='-', linewidth=1.5,
+                          label=r"Orientierung $\psi$")
         else:
             missing = theta_path if not os.path.isfile(theta_path) else path_path
             ax.text(0.5, 0.5,
                     f"Datei nicht gefunden:\n{missing}",
                     ha='center', va='center', color='red')
+            ax.axis('off')
+            continue
 
-        ax.set_ylabel('θ [rad]', fontsize=12)
-        ax.tick_params(axis='both', labelsize=10)
-        ax.legend(fontsize='small')
+        ax.set_title(label, fontsize=11)
         ax.grid(True)
 
-    # Entferne überzählige leere Subplots
+        # Nur linke Spalte → y-Achsenbeschriftung
+        if plot_no % ncols == 0:
+            ax.set_ylabel(r'$\psi$ in $\mathrm{rad}$', fontsize=11)
+        else:
+            ax.tick_params(labelleft=False)
+
+        # Nur unterste Zeile → x-Achsenbeschriftung
+        if plot_no >= (nrows - 1) * ncols:
+            ax.set_xlabel(r'$x$ in $\mathrm{m}$', fontsize=11)
+        else:
+            ax.tick_params(labelbottom=False)
+
+        if legend_handles is None:
+            legend_handles, legend_labels = ax.get_legend_handles_labels()
+
+    # Überzählige leere Subplots entfernen
     for ax in axes[n:]:
         ax.remove()
 
-    # X-Beschriftung nur in der untersten Zeile
-    for ax in axes[-ncols:]:
-        ax.set_xlabel('X [m]', fontsize=12)
+    # Gemeinsame Legende oberhalb
+    fig.legend(legend_handles, legend_labels,
+               loc='upper center', bbox_to_anchor=(0.5, 0.98),
+               ncol=len(legend_labels), frameon=True)
 
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.91])
     plt.show()
-
 
 def plot_multiple_control_inputs(folder_indices):
     """
@@ -834,7 +1057,7 @@ def plot_multiple_control_inputs(folder_indices):
     n = len(folder_indices)
     fig, axes = plt.subplots(
         nrows=n, ncols=1,
-        figsize=(12, 2.5*n),
+        figsize=(12, 2.1*n),
         sharex=True
     )
 
@@ -918,69 +1141,85 @@ def plot_multiple_control_inputs_vs_x(folder_indices):
 
         axes[-1].set_xlabel('X [m]')
         plt.tight_layout()
+        plt.savefig('control_inputs_vs_x.svg', format='svg')
         plt.show()
 
 def plot_multiple_control_inputs_vs_x2(folder_indices,
-                                      control_inputs_file='mpc_data_control_inputs.csv',
-                                      actual_path_file='mpc_data_actual_path.csv'):
+                                       control_inputs_file='mpc_data_control_inputs.csv',
+                                       actual_path_file='mpc_data_actual_path.csv'):
     """
-    Für jede Index in folder_indices einen Subplot mit u1–u4 gegen x.
-    Interpoliert x an den Zeitpunkten der Steuergrößen.
+    Für jeden Index in folder_indices einen Sub-Plot (Gitter 2 Spalten) mit
+    u1–u4 über x.
+    • Legende für u-Kurven einmalig oberhalb der Figure
+    • Titel je Sub-Plot = Konfig-Label
+    • x-Beschriftung nur in der untersten Zeile
+    • y-Beschriftung ('rad/s') + Ticks nur links außen
     """
     n = len(folder_indices)
     ncols = 2
     nrows = math.ceil(n / ncols)
-    fig, axes = plt.subplots(nrows=nrows, ncols=ncols,
-                             figsize=(3.65 * ncols, 1.8 * nrows),
-                             sharex=False)
-    # axes flach machen für einfachen Zugriff
-    axes = axes.flatten()
-    # axes flach machen für einfachen Zugriff
-    
-    if n == 1:
-        axes = [axes]
 
-    for ax, idx in zip(axes, folder_indices):
+    fig, axes = plt.subplots(
+        nrows=nrows, ncols=ncols,
+        figsize=(3.65 * ncols, 2.3 * nrows),
+        sharex=False
+    )
+    axes = axes.flatten()
+
+    legend_handles, legend_labels = None, None
+
+    for plot_no, (ax, idx) in enumerate(zip(axes, folder_indices)):
         folder = folders[idx]
         label  = labels[idx]
 
         ci_path = os.path.join(folder, control_inputs_file)
         ap_path = os.path.join(folder, actual_path_file)
+
         if not os.path.isfile(ci_path) or not os.path.isfile(ap_path):
-            ax.text(0.5, 0.5, f"Datei fehlt:\n{ci_path}\n{ap_path}",
-                    ha='center', va='center', color='red')
-            ax.set_ylabel(label)
+            ax.text(0.5, 0.5, "Datei fehlt", ha='center', va='center', color='red')
+            ax.axis('off')
             continue
 
         df_ci = pd.read_csv(ci_path)
         df_ap = pd.read_csv(ap_path)
 
-        # --- Interpolation: Voraussetzung ist eine gemeinsame Zeitspalte 't' in beiden DataFrames
         if 't' in df_ci.columns and 't' in df_ap.columns:
-            # Stelle sicher, dass df_ap nach t sortiert ist
             df_ap = df_ap.sort_values('t')
-            # Interpoliere x-Werte an den Zeitpunkten der Steuergrößen
             x_ci = np.interp(df_ci['t'], df_ap['t'], df_ap['x'])
         else:
-            # Fallback: einfach auf die minimale Länge trimmen
-            N = min(len(df_ci), len(df_ap))
-            x_ci = df_ap['x'].values[:N]
-            df_ci = df_ci.iloc[:N]
+            Nmin = min(len(df_ci), len(df_ap))
+            x_ci = df_ap['x'].values[:Nmin]
+            df_ci = df_ci.iloc[:Nmin]
 
-        # Plot der Stellgrößen gegen das interpolierte x
-        for col in ['u1','u2','u3','u4']:
+        name_map = {'u1': r'$u_1$', 'u2': r'$u_2$', 'u3': r'$u_3$', 'u4': r'$u_4$'}
+        for col in ['u1', 'u2', 'u3', 'u4']:
             if col in df_ci.columns:
-                ax.plot(x_ci, df_ci[col].values,
-                        label=col, linewidth=1)
+                ln, = ax.plot(x_ci, df_ci[col].values, lw=1, label=name_map[col])
 
-        ax.set_ylabel(label)
+        ax.set_title(label, fontsize=10)
         ax.grid(True)
-        ax.legend(fontsize='x-small')
 
-    axes[-1].set_xlabel('X [m]')
-    plt.tight_layout()
+        # y-Achsenbeschriftung + Ticks nur links
+        if plot_no % ncols == 0:
+            ax.set_ylabel(r'$\omega$ in $\mathrm{rad/s}$')
+        else:
+            ax.tick_params(labelleft=False)
+
+        if legend_handles is None:
+            legend_handles, legend_labels = ax.get_legend_handles_labels()
+
+    for ax in axes[-ncols:]:
+        ax.set_xlabel(r'$x$ in $\mathrm{m}$')
+
+    for ax in axes[n:]:
+        ax.axis('off')
+
+    fig.legend(legend_handles, legend_labels,
+               loc='upper center', bbox_to_anchor=(0.5, 0.98),
+               ncol=len(legend_labels), frameon=True)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.89])
     plt.show()
-
 
 
 
@@ -995,21 +1234,22 @@ if __name__ == '__main__':
         print(f"{labels[idx]:20s} → MaxLatErr = {me_lat:.4f} m,  RMSE_Lat = {r_lat:.4f} m")
     
     
-    plot_all_lateral_errors(ref_index=0)
+    #plot_all_lateral_errors(ref_index=0)
+    #plot_multiple_with_predictions_zoom([0, 1])
     plot_multiple_with_predictions([ 1,2])
-    #plot_multiple_with_reference([ 1,2,3,4])
-    plot_multiple_control_inputs_vs_x2([1,2])
+    #plot_multiple_with_reference2([ 1,2])
+    #plot_multiple_control_inputs_vs_x2([1,2])
     #plot_multiple_theta([0, 1])
     #plot_actual_paths()
     
-    plot_control_inputs(4)
+    #plot_control_inputs(1)
     #plot_error_vs_x(ref_index=0, act_index=2, N=1000)
     #plot_single_with_predictions(2)    
     #plot_all_actual_theta()
     #plot_single_theta_with_predictions(2)
-    #plot_solve_times_single(1)
-    #plot_solve_times_single2(1)
-    #plot_solve_times_summary()
+    plot_solve_times_single(3)
+    plot_solve_times_single2(3)
+    plot_solve_times_summary()
     #plot_multiple_control_inputs([ 0,1,2,3])
     
     totals, means, mins, maxs = plot_solve_times_summary()
@@ -1022,8 +1262,8 @@ if __name__ == '__main__':
     
     # Option B: Pro Konfiguration schön formatieren
     for label, tot, avg, lo, hi in zip(labels, totals, means, mins, maxs):
-        print(f"{label:>5s} → total: {tot:.4f}s, mean: {avg:.4f}s, "
-              f"min: {lo:.4f}s, max: {hi:.4f}s")
+       print(f"{label:>5s} → total: {tot:.4f}s, mean: {avg:.4f}s, "
+            f"min: {lo:.4f}s, max: {hi:.4f}s")
 
     
     pass

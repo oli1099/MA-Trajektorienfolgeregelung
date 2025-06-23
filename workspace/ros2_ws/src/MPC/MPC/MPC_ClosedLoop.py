@@ -15,7 +15,6 @@ from .MPC_OpenLoop import QP
 from .SystemModel import DynamicModel
 from .SaveData import SaveData
 
-import sys
 
 class MPCClosedLoop(Node):
     def __init__(self):
@@ -74,8 +73,6 @@ class MPCClosedLoop(Node):
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
-        #self.actual_u.append(self.u0[0],self.u0[1])
-
         #Speicher für geschlossenen Trajektorie
         self.x_cl = []
         self.u_cl = []
@@ -93,38 +90,10 @@ class MPCClosedLoop(Node):
         
         self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten()))
         
-
         #QP initzialisieren
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
                                               self.N, self.nx, self.nu, self.Ts)
         
-    '''def set_init_pose(self):
-        """
-        Wird einmalig aufgerufen, um die Startpose an '/set_pose' zu senden.
-        Danach wird der Timer deaktiviert, damit nicht erneut publiziert wird.
-        """
-        msg = PoseWithCovarianceStamped()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'odom'  # oder 'odom' oder ein anderes Frame
-
-        # Gewünschte Startposition + Orientierung
-        msg.pose.pose.position.x = 0.0
-        msg.pose.pose.position.y = 0.5
-        msg.pose.pose.position.z = 0.0
-        msg.pose.pose.orientation.x = 0.0
-        msg.pose.pose.orientation.y = 0.0
-        msg.pose.pose.orientation.z = 0.0
-        msg.pose.pose.orientation.w = 1.0
-
-        # Kovarianzmatrix initial auf 0
-        msg.pose.covariance = [0.0]*36
-
-        self.get_logger().info("Publishing initial pose (x=0.0, y=0.5).")
-        self.set_position.publish(msg)
-
-        # Timer ausschalten, damit die Nachricht nicht dauernd gesendet wird.
-        self.destroy_timer(self.set_pose_timer)
-        self.set_initial_position = True'''
 
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
@@ -134,10 +103,13 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-        
 
-        #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
-          
+    # Cloded Loop wird alle 100ms aufgerufen
+    # Hier wird die MPC Regelung durchgeführt
+    # und die optimale Stellgröße u an den Roboter gesendet
+    # und der aktuelle Zustand x_pred gespeichert
+    # Wenn der Roboter nahe genug an der Referenz ist, wird der Roboter gestoppt
+    # und die Daten gespeichert    
     def mpc_closedloop(self):
         if self.xmeasure_received is None: # and self.set_initial_position is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
@@ -160,7 +132,6 @@ class MPCClosedLoop(Node):
             self.timer.cancel()
             return
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
-        #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
         
         t0 = time.perf_counter()        
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
@@ -174,7 +145,6 @@ class MPCClosedLoop(Node):
         self.predictions_list.append(x_opt.copy())
         self.predictions_u.append(u_opt.copy())
         self.actual_u.append(u_cl.copy())
-
         
         self.get_logger().info(f"Optimale Zustände: {x_opt}")
 
@@ -193,21 +163,6 @@ class MPCClosedLoop(Node):
 
         self.get_logger().info(f'z0: {self.z0}')
 
-        '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
-        for k in range(self.N):
-            z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
-        #Letzter Zustand wird nochmal drangehängt 
-        z0_new[self.N*self.nx : (self.N+1)*self.nx] = x_opt[:, self.N]
-        
-        #Analog für U
-        for k in range(self.N-1):
-            z0_new[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]=u_opt[:,k+1]
-        
-        # U nochmal dranhängen
-        z0_new[(self.N+1)*self.nx + (self.N-1)*self.nu:(self.N+1)*self.nx + self.N*self.nu]= u_opt[:,self.N-1]
-
-        self.z0 = z0_new'''
-
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
         v_robot = self.mpc_model.get_velocity(u_cl)  
@@ -218,9 +173,6 @@ class MPCClosedLoop(Node):
         twist.linear.y = float(v_robot[1])
         twist.angular.z = float(v_robot[2])
         self.control_pub.publish(twist)
-
-        
-
 
     def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)

@@ -14,7 +14,6 @@ class DynamicModel:
                  k=10.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
                  Ts=0.1):          # Abtastzeit
                 
-            
             self.m = m
             self.I = I
             self.lx = lx
@@ -97,15 +96,13 @@ class DynamicModel:
                 v_vec = np.array([vx, vy, theta])
 
                 return (M @ v_vec) / self.r
-               
-               
 
 if __name__ == "__main__":
        omega_vec = np.array([20,20,20,20])
        mpc_model = DynamicModel()
        mpc_model.continuous_model()
        v = mpc_model.get_velocity(omega_vec)
-       omega = mpc_model.get_omega(0.2, 0.0, 0)
+       omega = mpc_model.get_omega(0.2, 0.10, 0)
        print("omega:\n", omega)
        print("V:\n", v)
        print("Ac:\n", mpc_model.A_d)

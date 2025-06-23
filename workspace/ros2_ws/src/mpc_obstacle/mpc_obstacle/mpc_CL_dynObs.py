@@ -16,9 +16,6 @@ from .mpc_OL_dynObs import QP
 from MPC.SystemModel import DynamicModel
 from MPC.SaveData import SaveData
 
-
-import sys
-
 class MPCClosedLoop(Node):
     def __init__(self):
         super().__init__('mpc_closed_loop')
@@ -110,7 +107,6 @@ class MPCClosedLoop(Node):
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Safezone, 
                                               self.Nc, self.Np, self.nx, self.nu, self.Ts)
         
-        
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
                                   msg.pose.pose.position.y, #y
@@ -131,10 +127,6 @@ class MPCClosedLoop(Node):
 
         xmin = carX
         xmax = 1e6
-
-        #y_min= self.road_width
-        #y_max = self.road_width/2
-
         adjence_lanecenter = self.road_width/2 
 
         # Schwellenwert wann das Auto in der linken spur ist 
@@ -166,50 +158,7 @@ class MPCClosedLoop(Node):
                
                # Hier den Code anpassen, dass nachdem der Roboter das hinderniss überholt hat, die Obere grenze für y der Obere Rand der Spur ist
                # generell self.road_width/2 überprüfen
-
-
-
-
-            '''if carX >= obsXrl + obslength + 2*self.Safezone + self.return_distance:
-                    cS = 0
-                    cI = -self.road_width/2
-            elif carX >= obsXrl + obslength + 2*self.Safezone:
-                cS = np.tan(np.arctan2((0 - carY), (self.return_distance)))#(-self.road_width/2)/(self.return_distance)
-                cI = obsYrl - cS * (obsXrl + obslength + 2*self.Safezone)
-                xmax= obsXrl + obslength + 2*self.Safezone + self.return_distance
-            else:
-                cS = 0
-                cI = obsYrl -0.1 
-                xmax = 1e6#Hier kommt der Schlenker hinzu, wenn nicht, dann infeasable'''
         return cS, cI, xmin, xmax
-    
-    '''def save_data_to_csv(self,filename= 'MPC_dynObs_Data' ):
-            # Erstelle den Header: Zeitstempel, aktuelle x, aktuelle y, dann für jeden Vorhersageschritt pred_x_i und pred_y_i.
-        header = ['timestamp', 'actual_x', 'actual_y']
-        for i in range(self.Np + 1):
-            header.append(f'pred_x_{i}')
-            header.append(f'pred_y_{i}')
-        
-        # Öffne die CSV-Datei zum Schreiben
-        with open(filename, mode='w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(header)
-            
-            # Gehe über alle gespeicherten Messungen und Vorhersagen
-            # Es wird hier angenommen, dass self.actual_path und self.predictions_list synchron gefüllt werden.
-            for act, pred in zip(self.actual_path, self.predictions_list):
-                # Zeitstempel (hier aktueller Zeitwert)
-                row = [time.time(), act[0], act[1]]
-                # pred ist ein NumPy-Array der Form (nx, Np+1)
-                # Wir extrahieren hier die x- und y-Koordinaten, also die ersten beiden Zeilen
-                pred_x = pred[0, :]
-                pred_y = pred[1, :]
-                # Füge für jeden Zeitschritt in der prädizierten Trajektorie die Werte hinzu
-                for x_val, y_val in zip(pred_x, pred_y):
-                    row.append(x_val)
-                    row.append(y_val)
-                writer.writerow(row)'''
-        
     
     def mpc_closedloop(self):
         if self.xmeasure_received is None:
@@ -262,8 +211,6 @@ class MPCClosedLoop(Node):
         # Verschieben der Eingänge: Entferne das erste Eingangselement und hänge den letzten Eingang an
         u_warm = np.hstack((u_opt[:, 1:], u_opt[:, -1:]))
 
-        #slacks_warm = np.hstack((slack_opt[1:], slack_opt[-1:]))
-
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))#, slacks_warm.flatten()))
         #z0_new[0:self.nx] = self.xmeasure
@@ -287,8 +234,6 @@ class MPCClosedLoop(Node):
         return math.atan2(siny_cosp, cosy_cosp)
     
     def plot_callback(self):
-        #self.ax.clear()
-
         # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
         for i, pred in enumerate(self.predictions_list):
                 self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)

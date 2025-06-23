@@ -1,5 +1,3 @@
-
-
 import numpy as np
 import casadi as ca
 from scipy.linalg import expm, block_diag
@@ -17,8 +15,6 @@ class QP:
         self.nu = nu
         self.Ts = Ts
 
-        #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
-    
         if solver_opts  is None:
             solver_opts = {"print_time":0}
         
@@ -30,7 +26,6 @@ class QP:
         P = ca.SX.sym('P',nx +nx*(N+1))
         x_0 = P[0:nx]
         
-
         #Inititalisieren der Kostenfunktion und der Anfangsbedingung
         cost = 0
         g = []
@@ -93,11 +88,8 @@ class QP:
 
         #Warmstart immer der vorherige Zustand
 
-        #self.z0 = np.zeros(self.zdim)
-
     def solveMPC(self,x_current, x_ref,z0):
-        #P_val = np.concatenate([x_current,x_ref])
-        
+    
         P_val = []
         P_val.extend(x_current)  # dimension nx
         for k in range(self.N+1):
@@ -118,28 +110,3 @@ class QP:
 
         return x_opt, u_opt
         
-'''if __name__ == "__main__":
-    # KLEINER TEST
-
-    # Beispielsystem
-    nx = 3
-    nu = 2
-    N  = 5
-    Ts = 0.1
-    
-    A_d = np.eye(nx)
-    B_d = np.ones((nx, nu))*0.1
-    
-    Q  = np.eye(nx)*1.0
-    R  = np.eye(nu)*0.1
-    QN = np.eye(nx)*2.0
-    
-    for i in range(N):
-        mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
-    
-        x0 = np.array([0.0, 0.0, 0.0])
-        x_ref = np.array([2.0, 3.0, 0.0])
-    
-        U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
-        print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)'''

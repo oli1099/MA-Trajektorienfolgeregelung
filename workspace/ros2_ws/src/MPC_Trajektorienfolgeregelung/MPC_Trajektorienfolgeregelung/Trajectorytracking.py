@@ -1,362 +1,280 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+trajectory_pcontroller.py – ROS2-Node für trajektorienfolgende Regelung
+mit Proportional-Controller und MPC für ein Mecanum-Fahrgestell.
+"""
+
+from __future__ import annotations
+import math
+from pathlib import Path
+
+import numpy as np
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
-from ros_robot_controller_msgs.msg import MotorsState, MotorState
-import numpy as np
-import math
-import time
-import matplotlib.pyplot as plt
-from pathlib import Path 
+from ros_robot_controller_msgs.msg import MotorsState
+
 from controller.mecanum import MecanumChassis
 from MPC.SystemModel import DynamicModel
 from MPC.SaveData import SaveData
+import matplotlib.pyplot as plt
 
-class TrajectoryPController(Node):
-    def __init__(self):
+# -----------------------------------------------------------------------------
+# Konfigurationsparameter
+# -----------------------------------------------------------------------------
+TRAJECTORY_CSV: Path = Path(
+    '/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung'
+    '/workspace/ros2_ws/src/MPC_Trajektorienfolgeregelung'
+    '/MPC_Trajektorienfolgeregelung/traj.csv'
+)
+LOOKAHEAD_DISTANCE: float = 0.01  # Look-ahead-Abstand [m]
+APPROACH_SPEED_MAX: float = 0.1   # maximaler Approach-Speed [m/s]
+V_REF: float = 0.1               # Soll-Geschwindigkeit [m/s]
+TOLERANCE: float = 0.05          # Wegpunkt-Toleranz [m]
+P_GAIN_LAT: float = 0.5          # Querfehler-Gain
+P_GAIN_PSI: float = 1.0         # Heading-Gain
+
+class TrajectoryPController(Node):  # pylint: disable=too-many-instance-attributes
+    """
+    ROS2-Node für die Trajektorienverfolgung.
+    Liest Wegpunkte aus einer CSV, berechnet P-Steuerung und MPC
+    und publiziert Rad- und Befehlsgeschwindigkeiten.
+    """
+
+    def __init__(self) -> None:
         super().__init__('trajectory_pcontroller')
-        """[(0.0,0,0),(0.5,0,0),(1,0,0),(1,0.5,0.0),(1,1,0)]"""
-        # Trajektorie festlegen
-       # self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
-        self.trajectory = [
-    (0.00, 0.00, 0),
-    (0.06, 0.00, 0),
-    (0.14, 0.00, 0),
-    (0.26, 0.00, 0),
-    (0.34, 0.00, 0),
-    (0.42, 0.00, 0),
-    (0.51, 0.06, 0),
-    (0.56, 0.12, 0),
-    (0.63, 0.18, 0),
-    (0.69, 0.23, 0),
-    (0.76, 0.29, 0),
-    (0.85, 0.34, 0),
-    (0.93, 0.36, 0),
-    (1.05, 0.38, 0),
-    (1.13, 0.38, 0),
-    (1.23, 0.39, 0),
-    (1.33, 0.40, 0),
-    (1.43, 0.40, 0),
-    (1.53, 0.40, 0),
-    (1.63, 0.40, 0),
-    (1.73, 0.40, 0),
-    (1.83, 0.40, 0),
-    (1.93, 0.39, 0),
-    (2.07, 0.37, 0),
-    (2.16, 0.32, 0),
-    (2.21, 0.28, 0),
-    (2.28, 0.22, 0),
-    (2.34, 0.16, 0),
-    (2.40, 0.09, 0),
-    (2.46, 0.04, 0),    
-    (2.52, 0.00, 0),
-    (2.58, 0.00, 0),
-    (2.64, 0.00, 0),
-    (2.70, 0.00, 0),
-    (2.76, 0.00, 0),
-    (2.82, 0.00, 0),
-    (2.88, 0.00, 0),
-    (2.94, 0.00, 0),
-    (3.00, 0.00, 0)
-]
-        # CSV laden
-        csv_file = Path('/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/MPC_Trajektorienfolgeregelung/MPC_Trajektorienfolgeregelung/traj.csv')
 
-        data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
-        # Spalten: [t, x, y, yaw]
-        xs   = data[:,1]
-        ys   = data[:,2]
-        yaws = data[:,3]
-        # Liste von Tripeln (x,y,yaw)
-        self.trajectory = list(zip(xs, ys, yaws))
-        
-        #self.lookahead = 0.12   # (m) Abstand, um einen Punkt auf der Pfad­gerade vorauszuwählen
-        self.k_lat = 0.5          # Querfehler-Gain
-        self.k_psi = 1.0          # Heading-Gain
-        #self.k_s = 1           # Längsfehler-Gain
+        # Trajektorie aus CSV laden
+        data = np.loadtxt(TRAJECTORY_CSV, delimiter=',', skiprows=1)
+        # Daten: [t, x, y, yaw]
+        self.trajectory: list[tuple[float, float, float]] = [
+            (row[1], row[2], row[3]) for row in data
+        ]
 
-        self.Ua_max    = 0.1   # maximaler Approach-Speed
-        self.Lp        = 0.01 # fester Look-ahead-Abstand
-        self.Vref= 0.1
-     
+        # Steuerungsparameter
+        self.lp = LOOKAHEAD_DISTANCE
+        self.ua_max = APPROACH_SPEED_MAX
+        self.v_ref = V_REF
+        self.tolerance = TOLERANCE
+        self.k_lat = P_GAIN_LAT
+        self.k_psi = P_GAIN_PSI
 
-        self.start_timer = None
-        #self.start_time =None
-        self.log_data   = []
+        # Initialisierung
+        self.start_time: rclpy.time.Time | None = None
+        self.current_position: tuple[float, float] | None = None
+        self.current_orientation: float = 0.0
 
+        # Datenlogging
+        self.actual_path: list[tuple[tuple[float, float], float]] = []
+        self.actual_u: list[np.ndarray] = []
+        self.solve_times: list[float] = []
 
-        #Startposition und aktuelle Position initzialisieren
-        self.start_position = None
-        self.current_position = None # enthält x,y
-        self.current_orientation = 0
+        # Modelle
+        self.mecanum = MecanumChassis()
+        self.mpc = DynamicModel()
 
-        #Feedforward konstante geschwindigkeit
+        # ROS2 Publisher & Subscriber
+        self.motor_pub = self.create_publisher(
+            MotorsState, 'ros_robot_controller/set_motor', 10
+        )
+        self.odom_sub = self.create_subscription(
+            Odometry, 'odom', self.odom_callback, 10
+        )
+        self.cmd_pub = self.create_publisher(Twist, 'cmd_vel', 10)
 
-        self.v_ff= 0.2
+        # Timer für Regel- und Plotschleife
+        self.control_timer = self.create_timer(0.1, self.control_loop)
+        self.plot_timer = self.create_timer(1.0, self.plot_callback)
 
-        # Liste für aktuelle path
-        self.mpc_model = DynamicModel()
-        self.actual_path = []
-        self.actual_u = []
-        self.predictions_list = []
-        self.actual_theta = []
-        self.predicted_theta_list = [] 
-        self.solve_times = []         
-
-
-        #Index für die Stützpunkte
-        self.waypoints_index = 0
-        
-        #Toleranz für Wegpunkt erreicht
-        self.tolerence = 0.05
-
-        #Regelparameter
-
-        self.k = 0.5
-        self.k_ang = 1
-
-        #Mecanum-Chassis Objekt erstellen
-        self.mecanum_chassis = MecanumChassis()
-
-        #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
-        self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
-        self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
-        self.stop_pub = self.create_publisher(Twist,'cmd_vel',10)
-
-        self.timer = self.create_timer(0.1, self.control_loop)
-        self.plot_timer = self.create_timer(1, self.plot_callback)
-        #self.shutdowntimer = self.create_timer(2,self.stop_robot)
-
+        # Echtzeit-Plot aktivieren
         plt.ion()
-        plt.show()
-        self.fig ,self.ax = plt.subplots()
+        self.fig, self.ax = plt.subplots()
         self.fig_u, self.ax_u = plt.subplots()
-        
-    def odom_callback(self,msg):
-        self.current_position = (msg.pose.pose.position.x,msg.pose.pose.position.y)
-        self.current_orientation = self.quaternion_to_yaw(msg.pose.pose.orientation)
 
-        #if self.current_position is not None:
-           
+    def odom_callback(self, msg: Odometry) -> None:
+        """
+        Verarbeitet Odometry-Updates, speichert Pose und Startzeit.
+        """
+        self.current_position = (
+            msg.pose.pose.position.x,
+            msg.pose.pose.position.y
+        )
+        self.current_orientation = self._quaternion_to_yaw(
+            msg.pose.pose.orientation
+        )
+        if self.start_time is None:
+            self.start_time = self.get_clock().now()
 
-        if self.start_timer is None:
-            self.start_timer = self.get_clock().now()
-            #self.start_time = time.perf_counter()
+    @staticmethod
+    def _quaternion_to_yaw(q) -> float:
+        """
+        Konvertiert eine Quaternion in den Yaw-Winkel.
+        """
+        siny = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        return math.atan2(siny, cosy)
 
-        #self.get_logger().info(f"Roboterposition: x = {self.current_position[0]:.4f}, y = {self.current_position[1]:.4f}, z = {self.current_orientation:.4f}")
+    def compute_reference(self) -> tuple[float, float]:
+        """
+        Bestimmt den Look-ahead-Punkt auf der Trajektorie und liefert
+        den LOS-Fehlervektor.
+        """
+        if self.current_position is None:
+            return 0.0, 0.0
 
-    def quaternion_to_yaw(self,q):
-        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
-        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
-        return math.atan2(siny_cosp, cosy_cosp)
-        
-    
-    def compute_reference(self):
-        '''for i, (xr, yr, _) in enumerate(self.trajectory):
-            dx = xr - self.current_position[0] 
-            dy = yr - self.current_position[1] 
-            D = math.hypot(dx, dy)
-
-            if D < self.Lp:
-                continue
-            # Sättigung und Einheitsvektor
-            KV = max(0.0, min(D / self.Lp, 1.0))
-            if D > 0:
-                dir_x = dx / D
-                dir_y = dy / D
-            else:
-                dir_x = dir_y = 0.0
-
-            Vref_x = self.Vref * KV* np.cos(np.arctan2(dir_y, dir_x))
-            Vref_y = self.Vref * KV *np.sin(np.arctan2(dir_y, dir_x))
-            break
-        return Vref_x, Vref_y '''
-
-        #f
-        
-        # 1) nächster Pfad-Index
+        # Index des nächsten Wegpunkts
         p = np.array(self.current_position)
         dists = [np.linalg.norm(p - np.array(pt[:2])) for pt in self.trajectory]
         i_min = int(np.argmin(dists))
-        self.waypoints_index = i_min
-        # 2) segmentweises Fortzählen bis Lp erreicht
-        dist_acc = 0.0
-        idx   = i_min
-        while idx < len(self.trajectory)-1 and dist_acc < self.Lp:
-            p0 = np.array(self.trajectory[idx][:2])
-            p1 = np.array(self.trajectory[idx+1][:2])
-            dist_acc += np.linalg.norm(p1-p0)
-            idx += 1
-        # 3) Zielpunkt
-        x_LA, y_LA, _ = self.trajectory[idx]
-        # 4) LOS-Vektor
-        ex = self.current_position[0] - x_LA
-        ey = self.current_position[1] - y_LA
-        return ex, ey
-        
 
-    
-    
-    def control_loop(self):
-        if self.current_position is None:
+        # Akkumulierte Distanz entlang der Trajektorie
+        dist_acc = 0.0
+        idx = i_min
+        while idx < len(self.trajectory) - 1 and dist_acc < self.lp:
+            p0 = np.array(self.trajectory[idx][:2])
+            p1 = np.array(self.trajectory[idx + 1][:2])
+            dist_acc += np.linalg.norm(p1 - p0)
+            idx += 1
+
+        x_la, y_la, _ = self.trajectory[idx]
+        ex = x_la - self.current_position[0]
+        ey = y_la - self.current_position[1]
+        return ex, ey
+
+    def control_loop(self) -> None:
+        """
+        Regelschleife: Berechnet Fehler, P-Anteil und MPC-Action, publiziert Befehle.
+        """
+        if self.current_position is None or self.start_time is None:
             return
-        now = self.get_clock().now()
-        delta = now - self.start_timer
-        t_rel = delta.nanoseconds * 1e-9
-        self.actual_path.append((self.current_position,t_rel))
+
+        # Relative Zeit
+        elapsed = self.get_clock().now() - self.start_time
+        t_rel = elapsed.nanoseconds * 1e-9
+        self.actual_path.append((self.current_position, t_rel))
+
+        # LOS-Fehler
         ex, ey = self.compute_reference()
 
-        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        v_x = -self.Ua_max * ex/denom
-        v_y = -self.Ua_max * ey/denom
+        # Normierung mit Approach-Speed
+        denom = math.hypot(ex, ey) + self.lp
+        vx = self.ua_max * (ex / denom)
+        vy = self.ua_max * (ey / denom)
 
-        #v_x = -self.v_ff-self.k_lat * ex
-        #v_y = -self.v_ff -self.k_lat * ey
+        # Heading-Regler
+        phi_d = math.atan2(vy, vx)
+        err_phi = math.atan2(
+            math.sin(phi_d - self.current_orientation),
+            math.cos(phi_d - self.current_orientation)
+        )
+        theta = self.k_psi * err_phi
 
-        # Basis als konstant schnelle LOS-Normierung
-        denom = math.sqrt(ex*ex + ey*ey + self.Lp*self.Lp)
-        v_x_norm = -self.Ua_max * ex/denom
-        v_y_norm = -self.Ua_max * ey/denom
+        # MPC-Berechnung der Radraten
+        omega_vec = self.mpc.get_omega(vx, vy, 0)
+        omega_vec = np.clip(omega_vec, -5.0, 5.0)
 
-        # Zusatz-P-Term nur auf Querkomponente
-        #v_x = v_x_norm + (-self.k_lat * ex)
-        #v_y = v_y_norm + (-self.k_lat * ey)
-
-       
-        
-        phi_d = math.atan2(-ex, -ey)
-        # 4) Gierrate aus Heading-Fehler
-        err_phi = math.atan2(math.sin(phi_d - self.current_orientation),
-                             math.cos(phi_d - self.current_orientation))
-        theta = self.k_psi * err_phi      # ggf. eigenes Gain self.k_ang
-
-        omega_vec = self.mpc_model.get_omega(v_x, v_y, 0)
-       
-
-        last_idx = len(self.trajectory)-1
-        if self.waypoints_index == last_idx :#and math.hypot(ex, ey) < self.tolerence:
-            self.stop_robot()
-            return
-
-        #Geschwindigkeit Begrenzung
-        #v_x = max(min(v_x, 0.2298), -0.22989)
-        #v_y = max(min(v_y, 0.2298), -0.2298)
-
-        
-
-        omega_vec = np.clip(omega_vec, -5.0, 5.0)  # Begrenzung der Stellgrößen
-        self.actual_u.append(omega_vec)
-        v_robot =self.mpc_model.get_velocity(omega_vec)
-        #Geschwindigkeit an Motor übergeben
-        motor_v=self.mecanum_chassis.set_velocity(v_x,v_y,theta)
-        self.motor_pub.publish(motor_v)
-        self.actual_u.append(omega_vec)
+        # Motorbefehle
+        motor_msg = self.mecanum.set_velocity(vx, vy, theta)
+        self.motor_pub.publish(motor_msg)
 
         twist = Twist()
-        twist.linear.x = float(v_robot[0])
-        twist.linear.y = float(v_robot[1])
-        twist.angular.z = float(v_robot[2])
-        self.stop_pub.publish(twist)
+        twist.linear.x = float(vx)
+        twist.linear.y = float(vy)
+        twist.angular.z = float(theta)
+        self.cmd_pub.publish(twist)
 
-        self.get_logger().info(f"Target: ({self.trajectory[self.waypoints_index][0]:.2f}, {self.trajectory[self.waypoints_index][1]:.2f}), "
-                              f"Current: {self.current_position}, "
-                                f"v: {v_robot}, "
-                              )
-        
-                      
-        #self.get_logger().info(f"Timer:{self.shutdowntimer}")
-        
-        #Prüfe ob zielpunkt erreicht?
+        # Logging
+        self.actual_u.append(omega_vec)
+        self.get_logger().info(
+            f"e=({ex:.3f},{ey:.3f}), vx={vx:.3f}, vy={vy:.3f}",
+            throttle_duration_sec=1.0
+        )
 
-        #if distance_error < self.tolerence:
-         #   self.get_logger().info(f"Waypoint {self.waypoints_index} erreicht.")
-          #  self.waypoints_index += 1
-            #self.stop_robot()
+        # Abbruch bei letzter Wegpunkt-Erreichung
+        if math.hypot(ex, ey) < self.tolerance and idx == len(self.trajectory) - 1:
+            self.stop_robot()
 
-    def stop_robot(self):
-        motor_stopp  = Twist()
-        motor_stopp.linear.x = 0.0 
-        motor_stopp.linear.y = 0.0
-        motor_stopp.angular.z = 0.0
-        self.stop_pub.publish(motor_stopp)
-        motor_v=self.mecanum_chassis.set_velocity(0,0,0)
-        self.motor_pub.publish(motor_v)
-        self.fig.savefig("trajectorytime_plot1.png")
-        self.fig_u.savefig("u_plot2.png")
-        
-        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u,self.actual_theta, self.predicted_theta_list, self.solve_times)
-        self.saveData.save_all("mpc_data")
-        self.timer.cancel()
+    def stop_robot(self) -> None:
+        """
+        Stoppt den Roboter, speichert Plots und Log-Daten.
+        """
+        # Anhalten
+        stop_cmd = Twist()
+        self.cmd_pub.publish(stop_cmd)
+        self.motor_pub.publish(self.mecanum.set_velocity(0, 0, 0))
 
-        #self.shutdowntimer.cancel()
+        # Plots speichern
+        self.fig.savefig("trajectory_plot.png")
+        self.fig_u.savefig("u_plot.png")
 
-    def plot_callback(self):
+        # Daten speichern
+        sd = SaveData(
+            [],
+            self.actual_path,
+            self.actual_u,
+            [],
+            [],
+            self.solve_times
+        )
+        sd.save_all("mpc_data")
+
+        # Timer abbrechen
+        self.control_timer.cancel()
+        self.plot_timer.cancel()
+
+    def plot_callback(self) -> None:
+        """
+        Visualisiert Soll- und Ist-Trajektorie sowie Radgeschwindigkeiten in Echtzeit.
+        """
         if not self.actual_path:
             return
-          
+
+        # Solltrajektorie
+        xs, ys, _ = zip(*self.trajectory)
         self.ax.cla()
+        self.ax.plot(xs, ys, 'r--', label='Solltrajektorie')
 
-        # Solltrajektorie extrahieren
-        traj_x = [pt[0] for pt in self.trajectory]
-        traj_y = [pt[1] for pt in self.trajectory]
-        self.ax.plot(traj_x, traj_y, 'r--', label='Solltrajektorie')
-
-        # Tatsächlichen Pfad extrahieren
-        path_x = [pt[0] for pt in self.actual_path]
-        path_y = [pt[1] for pt in self.actual_path]
-        self.ax.plot(path_x, path_y, 'b-', label='Tatsächlicher Weg')
-
-        self.ax.set_aspect('equal', adjustable='datalim')
-        self.ax.set_xlabel("x")
-        self.ax.set_ylabel("y")
+        # Ist-Pfad
+        path_x = [p[0] for p, _ in self.actual_path]
+        path_y = [p[1] for p, _ in self.actual_path]
+        self.ax.plot(path_x, path_y, 'b-', label='Ist-Pfad')
+        self.ax.set_aspect('equal', 'datalim')
+        self.ax.set_xlabel('x [m]')
+        self.ax.set_ylabel('y [m]')
         self.ax.legend()
-        self.ax.set_title("Trajektorie vs. tatsächlicher Weg")
-
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
-        self.ax_u.cla()  # Zweiten Plot zurücksetzen
-        if self.actual_u:
-            # Wandeln der Liste in einen NumPy-Array (jede Zeile entspricht einem Regelzyklus)
-            u_arr = np.array(self.actual_u)  # Shape: (Anzahl Zeitschritte, 4)
-            t = np.arange(u_arr.shape[0])  # Zeit bzw. Iterationsindex
-            # Plot für jedes der 4 Räder
-            self.ax_u.plot(t, u_arr[:, 0], label='Rad 1')
-            self.ax_u.plot(t, u_arr[:, 1], label='Rad 2')
-            self.ax_u.plot(t, u_arr[:, 2], label='Rad 3')
-            self.ax_u.plot(t, u_arr[:, 3], label='Rad 4')
-            
-            self.ax_u.set_title("Stellgröße u – Winkelgeschwindigkeiten der Räder")
-            self.ax_u.set_xlabel("Zeit (Iterationsschritte)")
-            self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
-            self.ax_u.legend()
+        # Radraten
+        u_arr = np.array(self.actual_u)
+        self.ax_u.cla()
+        if u_arr.size:
+            for i in range(u_arr.shape[1]):
+                self.ax_u.plot(u_arr[:, i], label=f'Rad {i+1}')
+            self.ax_u.set_xlabel('Iteration')
+            self.ax_u.set_ylabel('Winkelgeschw. [rad/s]')
             self.ax_u.grid(True)
-
-            self.fig_u.canvas.draw()
-            self.fig_u.canvas.flush_events()
-    
-
+            self.ax_u.legend()
+        self.fig_u.canvas.draw()
+        self.fig_u.canvas.flush_events()
 
 
-
-def main(args=None):
+def main(args=None) -> None:
+    """
+    Einstiegspunkt: Initialisiert den ROS2-Node und startet das Spin-Loop.
+    """
     rclpy.init(args=args)
     node = TrajectoryPController()
-    try: 
+    try:
         rclpy.spin(node)
     except KeyboardInterrupt:
         node.stop_robot()
     finally:
         node.destroy_node()
         rclpy.shutdown()
-        
+
 
 if __name__ == '__main__':
     main()
-
-    time = TrajectoryPController()
-    
-    
-
-

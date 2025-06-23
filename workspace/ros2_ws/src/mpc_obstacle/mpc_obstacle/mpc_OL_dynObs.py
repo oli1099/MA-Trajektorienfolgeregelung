@@ -19,13 +19,10 @@ class QP:
         self.nu = nu
         self.Ts = Ts
 
-        #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
-    
         if solver_opts  is None:
             solver_opts = {"print_time":0}
         
-        #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN und slack)
-        self.zdim = (Np+1)*nx +Nc*nu 
+        #Erstellen der Optimierungsvariablen (x0,x1,...,xN,u0,u1,...,uN)
         Z = ca.SX.sym('Z',self.zdim)
 
         # Anfangs- und Zielzustand P = [x0; x_ref]
@@ -59,8 +56,6 @@ class QP:
             else:
                 uk = Z[(Np+1)*nx + (Nc-1)*nu:(Np+1)*nx + Nc*nu]
             
-
-                  
             cost += (xk-x_ref).T @ self.Q @ (xk - x_ref)  
             if k < Nc:
                 cost += uk.T @ self.R @ uk 
@@ -106,15 +101,6 @@ class QP:
         #Standardgrenzen erstellen 
         lbz = -np.inf * np.ones(self.zdim) 
         ubz = np.inf*np.ones(self.zdim)
-
-        #Zustandsbegrenzung
-
-        #for k in range(Np +1):
-            # X wird begrenzt auf 0 bis 6
-            #lbz[k*self.nx + 0] = -
-            #ubz[k*self.nx + 0] = 6          
-            #lbz[k*self.nx + 1] = 0
-            #ubz[k*self.nx + 1] = 1 
        
         #Eingangsbegrenzung
         for k in range(Nc):
@@ -131,19 +117,10 @@ class QP:
 
         #Warmstart immer der vorherige Zustand
 
-        #self.z0 = np.zeros(self.zdim)
-
     def solveMPC(self,x_current, x_ref,z0,cS_val, cI_val, W_val, xmax_val,x_min_val):
         x_values = z0[:(self.Np+1)*self.nx].reshape((self.nx, self.Np+1))
         x_pred = x_values[0,:]
         y_pred = x_values[1,:]
-        y_min_vector = np.zeros(self.Np)
-
-        '''for k in range(self.Np):
-            if x_pred[k]  >= (1.5  - self.Safezone) and x_pred[k] <= (2.5 + self.Safezone):
-                y_min_vector[k] = 0.5 + self.Safezone
-            else:
-                y_min_vector[k] = 0.0'''
 
         P_val = np.concatenate([x_current,x_ref,np.array([cS_val, cI_val, W_val, xmax_val, x_min_val])])
 
@@ -151,8 +128,6 @@ class QP:
         print(f"Prädizierter y-Wert: {y_pred}")
 
         sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)    
-        
-        #sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
         #Extrahiere X und U

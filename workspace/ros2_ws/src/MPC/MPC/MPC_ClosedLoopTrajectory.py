@@ -1,5 +1,5 @@
 
-
+#Trajektorienfolgeregelung mit MPC
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
@@ -16,7 +16,6 @@ from .MPC_OpenLoopTrajectory import QP
 from .SystemModel import DynamicModel
 from .SaveData import SaveData
 
-import sys
 
 class MPCClosedLoopTrajectory(Node):
     def __init__(self):
@@ -55,7 +54,6 @@ class MPCClosedLoopTrajectory(Node):
         self.fig_u ,self.ax_u = plt.subplots()
         self.x_pred = None
 
-
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
@@ -69,21 +67,8 @@ class MPCClosedLoopTrajectory(Node):
         
         #Anfangszustand festlegen
 
-        
-        #self.trajectory = [(0,0,0),(0.5,0,0),(1,0.75,0),(1.5,1,0),(2,1,0),(2.5,1,0),(3,0.75,0),(3.5,0,0),(4,0,0)]
-        self.trajectory = [
-    (0.00, 0.00, 0),   # Index 0
-    (0.34, 0.00, 0),   # Index 4
-    (0.63, 0.18, 0),   # Index 8
-    (1.05, 0.38, 0),   # Index 13
-    (1.43, 0.40, 0),   # Index 17
-    (1.83, 0.40, 0),   # Index 21
-    (2.21, 0.28, 0),   # Index 25
-    (2.52, 0.00, 0),   # Index 30
-    (2.76, 0.00, 0),   # Index 34
-    (3.00, 0.00, 0)    # Index 38
-]
-        # CSV laden
+ 
+        # CSV laden von Trajektorie
         csv_file = Path('/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/MPC_Trajektorienfolgeregelung/MPC_Trajektorienfolgeregelung/traj.csv')
 
         data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
@@ -130,35 +115,7 @@ class MPCClosedLoopTrajectory(Node):
         #QP initzialisieren
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
                                               self.N, self.nx, self.nu, self.Ts)
-    '''def set_init_pose(self):
-        """
-        Wird einmalig aufgerufen, um die Startpose an '/set_pose' zu senden.
-        Danach wird der Timer deaktiviert, damit nicht erneut publiziert wird.
-        """
-        msg = PoseWithCovarianceStamped()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'odom'  # oder 'odom' oder ein anderes Frame
-
-        # Gewünschte Startposition + Orientierung
-        msg.pose.pose.position.x = 0.0
-        msg.pose.pose.position.y = 0.5
-        msg.pose.pose.position.z = 0.0
-        msg.pose.pose.orientation.x = 0.0
-        msg.pose.pose.orientation.y = 0.0
-        msg.pose.pose.orientation.z = 0.0
-        msg.pose.pose.orientation.w = 1.0
-
-        # Kovarianzmatrix initial auf 0
-        msg.pose.covariance = [0.0]*36
-
-        self.get_logger().info("Publishing initial pose (x=0.0, y=0.5).")
-        self.set_position.publish(msg)
-
-        # Timer ausschalten, damit die Nachricht nicht dauernd gesendet wird.
-        self.destroy_timer(self.set_pose_timer)
-        self.set_initial_position = True'''
- 
-        
+    
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
                                   msg.pose.pose.position.y, #y
@@ -214,22 +171,6 @@ class MPCClosedLoopTrajectory(Node):
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
         self.z0 = z0_new
 
-
-        '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
-        for k in range(self.N):
-            z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
-        #Letzter Zustand wird nochmal drangehängt 
-        z0_new[self.N*self.nx : (self.N+1)*self.nx] = x_opt[:, self.N]
-        
-        #Analog für U
-        for k in range(self.N-1):
-            z0_new[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]=u_opt[:,k+1]
-        
-        # U nochmal dranhängen
-        z0_new[(self.N+1)*self.nx + (self.N-1)*self.nu:(self.N+1)*self.nx + self.N*self.nu]= u_opt[:,self.N-1]
-
-        self.z0 = z0_new'''
-
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
         v_robot = self.mpc_model.get_velocity(u_cl)  
@@ -241,40 +182,6 @@ class MPCClosedLoopTrajectory(Node):
         twist.angular.z = float(v_robot[2])
         self.control_pub.publish(twist)
 
-        
-    '''def get_reference_trajectory(self, current_time):
-    # returns shape (nx, N+1)
-    # z.B. lineare Interpolation für x,y,theta, v_x=0, v_y=0, w=0
-        Xref = np.zeros((self.nx, self.N+1))
-        for k in range(self.N+1):
-            t_k = current_time + k*self.Ts
-            # Finde Segment, in dem t_k liegt, linear interpolieren
-            if t_k >= self.times[-1]:
-                x_des, y_des, theta_des = self.trajectory[-1]
-            else:
-            # 1) Finde Segment [t_i, t_{i+1}] mit t_i <= t_k < t_{i+1}
-                i = 0
-                while i < len(self.times)-1 and t_k > self.times[i+1]:
-                    i += 1
-                
-                # 2) lineare Interpolation
-                t_i   = self.times[i]
-                t_ip1 = self.times[i+1]
-                
-                ratio = (t_k - t_i) / (t_ip1 - t_i) if (t_ip1 > t_i) else 0.0
-                
-                x_i, y_i, theta_i  = self.trajectory[i]
-                x_i1, y_i1, theta_i1 = self.trajectory[i+1]
-                
-                x_des     = x_i     + ratio*(x_i1     - x_i)
-                y_des     = y_i     + ratio*(y_i1     - y_i)
-                theta_des = theta_i + ratio*(theta_i1 - theta_i)
-            
-            # vx, vy, w = 0.0 gesetzt (vereinfachtes Beispiel)
-            Xref[:, k] = [x_des, y_des, theta_des, 0.0, 0.0, 0.0]
-        
-        
-        return Xref'''
     
     def get_reference_trajectory(self, current_time):
             """
@@ -364,13 +271,9 @@ class MPCClosedLoopTrajectory(Node):
             self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
             self.ax_u.legend()
             self.ax_u.grid(True)
-    
-
 
         # Aktualisieren des Plots
         plt.pause(0.001)
-
-
 
 def main(args=None):
     rclpy.init(args=args)
