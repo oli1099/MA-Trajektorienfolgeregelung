@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'MPC'
+package_name = 'lidar_obstacle_detection'
 
 setup(
     name=package_name,
@@ -16,12 +16,13 @@ setup(
     maintainer='oli',
     maintainer_email='oliver.fellenz@stud.tu-darmstadt.de',
     description='TODO: Package description',
-    license='Apache-2.0',
+    license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'MPC_ClosedLoop = MPC.MPC_ClosedLoop:main',
-            'MPC_ClosedLoopTrajectory = MPC.MPC_ClosedLoopTrajectory:main'
+            'obstacle_clustering = lidar_obstacle_detection.obstacle_clustering:main',
+            'obstacle_detection_map = lidar_obstacle_detection.obstacle_detection_map:main',
+            'obstacle_map = lidar_obstacle_detection.obstacle_map:main'
         ],
     },
 )

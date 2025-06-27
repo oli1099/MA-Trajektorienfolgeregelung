@@ -11,16 +11,9 @@ class DynamicModel:
                  lx=0.106,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  ly=0.0855,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  r=0.0325,         # Radius der Räder
-<<<<<<< HEAD
-                 k=100.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
-                 Ts=0.1):          # Abtastzeit
-                
-            
-=======
                  k=10.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
                  Ts=0.1):          # Abtastzeit
                 
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
             self.m = m
             self.I = I
             self.lx = lx
@@ -91,14 +84,6 @@ class DynamicModel:
 
                v = (np.sqrt(2)*self.r)*J_pseudo @ omega_vec
                return v
-<<<<<<< HEAD
-
-if __name__ == "__main__":
-       omega_vec = np.array([0.7,0.2,0.7,0.2])
-       mpc_model = DynamicModel()
-       v = mpc_model.get_velocity(omega_vec)
-       print("V:\n", v)
-=======
         def get_omega(self,vx,vy,theta):
                 factor = 1.0 / np.sqrt(2)
                 A = np.array([
@@ -124,4 +109,3 @@ if __name__ == "__main__":
        print("Bc:\n", mpc_model.B_d)
        print("A_d:\n", mpc_model.A_d)
        print("B_d:\n", mpc_model.B_d)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)

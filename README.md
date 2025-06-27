@@ -15,12 +15,46 @@ Radumdrehungen an den Roboter geben:
 Nodes starten
     ros2 launch controller controller.launch.py
 
-    ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler  #Kreis Trajektorie
+    ros2 launch ldlidar_node ldlidar.launch.py
 
-    ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller  #Trajektorienfolgereglung
+    ros2 launch orchestrator_launch slam_toolbox.launch.py
 
-    ros2 run MPC MPC_ClosedLoop   #MPC Algorithmus starten
+Kreis Trajektorie
 
+    ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler  
+
+Trajektorienfolgereglung
+    
+    ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller  
+
+MPC Algorithmus starten
+
+    ros2 run MPC MPC_ClosedLoop   
+    mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
+
+Zeitbasierte Trajektorienfolgereglung
+
+    ros2 run MPC_Trajektorienfolgeregelung trajectoryPControllerTime  
+
+MPC Trajectory starten
+
+    ros2 run MPC MPC_ClosedLoopTrajectory
+
+MPC Obstacel avoidence starten
+
+    ros2 run mpc_obstacle mpc_CL_obstacle
+
+    ros2 run mpc_obstacle adaptiveMPC_CL  # ohne slack
+
+    ros2 run mpc_obstacle softMPC_CL      # mit slack
+
+    ros2 run mpc_obstacle mpc_CL_Nc       # Nc und Np
+
+    ros2 run mpc_obstacle mpc_CL_dynObs   #Dyn Obs
+
+    colcon build --packages-select
+
+    
 Package Erstellen in ROS2:
     ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
 
@@ -50,8 +84,29 @@ SSH Verbidung herstellen:
 
     IP Adresse Zuhause: 192.168.2.215
     IP Adresse LAB: 192.168.1.32
+    IP Adresse Handy: 192.168.137.118
+
 Plots vom Roboter speichern
-     scp prinzessinleia@192.168.1.32:~/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/trajectory_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+    
+    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/trajectorytime_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+
+    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/MPC_Adaptive_CL_plot.png /home/oli/Desktop/Oliver/Uni/MA/Plots
+
+Data
+
+    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/mpc_cl_actual_path.csv /home/oli/Desktop/Oliver/Uni/MA/Data
+
+    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/mpc_cl_predictions.csv /home/oli/Desktop/Oliver/Uni/MA/Data
+
+    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/mpc_cl_control_inputs.csv /home/oli/Desktop/Oliver/Uni/MA/Data
+
+    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/TrajectoryPController_actual_path.csv /home/oli/Desktop/Oliver/Uni/MA/Data
+
+
+prinzessinleia
+
+
+
 
      ---Virtual Environment---
 Create venv with:

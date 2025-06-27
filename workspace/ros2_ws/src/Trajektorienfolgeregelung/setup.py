@@ -20,7 +20,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main'
+            
+            'trajectoryPControllerTime = Trajektorienfolgeregelung.trajectoryPControllerTime:main',
+            'mpc_PD_controller = Trajektorienfolgeregelung.mpc_PD_controller:main',
+            'Trajectorytracking = Trajektorienfolgeregelung.Trajectorytracking:main',
+            'PurePursuit = Trajektorienfolgeregelung.PurePursuit:main'
         ],
     },
 )

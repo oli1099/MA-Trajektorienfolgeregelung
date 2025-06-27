@@ -16,11 +16,6 @@ class QP:
         self.nx = nx
         self.nu = nu
         self.Ts = Ts
-<<<<<<< HEAD
-
-        #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
-=======
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
     
         if solver_opts  is None:
             solver_opts = {"print_time":0}
@@ -70,10 +65,6 @@ class QP:
         lbz = -np.inf * np.ones(self.zdim) 
         ubz = np.inf*np.ones(self.zdim)
 
-<<<<<<< HEAD
-        #Zustandsbegrenzung
-
-=======
         #Zustandsbegrenzung Straße modellieren
         for k in range(N +1):
             # X wird begrenzt auf 0 bis 6
@@ -83,7 +74,6 @@ class QP:
             ubz[k*self.nx + 1] = 2 
             #Zustandsbegrenzung auf 0 bis 2       
         
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
         #Eingangsbegrenzung
         for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
@@ -99,13 +89,6 @@ class QP:
 
         #Warmstart immer der vorherige Zustand
 
-<<<<<<< HEAD
-        #self.z0 = np.zeros(self.zdim)
-
-    def solveMPC(self,x_current, x_ref,z0):
-        P_val = np.concatenate([x_current,x_ref])
-        
-=======
     def solveMPC(self,x_current, x_ref,z0):
         P_val = np.concatenate([x_current,x_ref])
         
@@ -118,7 +101,6 @@ class QP:
         print(f"Prädizierter y-Wert: {y_pred}")
 
     
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
         sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
@@ -132,35 +114,6 @@ class QP:
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
         return x_opt, u_opt
-<<<<<<< HEAD
-        
-'''if __name__ == "__main__":
-    # KLEINER TEST
-
-    # Beispielsystem
-    nx = 3
-    nu = 2
-    N  = 5
-    Ts = 0.1
-    
-    A_d = np.eye(nx)
-    B_d = np.ones((nx, nu))*0.1
-    
-    Q  = np.eye(nx)*1.0
-    R  = np.eye(nu)*0.1
-    QN = np.eye(nx)*2.0
-    
-    for i in range(N):
-        mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
-    
-        x0 = np.array([0.0, 0.0, 0.0])
-        x_ref = np.array([2.0, 3.0, 0.0])
-    
-        U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
-        print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)'''
-
-=======
     def getRegionBounds(x_current):
         # x_current[0] = x-Position
         if x_current[0] < 2:
@@ -169,7 +122,6 @@ class QP:
             return (0,3, 1,2)  # Beispiel: Schmaler Korridor
         else:
             return (0,5, 0,2)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
 
 
 
