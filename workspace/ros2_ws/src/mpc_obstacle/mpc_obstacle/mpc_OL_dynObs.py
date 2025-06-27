@@ -141,8 +141,7 @@ class QP:
             
         for k in range (self.Nc):
             u_opt[:,k] = z_opt[(self.Np+1)*self.nx + k*self.nu:(self.Np+1)*self.nx + (k+1)*self.nu]
-            #slack_opt[k] = z_opt[(self.N+1)*self.nx + self.N*self.nu + k]
-        
+            
         print(f"Optimale Zustände: {x_opt}")
         print(f"Optimale Eingänge: {u_opt}")
 

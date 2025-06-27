@@ -32,7 +32,6 @@ class MPCClosedLoop(Node):
         self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
-        self.Safezone = 0.1
 
         self.Ts = 0.1 #Diskretisierungszeit
         self.Np = 25 #Prediction Horizon
@@ -44,6 +43,7 @@ class MPCClosedLoop(Node):
             'obsYrl': 0.25,   # y-Koordinate
             'obslength': 0.75 # Breite des Hindernisses
         }
+        self.Safezone = 0.1
         self.road_width = 1  # Breite der Straße (Beispielwert)
         self.return_distance = 1 # Abstand zum Hindernis, ab dem die Berechnung der Sicherheitsgerade beginnt
 
@@ -74,6 +74,7 @@ class MPCClosedLoop(Node):
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
 
+        #Aufruf des Closedloops alle  100ms
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
@@ -106,7 +107,7 @@ class MPCClosedLoop(Node):
         #QP initzialisieren
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN,self.Safezone, 
                                               self.Nc, self.Np, self.nx, self.nu, self.Ts)
-        
+    #Aktuelle Position des Roboters bekommen     
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
                                   msg.pose.pose.position.y, #y
@@ -116,8 +117,7 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
         
-        #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
-          
+    #Funktion zum bestimmen der Werte für die Sicherheitsgerade in Abhängigkeit der aktuellen Position des Roboters und des Hindernisses
     def compute_obstacle_constraints(self,x_current):
         carX = x_current[0] 
         carY = x_current[1]
@@ -133,7 +133,7 @@ class MPCClosedLoop(Node):
         threshold = 0.2
         epsilon = 0.01
 
-        if obsXrl - carX > 0.5: # Erst ab 1 meter zum Hinderniss soll reagiert werden
+        if obsXrl - carX > 0.5: # Erst ab 0.5 meter zum Hinderniss soll reagiert werden
             return 0, -self.road_width/2, xmin, xmax #unterer Straßenrand 
 
         if carX <= obsXrl :
@@ -155,16 +155,13 @@ class MPCClosedLoop(Node):
             else:
                 cS = 0
                 cI = obsYrl -0.1 
-               
-               # Hier den Code anpassen, dass nachdem der Roboter das hinderniss überholt hat, die Obere grenze für y der Obere Rand der Spur ist
-               # generell self.road_width/2 überprüfen
         return cS, cI, xmin, xmax
     
     def mpc_closedloop(self):
         if self.xmeasure_received is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
-
+        #Wenn die aktuelle Position des Roboters nahe am Ziel ist, stoppe den Roboter und speichere die Daten
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
         if error < 0.02:
             motor_stopp  = Twist()
@@ -184,12 +181,14 @@ class MPCClosedLoop(Node):
             #self.save_data_to_csv()
             return
 
+        #In jedem Aufruf des Closedloops wird die aktuelle Position des Roboters gemessen und die Sicherheitsgerade berechnet
         cS, cI, xmin, xmax = self.compute_obstacle_constraints(self.xmeasure)
 
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
         self.actual_theta.append(self.xmeasure[2])
-        #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
+
         t0 = time.perf_counter()
+        #Aufruf des QP Sovlers
         x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0,cS, cI, self.road_width, xmax, xmin)
         t1 = time.perf_counter()
         dt = t1-t0
