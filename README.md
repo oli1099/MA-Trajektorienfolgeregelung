@@ -4,13 +4,56 @@ Dieses Rep dient zur Entwicklung auf dem HiWonder Mentor PI der mit einem rasber
 
 Der HiWonder Pi wurde mit folgender Anleitung aufgesetzt: https://github.com/Matzefritz/HiWonder_MentorPi
 
-Stopp den roboter: 
+Es wurden 4 verschieden Regelalgorithmen umgesetzt:
+
+Trajektorienfolgeregelung:
+  1. Purse Pursuit im Ordner Trajektorienfolgeregelung
+  2. MPC im Ordner MPC
+
+Hindernisvermeidung
+  1. staische Hindernisse im Ordner mpc obstacle
+
+Um die Skripte starten zu können müssen folgenden Schritte befolgt werden:
+
+
+Starten des Roboters:
+    1. SSH Verbindung zum Roboter : ssh prinzessinleia@192.168.1.32 (im Lab)
+    2. Zum folgenden ordner navigieren: cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
+    3. Folgende Nodes starten:
+        ros2 launch controller controller.launch.py
+        
+        ros2 launch ldlidar_node ldlidar.launch.py
+
+        ros2 launch orchestrator_launch slam_toolbox.launch.py
+    4. Node für den Regelalgorithmus starten
+        a. Neues Terminal öffnen
+        b. cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
+        c. git pull
+        d. Build Prozess straten colcon build
+        e. Node ausführen: ros2 run <Ordner> <file_name>
+
+
+Allgemeine Ansteuerung für den Roboter:
+
+Den Robter fahren lassen: 
     ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
-
-
 
 Radumdrehungen an den Roboter geben:
     ros2 topic pub -1 /ros_robot_controller/set_motor ros_robot_controller_msgs/MotorsState "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.10}, {id: 4, rps: 0.10}]}" (Vorwärts)
+Allgemeine Funktionen ROS2:
+
+Package Erstellen in ROS2:
+    ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
+ROS2 Befehle:
+
+    ros2 topic list -t will return the same list of topics, this time with the topic type appended in brackets
+
+    ros2 topic echo <topic_name> Data being published
+
+    ros2 topic info <topic_name>
+
+    ros2 interface show <Type> gibt genauere Informationen über den Type des Topic
+
 
 Nodes starten
     ros2 launch controller controller.launch.py
