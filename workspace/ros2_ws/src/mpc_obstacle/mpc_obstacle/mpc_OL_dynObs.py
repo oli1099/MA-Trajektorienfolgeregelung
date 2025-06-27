@@ -15,7 +15,7 @@ class QP:
         self.Safezone = Safezone
         self.Np = Np 
         self.Nc = Nc
-        self.nx = nx
+        self.nx = nx 
         self.nu = nu
         self.Ts = Ts
 

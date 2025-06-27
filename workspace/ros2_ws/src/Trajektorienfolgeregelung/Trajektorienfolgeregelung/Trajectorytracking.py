@@ -156,7 +156,7 @@ class TrajectoryPController(Node):  # pylint: disable=too-many-instance-attribut
         self.actual_path.append((self.current_position, t_rel))
 
         # LOS-Fehler
-        ex, ey = self.compute_reference()
+        ex, ey = self.compute_reference() 
 
         # Normierung mit Approach-Speed
         denom = math.hypot(ex, ey) + self.lp

@@ -133,7 +133,7 @@ class TrajectoryPController(Node):
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         return math.atan2(siny_cosp, cosy_cosp)
         
-    def control_loop(self):
+    def control_loop(self): 
         if self.current_position is None or self.start_timer is None:
             return
         

@@ -74,7 +74,7 @@ class MPCClosedLoopTrajectory(Node):
         data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
         # Spalten: [t, x, y, yaw]
         ts = data[:,0]
-        xs   = data[:,1]
+        xs   = data[:,1] 
         ys   = data[:,2]
         yaws = data[:,3]
         # Liste von Tripeln (x,y,yaw)
