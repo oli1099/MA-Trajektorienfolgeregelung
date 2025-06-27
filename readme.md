@@ -55,7 +55,7 @@ Weitere Ordner:
 
 ## Roboter starten
 
-Öffne ein Terminal auf dem Roboter und starte grundlegende Nodes:
+Öffne für jede Node ein Terminal auf dem Roboter und starte grundlegende Nodes:
 
 ```bash
 ros2 launch controller controller.launch.py
