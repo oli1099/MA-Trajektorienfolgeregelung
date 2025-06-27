@@ -39,7 +39,7 @@ Weitere Ordner:
 
 ## Installation
 
-1. **SSH-Verbindung zum Roboter**
+1. **SSH-Verbindung zum Roboter (Im Lab)**
 
    ```bash
    ssh prinzessinleia@192.168.1.32
