@@ -76,7 +76,7 @@ class MPCClosedLoopTrajectory(Node):
         ts = data[:,0]
         xs   = data[:,1] 
         ys   = data[:,2]
-        yaws = data[:,3]
+        yaws = data[:,3] 
         # Liste von Tripeln (x,y,yaw)
         self.times = ts
         self.trajectory = list(zip(xs, ys, yaws))
