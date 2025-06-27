@@ -145,7 +145,7 @@ class TrajectoryPController(Node):  # pylint: disable=too-many-instance-attribut
 
     def control_loop(self) -> None:
         """
-        Regelschleife: Berechnet Fehler, P-Anteil und MPC-Action, publiziert Befehle.
+        Regelschleife: Berechnet Fehler, publiziert Befehle.
         """
         if self.current_position is None or self.start_time is None:
             return

@@ -21,10 +21,10 @@ setup(
     entry_points={
         'console_scripts': [
             
-            'trajectoryPControllerTime = MPC_Trajektorienfolgeregelung.trajectoryPControllerTime:main',
-            'mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
-            'Trajectorytracking = MPC_Trajektorienfolgeregelung.Trajectorytracking:main',
-            'PurePursuit = MPC_Trajektorienfolgeregelung.PurePursuit:main'
+            'trajectoryPControllerTime = Trajektorienfolgeregelung.trajectoryPControllerTime:main',
+            'mpc_PD_controller = Trajektorienfolgeregelung.mpc_PD_controller:main',
+            'Trajectorytracking = Trajektorienfolgeregelung.Trajectorytracking:main',
+            'PurePursuit = Trajektorienfolgeregelung.PurePursuit:main'
         ],
     },
 )
