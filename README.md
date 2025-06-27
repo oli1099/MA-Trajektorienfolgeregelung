@@ -1,214 +1,126 @@
 # MA-Trajektorienfolgeregelung
 
-Dieses Rep dient zur Entwicklung auf dem HiWonder Mentor PI der mit einem rasberry betrieben wird.
+Dieses Repository dient zur Entwicklung auf dem HiWonder Mentor Pi (Raspberry Pi)
+und enthält Implementierungen verschiedener Regelalgorithmen für mobile Roboter.
 
-Der HiWonder Pi wurde mit folgender Anleitung aufgesetzt: https://github.com/Matzefritz/HiWonder_MentorPi
+## Inhaltsverzeichnis
 
-Es wurden 4 verschieden Regelalgorithmen umgesetzt:
+1. [Projektstruktur](#projektstruktur)
+2. [Vorraussetzungen](#vorraussetzungen)
+3. [Installation](#installation)
+4. [Roboter starten](#roboter-starten)
+5. [Regelalgorithmen starten](#regelalgorithmen-starten)
+6. [Allgemeine ROS 2 Befehle](#allgemeine-ros-2-befehle)
 
-Trajektorienfolgeregelung:
-  1. Purse Pursuit im Ordner Trajektorienfolgeregelung
-  2. MPC im Ordner MPC
+---
 
-Hindernisvermeidung
-  1. staische Hindernisse im Ordner mpc obstacle
+## Projektstruktur
 
-Um die Skripte starten zu können müssen folgenden Schritte befolgt werden:
+```
+MA-Trajektorienfolgeregelung/
+workspace/ros2_ws/src/MPC/MPC
+├── Trajektorienfolgeregelung/   # Pure Pursuit Implementierung
+├── MPC/                         # Model Predictive Control Implementierung
+└── mpc_obstacle/                # Hindernisvermeidung (statische Hindernisse)
 
+Weitere Ordner:
+- controller/                    # ROS2 Package für Controller-Launch
+- ldlidar_node/                 # ROS2 Package für Lidar-Integration
+- orchestrator_launch/          # ROS2 Package für SLAM-Toolbox
+- workspace/ros2_ws/            # ROS2 Workspace mit Quellcode
+```
 
-Starten des Roboters:
-    1. SSH Verbindung zum Roboter : ssh prinzessinleia@192.168.1.32 (im Lab)
-    2. Zum folgenden ordner navigieren: cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
-    3. Folgende Nodes starten:
-        ros2 launch controller controller.launch.py
-        
-        ros2 launch ldlidar_node ldlidar.launch.py
+## Vorraussetzungen
 
-        ros2 launch orchestrator_launch slam_toolbox.launch.py
-    4. Node für den Regelalgorithmus starten
-        a. Neues Terminal öffnen
-        b. cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
-        c. git pull
-        d. Build Prozess straten colcon build
-        e. Node ausführen: ros2 run <Ordner> <file_name>
+* HiWonder Mentor Pi mit installiertem Raspberry Pi OS
+* Hier eine Anleitung zum Aufsetzen des HiWonder https://github.com/Matzefritz/HiWonder_MentorPi
+* ROS 2 (Foxy, Galactic oder Humble)
+* Abhängigkeiten in `requirements.txt` (numpy, scipy, matplotlib, rclpy, ...)
 
+## Installation
 
-Allgemeine Ansteuerung für den Roboter:
+1. **SSH-Verbindung zum Roboter**
 
-Den Robter fahren lassen: 
-    ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0}}"
+   ```bash
+   ssh prinzessinleia@192.168.1.32
+   ```
+2. **Ros2 Workspace vorbereiten**
 
-Radumdrehungen an den Roboter geben:
-    ros2 topic pub -1 /ros_robot_controller/set_motor ros_robot_controller_msgs/MotorsState "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.10}, {id: 4, rps: 0.10}]}" (Vorwärts)
-Allgemeine Funktionen ROS2:
+   ```bash
+   cd ~/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws
+   git pull origin main
+   colcon build
+   source install/setup.bash
+   ```
 
-Package Erstellen in ROS2:
-    ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
-ROS2 Befehle:
+## Roboter starten
 
-    ros2 topic list -t will return the same list of topics, this time with the topic type appended in brackets
+Öffne ein Terminal auf dem Roboter und starte grundlegende Nodes:
 
-    ros2 topic echo <topic_name> Data being published
+```bash
+ros2 launch controller controller.launch.py
+ros2 launch ldlidar_node ldlidar.launch.py
+ros2 launch orchestrator_launch slam_toolbox.launch.py
+```
 
-    ros2 topic info <topic_name>
+## Regelalgorithmen starten
 
-    ros2 interface show <Type> gibt genauere Informationen über den Type des Topic
+1. Neues Terminal öffnen auf dem Roboter
+2. Ins Workspace-Verzeichnis wechseln:
 
+   ```bash
+   cd ~/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws
+   source install/setup.bash
+   ```
+3. Gewünschten Algorithmus ausführen:
 
-Nodes starten
-    ros2 launch controller controller.launch.py
+   ```bash
+   ros2 run <package_name> <executable_name>
+   ```
 
-    ros2 launch ldlidar_node ldlidar.launch.py
+   * **Pure Pursuit**:  `ros2 run Trajektorienfolgeregelung Trajectorytracking`
+   * **MPC**:           `ros2 run MPC MPC_ClosedLoopTrajectory`
+   * **Hindernisvermeidung**:  `ros2 run mpc_obstacle mpc_CL_dynObs`
 
-    ros2 launch orchestrator_launch slam_toolbox.launch.py
+## Allgemeine ROS 2 Befehle
 
-Kreis Trajektorie
+* **Topics auflisten**
 
-    ros2 run Trajektorienfolgeregelung circle_trajectory_p_regler  
+  ```bash
+  ros2 topic list -t
+  ```
+* **Topic-Daten anzeigen**
 
-Trajektorienfolgereglung
-    
-    ros2 run MPC_Trajektorienfolgeregelung mpc_PD_controller  
+  ```bash
+  ros2 topic echo /topic_name
+  ```
+* **Topic-Informationen**
 
-MPC Algorithmus starten
+  ```bash
+  ros2 topic info /topic_name
+  ```
+* **Message-Type untersuchen**
 
-    ros2 run MPC MPC_ClosedLoop   
-    mpc_PD_controller = MPC_Trajektorienfolgeregelung.mpc_PD_controller:main',
+  ```bash
+  ros2 interface show geometry_msgs/msg/Twist
+  ```
 
-Zeitbasierte Trajektorienfolgereglung
+## Beispiel: Manuelle Robotersteuerung
 
-    ros2 run MPC_Trajektorienfolgeregelung trajectoryPControllerTime  
+* **Bewegung über `/controller/cmd_vel`**
 
-MPC Trajectory starten
+  ```bash
+  ros2 topic pub --once /controller/cmd_vel geometry_msgs/msg/Twist \
+    "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
+  ```
+* **Ansteuerung der Radmotoren**
 
-    ros2 run MPC MPC_ClosedLoopTrajectory
+  ```bash
+  ros2 topic pub -1 /ros_robot_controller/set_motor \
+    ros_robot_controller_msgs/MotorsState \
+    "{data: [{id: 1, rps: -0.1}, {id: 2, rps: -0.1}, {id: 3, rps: 0.1}, {id: 4, rps: 0.1}]}"
+  ```
 
-MPC Obstacel avoidence starten
+---
 
-    ros2 run mpc_obstacle mpc_CL_obstacle
-
-    ros2 run mpc_obstacle adaptiveMPC_CL  # ohne slack
-
-    ros2 run mpc_obstacle softMPC_CL      # mit slack
-
-    ros2 run mpc_obstacle mpc_CL_Nc       # Nc und Np
-
-    ros2 run mpc_obstacle mpc_CL_dynObs   #Dyn Obs
-
-    colcon build --packages-select
-
-    
-Package Erstellen in ROS2:
-    ros2 pkg create --build-type ament_python --license Apache-2.0 <package_name>
-
-Starten des Roboters:
-    1. SSH Verbindung zum Roboter : sh prinzessinleia@192.168.1.32 (im Lab)
-    2. Zum folgenden ordner navigieren: cd PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/
-    3. Controller Launch vom roboter starten: ros2 launch controller controller.launch.py
-
-ROS2 Befehle:
-
-    ros2 topic list -t will return the same list of topics, this time with the topic type appended in brackets
-
-    ros2 topic echo <topic_name> Data being published
-
-    ros2 topic info <topic_name>
-
-    ros2 interface show <Type> gibt genauere Informationen über den Type des Topic
-
-    Orientation vom ROboter ist positiv gegen den Uhrzeigersinn
-
-SSH Verbidung herstellen:
-
-    IP Adresse vom ROboter herausfinden: nmap -sn 192.168.1.0/24
-
-    Verbinden: ssh prinzessinleia@<IP-Adresse>
-    Verbinden mit gui: ssh prinzessinleia@<IP-Adresse> -X
-
-    IP Adresse Zuhause: 192.168.2.215
-    IP Adresse LAB: 192.168.1.32
-    IP Adresse Handy: 192.168.137.118
-
-Plots vom Roboter speichern
-    
-    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/trajectorytime_plot1.png /home/oli/Desktop/Oliver/Uni/MA/Plots
-
-    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/MPC_Adaptive_CL_plot.png /home/oli/Desktop/Oliver/Uni/MA/Plots
-
-Data
-
-    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/mpc_cl_actual_path.csv /home/oli/Desktop/Oliver/Uni/MA/Data
-
-    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/mpc_cl_predictions.csv /home/oli/Desktop/Oliver/Uni/MA/Data
-
-    scp prinzessinleia@192.168.1.32:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/mpc_cl_control_inputs.csv /home/oli/Desktop/Oliver/Uni/MA/Data
-
-    scp prinzessinleia@192.168.2.215:/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/TrajectoryPController_actual_path.csv /home/oli/Desktop/Oliver/Uni/MA/Data
-
-
-prinzessinleia
-
-
-
-
-     ---Virtual Environment---
-Create venv with:
-    python3-m venv <Namevenv>
-Activate venv with:
-    source <Namevenv>/bin/activate
-Deactivate venv with:
-    deactivate
-
----Requirements.txt---\
-Requirements.txt erstellen laseen:\
-    pip freeze > requirements.txt
-Installieren lassen mit:\
-    pip install -r requirements.txt
-
-#!/home/prinzessinleia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/venv/bin/python3
-
-#!/usr/bin/env python3
-
-Funktion für MotorsState aktualisiert die Odometry
-
-def motors_state_callback(self,msg: MotorsState):
-        wheel_radius = self.mecanum.wheel_diameter/2
-        lx = self.mecanum.wheelbase
-        ly = self.mecanum.track_width
-
-        omega1 = msg.data[0].rps
-        omega2 = msg.data[1].rps
-        omega3 = msg.data[2].rps
-        omega4 = msg.data[3].rps
-
-        vx = (4 / (wheel_radius**2)) * (omega1 + omega2 + omega3 + omega4)
-        vy = (4 / (wheel_radius**2)) * (omega1 - omega2 + omega3 - omega4)
-        angular_z = (4 * wheel_radius / ((lx + ly)**2)) * ((omega4 - omega3) - (omega2 - omega1))
-        
-        now = time.time()
-        if self.last_time is None:
-            dt = 0.0
-        else:
-            dt = now - self.last_time
-        self.last_time = now
-
-        # Integriere die neuen Werte, um die Pose zu aktualisieren:
-        self.x += vx * dt * math.cos(self.pose_yaw) - vy * dt * math.sin(self.pose_yaw)
-        self.y += vx * dt * math.sin(self.pose_yaw) + vy * dt * math.cos(self.pose_yaw)
-        self.pose_yaw += angular_z * dt
-
-        # Aktualisiere und publiziere die Odometry-Nachricht:
-        self.odom.header.stamp = self.get_clock().now().to_msg()
-        self.odom.pose.pose.position.x = self.x
-        self.odom.pose.pose.position.y = self.y
-        self.odom.pose.pose.orientation = rpy2qua(0, 0, self.pose_yaw)
-        self.odom.twist.twist.linear.x = vx
-        self.odom.twist.twist.linear.y = vy
-        self.odom.twist.twist.angular.z = angular_z
-
-        self.odom_pub.publish(self.odom)
-
-    
-
-
-
+*Hinweis:* Passe Pfade und Paket-/Executable-Namen an deine lokale Struktur an.
