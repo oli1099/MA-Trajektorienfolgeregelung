@@ -18,7 +18,7 @@ und enthält Implementierungen verschiedener Regelalgorithmen für mobile Robote
 
 ```
 MA-Trajektorienfolgeregelung/
-workspace/ros2_ws/src/MPC/MPC
+workspace/ros2_ws/src/
 ├── Trajektorienfolgeregelung/   # Pure Pursuit Implementierung
 ├── MPC/                         # Model Predictive Control Implementierung
 └── mpc_obstacle/                # Hindernisvermeidung (statische Hindernisse)
