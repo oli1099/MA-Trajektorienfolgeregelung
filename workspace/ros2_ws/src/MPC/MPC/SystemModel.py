@@ -11,10 +11,16 @@ class DynamicModel:
                  lx=0.106,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  ly=0.0855,       # Abstand in x-Richtung vom Schwerpunkt zu den Rädern (m)
                  r=0.0325,         # Radius der Räder
+<<<<<<< HEAD
                  k=100.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
                  Ts=0.1):          # Abtastzeit
                 
             
+=======
+                 k=10.0,       # Verstärkungsfaktor (Umwandlung Geschwindigkeitsfehler -> Kraft)
+                 Ts=0.1):          # Abtastzeit
+                
+>>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
             self.m = m
             self.I = I
             self.lx = lx
@@ -85,9 +91,37 @@ class DynamicModel:
 
                v = (np.sqrt(2)*self.r)*J_pseudo @ omega_vec
                return v
+<<<<<<< HEAD
 
 if __name__ == "__main__":
        omega_vec = np.array([0.7,0.2,0.7,0.2])
        mpc_model = DynamicModel()
        v = mpc_model.get_velocity(omega_vec)
        print("V:\n", v)
+=======
+        def get_omega(self,vx,vy,theta):
+                factor = 1.0 / np.sqrt(2)
+                A = np.array([
+                        [1,  1,   self.lx - self.ly],
+                        [1, -1,   self.ly - self.lx],
+                        [1,  1,  -(self.lx + self.ly)],
+                        [1, -1,   self.lx + self.ly]
+                ])
+                M = factor*A
+                v_vec = np.array([vx, vy, theta])
+
+                return (M @ v_vec) / self.r
+
+if __name__ == "__main__":
+       omega_vec = np.array([20,20,20,20])
+       mpc_model = DynamicModel()
+       mpc_model.continuous_model()
+       v = mpc_model.get_velocity(omega_vec)
+       omega = mpc_model.get_omega(0.2, 0.10, 0)
+       print("omega:\n", omega)
+       print("V:\n", v)
+       print("Ac:\n", mpc_model.A_d)
+       print("Bc:\n", mpc_model.B_d)
+       print("A_d:\n", mpc_model.A_d)
+       print("B_d:\n", mpc_model.B_d)
+>>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)

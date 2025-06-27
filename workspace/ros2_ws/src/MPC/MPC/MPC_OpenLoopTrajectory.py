@@ -1,5 +1,3 @@
-
-
 import numpy as np
 import casadi as ca
 from scipy.linalg import expm, block_diag
@@ -16,12 +14,7 @@ class QP:
         self.nx = nx
         self.nu = nu
         self.Ts = Ts
-<<<<<<< HEAD
 
-        #H = 0.5*block_diag([Q]*N+[QN],[R]*N)
-=======
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
-    
         if solver_opts  is None:
             solver_opts = {"print_time":0}
         
@@ -29,11 +22,10 @@ class QP:
         self.zdim = (N+1)*nx +N*nu
         Z = ca.SX.sym('Z',self.zdim)
 
-        # Anfangs- und Zielzustand P = [x0; x_ref]
-        P = ca.SX.sym('P',nx*2)
+        # Anfangs- + referenz für jeden schritt
+        P = ca.SX.sym('P',nx +nx*(N+1))
         x_0 = P[0:nx]
-        x_ref = P[nx:]
-
+        
         #Inititalisieren der Kostenfunktion und der Anfangsbedingung
         cost = 0
         g = []
@@ -47,14 +39,16 @@ class QP:
             xk = Z[k*nx:(k+1)*nx]
             x_next = Z[(k+1)*nx:(k+2)*nx]
             uk = Z[(N+1)*nx +k*nu:(N+1)*nx + (k+1)*nu]
+            x_ref_k = P[nx +k*nx : nx +(k+1)*nx] # zeitvariante Referenz
             
-            cost += (xk-x_ref).T @ self.Q @ (xk - x_ref) + uk.T @ self.R @ uk
+            cost += (xk-x_ref_k).T @ self.Q @ (xk - x_ref_k) + uk.T @ self.R @ uk
             g.append(x_next - (self.A_d @ xk + self.B_d @ uk))
         
         
         #Terminalkosten
         xN = Z[N*nx : (N+1)*nx]
-        cost += (xN - x_ref).T @ self.QN @ (xN - x_ref)
+        x_ref_N = P[nx + N*nx : nx +(N+1)*nx]
+        cost += (xN - x_ref_N).T @ self.QN @ (xN - x_ref_N)
 
         #Nebenbedingungen
 
@@ -70,20 +64,15 @@ class QP:
         lbz = -np.inf * np.ones(self.zdim) 
         ubz = np.inf*np.ones(self.zdim)
 
-<<<<<<< HEAD
         #Zustandsbegrenzung
 
-=======
-        #Zustandsbegrenzung Straße modellieren
         for k in range(N +1):
-            # X wird begrenzt auf 0 bis 6
+            # X und Ywird begrenzt auf 0 bis 6
             lbz[k*self.nx + 0] = 0
-            ubz[k*self.nx + 0] = 5       
-            lbz[k*self.nx + 1] = 0
-            ubz[k*self.nx + 1] = 2 
-            #Zustandsbegrenzung auf 0 bis 2       
-        
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+            ubz[k*self.nx + 0] = 4       
+            lbz[k*self.nx + 1] = -0.05
+            ubz[k*self.nx + 1] = 0.5
+
         #Eingangsbegrenzung
         for k in range(N):
             lbz[(N+1)*nx+k*nu:(N+1)*nx +(k+1)*nu] = -5
@@ -99,26 +88,14 @@ class QP:
 
         #Warmstart immer der vorherige Zustand
 
-<<<<<<< HEAD
-        #self.z0 = np.zeros(self.zdim)
-
     def solveMPC(self,x_current, x_ref,z0):
-        P_val = np.concatenate([x_current,x_ref])
-        
-=======
-    def solveMPC(self,x_current, x_ref,z0):
-        P_val = np.concatenate([x_current,x_ref])
-        
-        # Der x-Wert des Warmstarts  für Zeitschritt k
-        x_values = z0[:(self.N+1)*self.nx].reshape((self.nx, self.N+1))
-        x_pred = x_values[0,:]
-        y_pred = x_values[1,:]
-
-        print(f"Prädizierter x-Wert: {x_pred}")
-        print(f"Prädizierter y-Wert: {y_pred}")
-
     
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+        P_val = []
+        P_val.extend(x_current)  # dimension nx
+        for k in range(self.N+1):
+            P_val.extend(x_ref[:,k])  # dimension nx
+        P_val = np.array(P_val)
+
         sol = self.solver(x0 = z0,p=P_val,lbx=self.lbz, ubx= self.ubz,lbg = self.lbg, ubg= self.ubg)
         z_opt =sol['x'].full().flatten()
 
@@ -132,50 +109,4 @@ class QP:
             u_opt[:,k] = z_opt[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]
 
         return x_opt, u_opt
-<<<<<<< HEAD
         
-'''if __name__ == "__main__":
-    # KLEINER TEST
-
-    # Beispielsystem
-    nx = 3
-    nu = 2
-    N  = 5
-    Ts = 0.1
-    
-    A_d = np.eye(nx)
-    B_d = np.ones((nx, nu))*0.1
-    
-    Q  = np.eye(nx)*1.0
-    R  = np.eye(nu)*0.1
-    QN = np.eye(nx)*2.0
-    
-    for i in range(N):
-        mpc = QP(A_d, B_d, Q, R, QN, N, nx, nu, Ts)
-    
-        x0 = np.array([0.0, 0.0, 0.0])
-        x_ref = np.array([2.0, 3.0, 0.0])
-    
-        U_opt, X_opt = mpc.solveMPC(x0,x_ref, mpc.z0)
-        print("U_opt:\n", U_opt)
-        print("X_opt:\n", X_opt)'''
-
-=======
-    def getRegionBounds(x_current):
-        # x_current[0] = x-Position
-        if x_current[0] < 2:
-            return (0,2, 0,5)
-        elif x_current[0] < 3:
-            return (0,3, 1,2)  # Beispiel: Schmaler Korridor
-        else:
-            return (0,5, 0,2)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
-
-
-
-
-
-
-
-
-

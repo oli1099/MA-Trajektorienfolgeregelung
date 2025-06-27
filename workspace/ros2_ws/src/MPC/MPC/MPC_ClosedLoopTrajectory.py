@@ -1,40 +1,25 @@
 
-<<<<<<< HEAD
-
-import rclpy
-from rclpy.node import Node
-from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
-=======
-import os
+#Trajektorienfolgeregelung mit MPC
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
 from ros_robot_controller_msgs.msg import MotorsState, MotorState
 import numpy as np
 import math
 import time
 import matplotlib.pyplot as plt
-<<<<<<< HEAD
-from controller.mecanum import MecanumChassis
-from .MPC_OpenLoop import QP
-from .SystemModel import DynamicModel
-
-import sys
-=======
+from pathlib import Path 
 import matplotlib.patches as patches
 from controller.mecanum import MecanumChassis
-from .MPC_OpenLoop import QP
+from .MPC_OpenLoopTrajectory import QP
 from .SystemModel import DynamicModel
 from .SaveData import SaveData
 
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
 
-class MPCClosedLoop(Node):
+class MPCClosedLoopTrajectory(Node):
     def __init__(self):
-        super().__init__('mpc_closed_loop')
+        super().__init__('mpc_closed_loop_trajectory')
 
         #Dynamic Modell initialisieren
 
@@ -45,72 +30,67 @@ class MPCClosedLoop(Node):
         self.nu = self.mpc_model.nu
 
         # Gewichtsmatrizen festlegen
-<<<<<<< HEAD
-        self.Q = np.diag([10,10,5,1,1,1]) #Höhere Bestrafung auf der Position
-        self.R = 0.1*np.eye(self.nu)
-        self.QN = self.Q
-
-        self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 50   #Prediktionshorizont
-=======
-        self.Q = np.diag([100,100,100,1,1,1]) #Höhere Bestrafung auf der Position
+        self.Q = np.diag([100,100,50,1,1,1]) #Höhere Bestrafung auf der Position
         self.R = 0.01*np.eye(self.nu)
         self.QN = self.Q
 
-        self.Ts = 0.1 #Diskretisierungszeit
-        self.N = 15   #Prediktionshorizont
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+        self.Ts = 0.1 #Disretisierungszeit
+        self.N = 15  #Prediktionshorizont
 
         #Mecanum-Chassis Objekt erstellen
-        self.mecanum_chassis = MecanumChassis()
+        self.mecanum_chassis = MecanumChassis() 
 
         #Liste für aktuellen Pfad
         self.actual_path = []
-<<<<<<< HEAD
         self.predictions_list = []
-        plt.ion()
-        plt.show()
-        self.fig ,self.ax = plt.subplots()
-=======
         self.actual_u = []
-        self.predictions_list = []
-        self.predictions_u =[]
         self.actual_theta = []
         self.predicted_theta_list = [] 
-        self.solve_times = [] 
+        self.solve_times = []  
+
         plt.ion()
         plt.show()
         self.fig ,self.ax = plt.subplots()
-        self.fig_u, self.ax_u = plt.subplots()
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+        self.fig_u ,self.ax_u = plt.subplots()
         self.x_pred = None
-
 
         #ROS2 Publisher (Winkelgeschwindikeiten der vier Räder) und subscriber(Position)
         self.motor_pub = self.create_publisher(MotorsState,'ros_robot_controller/set_motor',10)
         self.get_position = self.create_subscription(Odometry,'odom',self.odom_callback,10)
         self.control_pub = self.create_publisher(Twist,'cmd_vel',10)
-<<<<<<< HEAD
+        #self.set_position = self.create_publisher(PoseWithCovarianceStamped,'set_pose',10)
 
-        self.timer = self.create_timer(0.1, self.mpc_closedloop)
-=======
-        self.set_position = self.create_publisher(PoseWithCovarianceStamped,'set_pose',10)
 
         self.timer = self.create_timer(0.1, self.mpc_closedloop)
         #self.set_pose_timer = self.create_timer(0.5, self.set_init_pose)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
         self.plot_timer = self.create_timer(1, self.plot_callback)
         
         #Anfangszustand festlegen
 
+ 
+        # CSV laden von Trajektorie
+        csv_file = Path('/home/prinzessinleia/PrinzessinLeia/RepoTrajektorienfolgeregelung/MA-Trajektorienfolgeregelung/workspace/ros2_ws/src/MPC_Trajektorienfolgeregelung/MPC_Trajektorienfolgeregelung/traj.csv')
+
+        data = np.loadtxt(csv_file, delimiter=',', skiprows=1)
+        # Spalten: [t, x, y, yaw]
+        ts = data[:,0]
+        xs   = data[:,1] 
+        ys   = data[:,2]
+        yaws = data[:,3]
+        # Liste von Tripeln (x,y,yaw)
+        self.times = ts
+        self.trajectory = list(zip(xs, ys, yaws))
+
+        self.num_waypoints = len(self.times)
+        
+        self.total_time = 23
+        #self.times = [i*(self.total_time/(self.num_waypoints -1)) for i in range(self.num_waypoints)]
+        self.start_timer = None
+
+        #self.set_initial_position = None
         self.xmeasure = None    #Aktuelle gemessene Position des Roboters
         self.xmeasure_received = None 
-<<<<<<< HEAD
-        self.x_ref = [3,3,0.5,0,0,0]
-=======
-        self.set_initial_position = None
-        self.x_ref = [1,0.35,0,0,0,0]
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+        self.x_ref = [3,0,0,0,0,0]
         self.x0 = [0,0,0,0,0,0]
         self.u0 = [0.2,0.2,0.2,0.2]
 
@@ -131,19 +111,11 @@ class MPCClosedLoop(Node):
         
         self.z0 = np.concatenate((self.x_guess.flatten(),self.u_guess.flatten()))
         
-<<<<<<< HEAD
 
-=======
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
         #QP initzialisieren
         self.QP = QP(self.Ad, self.Bd, self.Q, self.R, self.QN, 
                                               self.N, self.nx, self.nu, self.Ts)
-        
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+    
     def odom_callback(self,msg):
         self.xmeasure = np.array([msg.pose.pose.position.x, #x
                                   msg.pose.pose.position.y, #y
@@ -152,81 +124,43 @@ class MPCClosedLoop(Node):
                                   msg.twist.twist.linear.y, #vy
                                   msg.twist.twist.angular.z]) #omega
         self.xmeasure_received = True
-<<<<<<< HEAD
-        self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
+        if self.start_timer is None:
+            self.start_timer = self.get_clock().now()
         #self.get_logger().info(f'Received state update: x={self.xmeasure[0]:.2f}, y={self.xmeasure[1]:.2f}, theta={self.xmeasure[2]:.2f}')
           
     def mpc_closedloop(self):
-        if self.xmeasure_received is None:
-=======
-
-    # Cloded Loop wird alle 100ms aufgerufen
-    # Hier wird die MPC Regelung durchgeführt
-    # und die optimale Stellgröße u an den Roboter gesendet
-    # und der aktuelle Zustand x_pred gespeichert
-    # Wenn der Roboter nahe genug an der Referenz ist, wird der Roboter gestoppt
-    # und die Daten gespeichert    
-    def mpc_closedloop(self):
-        if self.xmeasure_received is None: # and self.set_initial_position is None:
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+        
+        if self.xmeasure_received is None:# and self.set_initial_position is None:
             self.get_logger().warn("Keine gültige Zustandsmessung erhalten")
             return
+        if self.start_timer is None:
+            return
+        current_time = (self.get_clock().now() - self.start_timer).nanoseconds*1e-9
+        Xref = self.get_reference_trajectory(current_time)
 
         error = np.linalg.norm(np.array(self.xmeasure[0:2])-np.array(self.x_ref[0:2]))
-<<<<<<< HEAD
-        if error < 0.1:
-=======
-        if error < 0.05:
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
-            motor_stopp  = Twist()
-            motor_stopp.linear.x = 0.0 
-            motor_stopp.linear.y = 0.0
-            motor_stopp.angular.z = 0.0
-            self.control_pub.publish(motor_stopp)
-            self.fig.savefig("MPC_CL_plot")
-<<<<<<< HEAD
-            self.timer.cancel()
-            return
-
-        #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
-        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
-=======
-            self.fig_u.savefig("MPC_CL_u_plot")
-
-            self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list, self.solve_times)
-            current_dir = os.getcwd()
-            self.get_logger().info(f"Working directory: {current_dir}")
-            self.saveData.save_all("mpc_cl")
-            self.timer.cancel()
+        if  error < 0.01: #current_time >= self.total_time or
+            self.stop_robot()
             return
         self.actual_path.append((self.xmeasure[0], self.xmeasure[1]))
-        
-        t0 = time.perf_counter()        
-        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, self.x_ref,self.z0)
+        self.actual_theta.append(self.xmeasure[2])
+        #x_current muss der gemessene aktuelle Zustand sein, wir müssen noch die geschwindigkeit bekommen, wie bekomme ich die aktuelle Geschwinfigkeit
+        t0 = time.perf_counter()
+        x_opt, u_opt = self.QP.solveMPC(self.xmeasure, Xref,self.z0)
         t1 = time.perf_counter()
         dt = t1-t0
         self.solve_times.append(dt)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
         u_cl = u_opt[:,0]
         x_cl = x_opt[:,0]
         self.get_logger().info(f'Received state update: x={x_cl}, y={u_cl}')
         self.x_pred =x_opt
         self.predictions_list.append(x_opt.copy())
-<<<<<<< HEAD
-        
-
-        z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
-
-=======
-        self.predictions_u.append(u_opt.copy())
+        self.predicted_theta_list.append(x_opt[2, :].copy())
         self.actual_u.append(u_cl.copy())
         
-        self.get_logger().info(f"Optimale Zustände: {x_opt}")
 
         z0_new = np.concatenate((x_opt.flatten(),u_opt.flatten()))
 
-
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
         # x_opt hat die Form (nx, N+1) und u_opt die Form (nu, N)
         # Verschieben der Zustände: Entferne das erste Element und hänge den letzten Zustand an
         x_warm = np.hstack((x_opt[:, 1:], x_opt[:, -1:]))
@@ -236,26 +170,6 @@ class MPCClosedLoop(Node):
         # Neu zusammensetzen des Warmstart-Vektors, indem zuerst x_warm und dann u_warm (beide flach gemacht) konkateniert werden
         z0_new = np.concatenate((x_warm.flatten(), u_warm.flatten()))
         self.z0 = z0_new
-
-<<<<<<< HEAD
-
-        '''#Neuen Warmstart initialisieren Dabei wird die Lösung in x0 <- x1 x1 <- x2 usw x_n-1 <- x_n und x_n <- xn geshiftet und am ende der gleiche Zustand nochmal drangehängt
-        for k in range(self.N):
-            z0_new[k*self.nx : (k+1)*self.nx] = x_opt[:, k+1]
-        #Letzter Zustand wird nochmal drangehängt 
-        z0_new[self.N*self.nx : (self.N+1)*self.nx] = x_opt[:, self.N]
-        
-        #Analog für U
-        for k in range(self.N-1):
-            z0_new[(self.N+1)*self.nx + k*self.nu:(self.N+1)*self.nx + (k+1)*self.nu]=u_opt[:,k+1]
-        
-        # U nochmal dranhängen
-        z0_new[(self.N+1)*self.nx + (self.N-1)*self.nu:(self.N+1)*self.nx + self.N*self.nu]= u_opt[:,self.N-1]
-
-        self.z0 = z0_new'''
-=======
-        self.get_logger().info(f'z0: {self.z0}')
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
 
         # uopt auf den Roboter publishen
         # Winkelgeschwindikeiten werden mithilfe der Kinematik umgeechnet in Geschwindigkeit des Roboter in x y und theta Richtung
@@ -268,29 +182,52 @@ class MPCClosedLoop(Node):
         twist.angular.z = float(v_robot[2])
         self.control_pub.publish(twist)
 
-<<<<<<< HEAD
-        
+    
+    def get_reference_trajectory(self, current_time):
+            """
+            Liefert ein Array Xref der Form (nx, N+1),
+            indem an jedem Horizont‐Schritt einfach
+            der nächstliegende Zeitindex aus self.times verwendet wird.
+            """
+            Xref = np.zeros((self.nx, self.N+1))
+            # finde aktuellen Index
+            # searchsorted liefert das erste i, bei dem self.times[i] >= current_time
+            i0 = np.searchsorted(self.times, current_time, side='right') - 1
+            i0 = np.clip(i0, 0, self.num_waypoints-1)
+
+            for k in range(self.N+1):
+                idx = i0 + k
+                # Wenn wir über das Ende hinausgehen, bleib auf dem letzten Punkt
+                if idx >= self.num_waypoints:
+                    idx = self.num_waypoints - 1
+
+                x_des, y_des, theta_des = self.trajectory[idx]
+                # v_x, v_y, omega setzen wir hier auf 0 (oder je nach Bedarf anders)
+                Xref[:, k] = [x_des, y_des, 0, 0.0, 0.0, 0.0]
+
+            return Xref
 
 
-=======
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
+
     def quaternion_to_yaw(self,q):
         siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
         cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         return math.atan2(siny_cosp, cosy_cosp)
     
-    def plot_callback(self):
-<<<<<<< HEAD
-        #self.ax.clear()
+    def stop_robot(self):
+        motor_stopp  = Twist()
+        motor_stopp.linear.x = 0.0 
+        motor_stopp.linear.y = 0.0
+        motor_stopp.angular.z = 0.0
+        self.control_pub.publish(motor_stopp)
+        self.fig.savefig("MPCtrajectorytime_plot1.png")
+        self.fig_u.savefig("MPCtrajectorytime_u_plot1.png")
 
-        # Falls eine Vorhersage-Trajektorie vom MPC vorliegt, diese plotten
-        for i, pred in enumerate(self.predictions_list):
-                self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
-            
-        '''if self.x_pred is not None:
-            # x_pred[0,:] = x-Koordinaten, x_pred[1,:] = y-Koordinaten
-            self.ax.plot(self.x_pred[0, :], self.x_pred[1, :], 'r--', linewidth=2, label='Vorhersage (N Schritte)')'''
-=======
+        self.saveData = SaveData(self.predictions_list, self.actual_path, self.actual_u, self.actual_theta, self.predicted_theta_list, self.solve_times)
+        self.saveData.save_all("mpc_data")
+        self.timer.cancel()
+    
+    def plot_callback(self):
         
         self.ax.cla()  # Vorherigen Plot löschen
 
@@ -304,32 +241,18 @@ class MPCClosedLoop(Node):
         # 3. Zeichne die MPC-Vorhersagen, falls vorhanden
         for i, pred in enumerate(self.predictions_list):
             self.ax.plot(pred[0, :], pred[1, :], 'r--', alpha=0.5)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
 
         # Plot des tatsächlichen Pfads, falls vorhanden
         if self.actual_path:
             actual_path_arr = np.array(self.actual_path)
-<<<<<<< HEAD
-            self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2)
-
-        self.ax.legend()
-        self.ax.set_title("MPC Vorhersage & Tatsächlicher Pfad")
-        self.ax.set_xlabel("y [m]")
-        self.ax.set_ylabel("x [m]")
-        self.ax.grid(True)
-
-        # Zeichnen des Plots (mit kurzer Pause, um die Aktualisierung zu ermöglichen)
-
-
-=======
             self.ax.plot(actual_path_arr[:, 0], actual_path_arr[:, 1], 'b-', linewidth=2, label='Tatsächlicher Pfad')
 
         self.ax.legend()
-        self.ax.set_title("MPC Spurwechsel")
+        self.ax.set_title("MPC Trajectory")
         self.ax.set_xlabel("x [m]")  # Länge
         self.ax.set_ylabel("y [m]")  # Breite
         self.ax.set_xlim(0, 5)
-        self.ax.set_ylim(0, 2)
+        self.ax.set_ylim(0, 2) 
         self.ax.grid(True)
 
         self.ax_u.cla()  # Zweiten Plot zurücksetzen
@@ -348,15 +271,13 @@ class MPCClosedLoop(Node):
             self.ax_u.set_ylabel("Winkelgeschwindigkeit [rad/s]")
             self.ax_u.legend()
             self.ax_u.grid(True)
-    
 
         # Aktualisieren des Plots
         plt.pause(0.001)
->>>>>>> 114038e (Importiere ausgewählte MPC-Dateien aus Branch MPC)
 
 def main(args=None):
     rclpy.init(args=args)
-    node = MPCClosedLoop()
+    node = MPCClosedLoopTrajectory()
     rclpy.spin(node)
 
     node.destroy_node()
